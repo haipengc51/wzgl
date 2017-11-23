@@ -20,6 +20,12 @@
         android:id="@+id/thread_pool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="线程池"/>
+        android:text="线程池(Fix)"/>
+
+    <Button
+        android:id="@+id/thread_pool_cache"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="线程池(cache)"/>
 
 </LinearLayout>

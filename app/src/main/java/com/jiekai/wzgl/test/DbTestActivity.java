@@ -23,15 +23,20 @@ import java.util.concurrent.Executors;
  */
 
 public class DbTestActivity extends Activity {
+    private static final int TIME = 50;
+
     private Button readDb;
     private Button threadBtn;
     private Button threadPoolBtn;
     private Handler threadHandler;
-    private Handler threadPoolHandler;
     private Runnable threadRunnable;
-    private Runnable threadPoolRunnable;
     private boolean isThread = false;
+    private Handler threadPoolHandler;
+    private Runnable threadPoolRunnable;
     private boolean isThreadPool = false;
+    private Handler threadPoolCacheHandler;
+    private Runnable threadPoolCacheRunnable;
+    private boolean isThreadCachePool = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +76,19 @@ public class DbTestActivity extends Activity {
                 isThreadPool = !isThreadPool;
             }
         });
+        findViewById(R.id.thread_pool_cache).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isThreadCachePool) {
+                    if (threadPoolCacheHandler != null) {
+                        threadPoolCacheHandler.removeCallbacks(threadPoolCacheRunnable);
+                    }
+                } else {
+                    threadCachePool();
+                }
+                isThreadCachePool = !isThreadCachePool;
+            }
+        });
     }
 
     private void readDb() {
@@ -84,7 +102,7 @@ public class DbTestActivity extends Activity {
 
     private void readDbDealProcess() {
         try {
-            Log.i("liu", "执行了一次查询数据库");
+            Log.i("liu", android.os.Process.myTid() + "执行了一次查询数据库");
             Class.forName(Config.DB_CLASS_NAME);
             String url = "jdbc:oracle:thin:@" + Config.DB_IP + ":" + Config.DB_PORT
                     + ":" + Config.DB_NAME;
@@ -93,7 +111,7 @@ public class DbTestActivity extends Activity {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Log.i("liu", resultSet.getString("xing")+resultSet.getString("name")+ ":" + resultSet.getString("age"));
+                Log.i("liu", android.os.Process.myTid() + resultSet.getString("xing")+resultSet.getString("name")+ ":" + resultSet.getString("age"));
             }
             resultSet.close();
             preparedStatement.close();
@@ -111,10 +129,10 @@ public class DbTestActivity extends Activity {
             @Override
             public void run() {
                 readDb();
-                threadHandler.postDelayed(threadRunnable, 500);
+                threadHandler.postDelayed(threadRunnable, TIME);
             }
         };
-        threadHandler.postDelayed(threadRunnable, 500);
+        threadHandler.postDelayed(threadRunnable, TIME);
     }
 
     private void threadPool() {
@@ -129,9 +147,27 @@ public class DbTestActivity extends Activity {
                         readDbDealProcess();
                     }
                 });
-                threadPoolHandler.postDelayed(threadPoolRunnable, 500);
+                threadPoolHandler.postDelayed(threadPoolRunnable, TIME);
             }
         };
-        threadPoolHandler.postDelayed(threadPoolRunnable, 500);
+        threadPoolHandler.postDelayed(threadPoolRunnable, TIME);
+    }
+
+    private void threadCachePool() {
+        final ExecutorService executorService = Executors.newCachedThreadPool();
+        threadPoolCacheHandler = new Handler();
+        threadPoolCacheRunnable = new Runnable() {
+            @Override
+            public void run() {
+                executorService.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        readDbDealProcess();
+                    }
+                });
+                threadPoolCacheHandler.postDelayed(threadPoolCacheRunnable, TIME);
+            }
+        };
+        threadPoolCacheHandler.postDelayed(threadPoolCacheRunnable, TIME);
     }
 }
