@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.Config;
+import com.jiekai.wzgl.utils.LogUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -42,11 +43,13 @@ public class DbTestActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_db);
+        LogUtils.i("liuhaipeng");
 
         readDb = (Button) findViewById(R.id.read_db);
         readDb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.i("liu", "123");
                 readDb();
             }
         });
@@ -102,7 +105,7 @@ public class DbTestActivity extends Activity {
 
     private void readDbDealProcess() {
         try {
-            Log.i("liu", android.os.Process.myTid() + "执行了一次查询数据库");
+            Log.i("liu", "执行了一次查询数据库");
             Class.forName(Config.DB_CLASS_NAME);
             String url = "jdbc:oracle:thin:@" + Config.DB_IP + ":" + Config.DB_PORT
                     + ":" + Config.DB_NAME;
@@ -111,15 +114,17 @@ public class DbTestActivity extends Activity {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Log.i("liu", android.os.Process.myTid() + resultSet.getString("xing")+resultSet.getString("name")+ ":" + resultSet.getString("age"));
+                Log.i("liu", resultSet.getString("xing")+resultSet.getString("name")+ ":" + resultSet.getString("age"));
             }
             resultSet.close();
             preparedStatement.close();
             connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            LogUtils.e("not find jdbc class");
         } catch (SQLException e) {
             e.printStackTrace();
+            LogUtils.e("sql error:" + e.getMessage());
         }
     }
 

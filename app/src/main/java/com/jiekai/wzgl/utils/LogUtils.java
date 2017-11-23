@@ -13,31 +13,31 @@ public class LogUtils {
     private static final boolean LOG_SWITCH = BuildConfig.DEBUG;
     private static final String LOG_TAG = "wzgl";
 
-    public void i(String msg) {
+    public static void i(String msg) {
         i(LOG_TAG, msg);
     }
 
-    public void w(String msg) {
+    public static void w(String msg) {
         w(LOG_TAG, msg);
     }
 
-    public void e(String msg) {
+    public static void e(String msg) {
         e(LOG_TAG, msg);
     }
 
-    public void i(String tag, String msg) {
+    public static void i(String tag, String msg) {
         if (LOG_SWITCH) {
             Log.i(tag, msg);
         }
     }
 
-    public void w(String tag, String msg) {
+    public static void w(String tag, String msg) {
         if (LOG_SWITCH) {
             Log.w(tag, msg);
         }
     }
 
-    public void e(String tag, String msg) {
+    public static void e(String tag, String msg) {
         if (LOG_SWITCH) {
             Log.e(tag, msg);
         }
