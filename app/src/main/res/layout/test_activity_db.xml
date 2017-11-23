@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/read_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="读取数据库"/>
+
+    <Button
+        android:id="@+id/thread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单独线程"/>
+
+    <Button
+        android:id="@+id/thread_pool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="线程池"/>
+
+</LinearLayout>
