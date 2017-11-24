@@ -1,15 +1,19 @@
-package com.jiekai.wzgl.test;
+package com.jiekai.wzgl.dbutils;
 
 /**
  * Created by LaoWu on 2017/11/23.
- * 线程池的方式访问数据库
- * 对数据库的方式尽量封装，方便后来的时候使用
+ * 线程池的管理类
+ * 线程池的创建
  */
 
 public class ExecutorManager {
     private static ExecutorManager executorManager = null;
+    private PlantFrom plantFrom;
 
     public ExecutorManager() {
+        if (plantFrom == null) {
+            plantFrom = PlantFrom.getInstance();
+        }
     }
 
     /**
@@ -21,5 +25,9 @@ public class ExecutorManager {
                 executorManager = new ExecutorManager();
             }
         }
+    }
+
+    public void execute() {
+
     }
 }
