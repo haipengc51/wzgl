@@ -92,6 +92,13 @@ public class DbTestActivity extends Activity {
                 isThreadCachePool = !isThreadCachePool;
             }
         });
+        findViewById(R.id.thread_frame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //用框架的形式加载数据库的内容
+
+            }
+        });
     }
 
     private void readDb() {

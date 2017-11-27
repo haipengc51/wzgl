@@ -1,5 +1,6 @@
 package com.jiekai.wzgl.dbutils;
 
+import java.sql.ResultSet;
 import java.util.Objects;
 
 /**
@@ -10,5 +11,5 @@ import java.util.Objects;
 public abstract class DbCallBack {
     public abstract void onError(String err);
 
-    public abstract void onResponse(Objects response);
+    public abstract void onResponse(ResultSet response);
 }

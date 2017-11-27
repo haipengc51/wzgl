@@ -9,10 +9,14 @@ package com.jiekai.wzgl.dbutils;
 public class ExecutorManager {
     private static ExecutorManager executorManager = null;
     private PlantFrom plantFrom;
+    private DbDeal dbDeal;
 
     public ExecutorManager() {
         if (plantFrom == null) {
             plantFrom = PlantFrom.getInstance();
+        }
+        if (dbDeal == null) {
+            dbDeal = DbDeal.getInstance();
         }
     }
 
@@ -27,7 +31,11 @@ public class ExecutorManager {
         }
     }
 
-    public void execute() {
+    public DbDeal dbDeal() {
+        return dbDeal;
+    }
+
+    public void execute(DbCallBack callBack) {
 
     }
 }
