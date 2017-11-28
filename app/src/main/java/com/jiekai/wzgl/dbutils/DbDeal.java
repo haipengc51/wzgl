@@ -42,6 +42,7 @@ public class DbDeal {
                 } else {
                     dbCallBack.onError(resultMsg);
                 }
+                ExecutorManager.getInstance().execute(dbCallBack);
             }
         });
     }

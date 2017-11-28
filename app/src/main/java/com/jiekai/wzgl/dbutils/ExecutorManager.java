@@ -23,12 +23,13 @@ public class ExecutorManager {
     /**
      * 创建单例, 并初始化
      */
-    public void init() {
+    public static ExecutorManager getInstance() {
         if (executorManager == null) {
-            synchronized (ExecutorManager.this) {
+            synchronized (ExecutorManager.class) {
                 executorManager = new ExecutorManager();
             }
         }
+        return executorManager;
     }
 
     public DbDeal dbDeal() {
