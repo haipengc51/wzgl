@@ -1,5 +1,9 @@
 package com.jiekai.wzgl.dbutils;
 
+import java.sql.ResultSet;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
 /**
  * Created by LaoWu on 2017/11/23.
  * 线程池的管理类
@@ -9,15 +13,19 @@ package com.jiekai.wzgl.dbutils;
 public class ExecutorManager {
     private static ExecutorManager executorManager = null;
     private PlantFrom plantFrom;
-    private DbDeal dbDeal;
+    private Executor executor;
 
     public ExecutorManager() {
         if (plantFrom == null) {
             plantFrom = PlantFrom.getInstance();
         }
-        if (dbDeal == null) {
-            dbDeal = DbDeal.getInstance();
+        if (executor == null) {
+            executor = Executors.newCachedThreadPool();
         }
+    }
+
+    public static DbDeal dbDeal() {
+        return new DbDeal();
     }
 
     /**
@@ -32,11 +40,44 @@ public class ExecutorManager {
         return executorManager;
     }
 
-    public DbDeal dbDeal() {
-        return dbDeal;
+    public Executor getExecutor() {
+        return executor;
     }
 
-    public void execute(DbCallBack callBack) {
+    public void execute(final AsynInterface asynInterface, final DbCallBack callBack) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                asynInterface.doExecutor(new AsynCallBack() {
+                    @Override
+                    public void onError(String errorMsg) {
+                        doFailed(callBack, errorMsg);
+                    }
 
+                    @Override
+                    public void onSuccess(ResultSet resultSet) {
+                        doSuccess(callBack, resultSet);
+                    }
+                });
+            }
+        });
+    }
+
+    private void doSuccess(final DbCallBack dbCallBack, final ResultSet resultSet) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                dbCallBack.onResponse(resultSet);
+            }
+        });
+    }
+
+    private void doFailed(final DbCallBack dbCallBack, final String errorMsg) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                dbCallBack.onError(errorMsg);
+            }
+        });
     }
 }

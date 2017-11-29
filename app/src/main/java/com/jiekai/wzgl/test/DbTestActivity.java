@@ -9,6 +9,8 @@ import android.widget.Button;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.Config;
+import com.jiekai.wzgl.dbutils.DbCallBack;
+import com.jiekai.wzgl.dbutils.ExecutorManager;
 import com.jiekai.wzgl.utils.LogUtils;
 
 import java.sql.Connection;
@@ -38,6 +40,9 @@ public class DbTestActivity extends Activity {
     private Handler threadPoolCacheHandler;
     private Runnable threadPoolCacheRunnable;
     private boolean isThreadCachePool = false;
+    private Handler frameWork;
+    private Runnable frameWorkRunnable;
+    private boolean isFrameWork = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +101,14 @@ public class DbTestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //用框架的形式加载数据库的内容
-
+            if (isFrameWork) {
+                if (frameWork != null) {
+                    frameWork.removeCallbacks(frameWorkRunnable);
+                }
+            } else {
+                frameWork();
+            }
+                isFrameWork = !isFrameWork;
             }
         });
     }
@@ -114,9 +126,7 @@ public class DbTestActivity extends Activity {
         try {
             Log.i("liu", "执行了一次查询数据库");
             Class.forName(Config.DB_CLASS_NAME);
-            String url = "jdbc:oracle:thin:@" + Config.DB_IP + ":" + Config.DB_PORT
-                    + ":" + Config.DB_NAME;
-            Connection connection = DriverManager.getConnection(url, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
+            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
             String sql = "select * from MY_TABLE";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -181,5 +191,29 @@ public class DbTestActivity extends Activity {
             }
         };
         threadPoolCacheHandler.postDelayed(threadPoolCacheRunnable, TIME);
+    }
+
+    private void frameWork() {
+        frameWork = new Handler();
+        frameWorkRunnable = new Runnable() {
+            @Override
+            public void run() {
+                ExecutorManager.dbDeal()
+                        .sql("select * from MY_TABLE")
+                        .execut(new DbCallBack() {
+                    @Override
+                    public void onError(String err) {
+                        LogUtils.e(err);
+                    }
+
+                    @Override
+                    public void onResponse(ResultSet response) {
+                        LogUtils.i("接收数据成功");
+                    }
+                });
+                frameWork.postDelayed(frameWorkRunnable, TIME);
+            }
+        };
+        frameWork.postDelayed(frameWorkRunnable, TIME);
     }
 }

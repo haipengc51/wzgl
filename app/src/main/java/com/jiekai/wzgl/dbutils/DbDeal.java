@@ -15,64 +15,46 @@ import java.util.concurrent.Executors;
  * Created by laowu on 2017/11/26.
  */
 
-public class DbDeal {
+public class DbDeal extends AsynInterface{
     private Executor executor;
     private String sql;
 
-    private boolean isSuccess = false;
-    private String resultMsg;
     private ResultSet resultSet;
-
-    private void init() {
-        executor = Executors.newCachedThreadPool();
-    }
 
     public DbDeal sql(String sql) {
         this.sql = sql;
         return this;
     }
 
-    public void execut(final DbCallBack dbCallBack) {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                readDbDealProcess();
-                if (isSuccess) {
-                    dbCallBack.onResponse(resultSet);
-                } else {
-                    dbCallBack.onError(resultMsg);
-                }
-                ExecutorManager.getInstance().execute(dbCallBack);
-            }
-        });
+    public void execut(DbCallBack dbCallBack) {
+        ExecutorManager.getInstance().execute(DbDeal.this, dbCallBack);
     }
 
-    private void readDbDealProcess() {
-        isSuccess = false;
+    private void readDbDealProcess(AsynCallBack asynCallBack) {
         try {
             if (sql == null || sql.length() == 0) {
-                resultMsg = "sql命令为空";
+                asynCallBack.onError("sql命令为空");
                 return;
             }
             Class.forName(Config.DB_CLASS_NAME);
-            String url = "jdbc:oracle:thin:@" + Config.DB_IP + ":" + Config.DB_PORT
-                    + ":" + Config.DB_NAME;
-            Connection connection = DriverManager.getConnection(url, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
-            String sql = "select * from MY_TABLE";
+            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             resultSet = preparedStatement.executeQuery();
-            if (resultSet != null) {
-                isSuccess = true;
-            }
+            asynCallBack.onSuccess(resultSet);
             resultSet.close();
             preparedStatement.close();
             connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            resultMsg = e.getMessage();
+            asynCallBack.onError(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
-            resultMsg = e.getMessage();
+            asynCallBack.onError(e.getMessage());
         }
+    }
+
+    @Override
+    public void doExecutor(AsynCallBack asynCallBack) {
+        readDbDealProcess(asynCallBack);
     }
 }
