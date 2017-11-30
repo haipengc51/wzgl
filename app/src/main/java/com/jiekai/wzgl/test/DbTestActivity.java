@@ -127,11 +127,11 @@ public class DbTestActivity extends Activity {
             Log.i("liu", "执行了一次查询数据库");
             Class.forName(Config.DB_CLASS_NAME);
             Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
-            String sql = "select * from MY_TABLE";
+            String sql = "select * from department";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Log.i("liu", resultSet.getString("xing")+resultSet.getString("name")+ ":" + resultSet.getString("age"));
+                Log.i("liu", resultSet.getString("DWMC"));
             }
             resultSet.close();
             preparedStatement.close();
@@ -199,7 +199,7 @@ public class DbTestActivity extends Activity {
             @Override
             public void run() {
                 ExecutorManager.dbDeal()
-                        .sql("select * from MY_TABLE")
+                        .sql("select * from department")
                         .execut(new DbCallBack() {
                     @Override
                     public void onError(String err) {
@@ -209,6 +209,13 @@ public class DbTestActivity extends Activity {
                     @Override
                     public void onResponse(ResultSet response) {
                         LogUtils.i("接收数据成功");
+                        try {
+                            while (response.next()) {
+                                Log.i("liu", response.getString("DWMC"));
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
                 frameWork.postDelayed(frameWorkRunnable, TIME);
