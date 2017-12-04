@@ -6,30 +6,50 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcA;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.config.Config;
+import com.jiekai.wzgl.ftputils.FTPUtils;
+import com.jiekai.wzgl.ftputils.FtpCallBack;
+import com.jiekai.wzgl.ftputils.FtpManager;
+import com.jiekai.wzgl.utils.GlidUtils;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
  * Created by laowu on 2017/12/1.
  */
 
-public class NfcReadTestActivity extends NFCBaseActivity {
+public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClickListener {
     private TextView nfcTextView;
+    private Button upImage;
+    private ImageView image1;
+    private ImageView image2;
     private String nfcString ;
+
+    private FTPUtils ftpUtils = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_nfc);
         nfcTextView = (TextView) findViewById(R.id.nfc_read);
+        upImage = (Button) findViewById(R.id.up_image);
+
+        image1 = (ImageView) findViewById(R.id.imag1);
+        image2 = (ImageView) findViewById(R.id.image2);
+        GlidUtils.displayImage(this, "http://114.115.171.225/View/AppImage/1234.jpg", image1);
+
+        upImage.setOnClickListener(this);
         readNfcTag(getIntent());
     }
 
@@ -87,5 +107,29 @@ public class NfcReadTestActivity extends NFCBaseActivity {
         } catch (Exception e) {
             throw  new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.up_image:
+                upImage();
+                break;
+        }
+    }
+
+    private void upImage() {
+        FtpManager.getInstance().uploadFile(Environment.getExternalStorageDirectory() + "/123.jpg",
+                "/test/", "test.jpg", new FtpCallBack() {
+                    @Override
+                    public void ftpSuccess(String remotePath) {
+                        Toast.makeText(NfcReadTestActivity.this, remotePath, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void ftpFaild(String error) {
+                        Toast.makeText(NfcReadTestActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
