@@ -1,7 +1,6 @@
-package com.jiekai.wzgl.dbutils;
+package com.jiekai.wzgl.utils.dbutils;
 
-import java.sql.ResultSet;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * Created by laowu on 2017/11/24.
@@ -11,5 +10,5 @@ import java.util.Objects;
 public abstract class DbCallBack {
     public abstract void onError(String err);
 
-    public abstract void onResponse(ResultSet response);
+    public abstract void onResponse(List result);
 }

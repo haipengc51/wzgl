@@ -8,8 +8,52 @@
 app直连数据库和回调（主线程中）。
 12-03计划
 1、和杨哥沟通看看图片怎么上传到服务器（0.5小时）（沟通完毕之后可能还需要学习技术）（1天时间）(完成12.4)
-2、NFC采集的整理封装成能使用的类（1小时）
-3、数据库连接池的返回数据封装（1.5小时）
-4、导入第三方库，zxing, pictureSelect（0.5小时）
+        FtpManager.getInstance().uploadFile(Environment.getExternalStorageDirectory() + "/123.jpg",
+                        "/test/", "test.jpg", new FtpCallBack() {
+                            @Override
+                            public void ftpSuccess(String remotePath) {
+                                Toast.makeText(NfcReadTestActivity.this, remotePath, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void ftpFaild(String error) {
+                                Toast.makeText(NfcReadTestActivity.this, error, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+2、NFC采集的整理封装成能使用的类（1小时） (完成)
+        (继承NfcBaseActivity然后在onNewIntent中读取刷卡信息）
+        <!--程序不在前台时进行激活-->下面的这些写入之后当程序不运行是扫描nfc照样能除法activity的执行
+                    <intent-filter>
+                        <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                        <category android:name="android.intent.category.DEFAULT"/>
+                        <data android:mimeType="text/plain"/>
+                    </intent-filter>
+                    <intent-filter>
+                        <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+                    </intent-filter>
+                    <meta-data
+                        android:name="android.nfc.action.TECH_DESCOVERED"
+                        android:resource="@xml/nfc_tech_filter"/>
+                    <intent-filter>
+                        <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                        <category android:name="android.intent.category.DEFAULT"/>
+                    </intent-filter>
+3、数据库连接池的返回数据封装（1.5小时） （完成12.5）
+        ExecutorManager.dbDeal()
+                .sql("select * from department")
+                .clazz(DepartmentEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onError(String err) {
+                        LogUtils.e(err);
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        LogUtils.i("接收数据成功:" + result);
+                    }
+                });
+4、导入第三方库，zxing, pictureSelect（0.5小时）(完成zxing-12.5 pictureSelect还没有应用)
+
 --------上午四个小时完成-----7:30起床-8:00开始干活------------
 5、梳理所有界面，开始搭建界面

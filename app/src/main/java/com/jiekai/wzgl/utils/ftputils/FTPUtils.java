@@ -1,4 +1,4 @@
-package com.jiekai.wzgl.ftputils;
+package com.jiekai.wzgl.utils.ftputils;
 
 import com.jiekai.wzgl.utils.LogUtils;
 

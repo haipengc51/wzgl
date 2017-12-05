@@ -1,9 +1,8 @@
-package com.jiekai.wzgl.dbutils;
+package com.jiekai.wzgl.utils.dbutils;
 
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.compat.BuildConfig;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

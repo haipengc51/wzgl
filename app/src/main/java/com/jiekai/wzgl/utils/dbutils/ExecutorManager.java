@@ -1,6 +1,6 @@
-package com.jiekai.wzgl.dbutils;
+package com.jiekai.wzgl.utils.dbutils;
 
-import java.sql.ResultSet;
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -55,19 +55,19 @@ public class ExecutorManager {
                     }
 
                     @Override
-                    public void onSuccess(ResultSet resultSet) {
-                        doSuccess(callBack, resultSet);
+                    public void onSuccess(List result) {
+                        doSuccess(callBack, result);
                     }
                 });
             }
         });
     }
 
-    private void doSuccess(final DbCallBack dbCallBack, final ResultSet resultSet) {
+    private void doSuccess(final DbCallBack dbCallBack, final List result) {
         plantFrom.execut(new Runnable() {
             @Override
             public void run() {
-                dbCallBack.onResponse(resultSet);
+                dbCallBack.onResponse(result);
             }
         });
     }

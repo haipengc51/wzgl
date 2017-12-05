@@ -2,6 +2,7 @@ package com.jiekai.wzgl.ui.base;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.jiekai.wzgl.utils.AnimationUtils;
 
@@ -19,5 +20,29 @@ public class MyBaseActivity extends AppCompatActivity {
         if (isAnimation) {
             AnimationUtils.setAnimationOfRight(this);
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        if (isAnimation) {
+            AnimationUtils.setAnimationOfRight(this);
+        }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        if (isAnimation) {
+            AnimationUtils.setAnimationOfRight(this);
+        }
+    }
+
+    public void alert(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public void alert(int strId) {
+        Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,4 +1,4 @@
-package com.jiekai.wzgl.ftputils;
+package com.jiekai.wzgl.utils.ftputils;
 
 /**
  * Created by laowu on 2017/12/4.

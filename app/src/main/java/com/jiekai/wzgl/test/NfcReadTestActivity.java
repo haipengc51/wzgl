@@ -1,14 +1,10 @@
 package com.jiekai.wzgl.test;
 
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
@@ -17,23 +13,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jiekai.wzgl.R;
-import com.jiekai.wzgl.config.Config;
-import com.jiekai.wzgl.ftputils.FTPUtils;
-import com.jiekai.wzgl.ftputils.FtpCallBack;
-import com.jiekai.wzgl.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.GlidUtils;
-
-import java.util.Arrays;
+import com.jiekai.wzgl.utils.ftputils.FTPUtils;
+import com.jiekai.wzgl.utils.ftputils.FtpCallBack;
+import com.jiekai.wzgl.utils.ftputils.FtpManager;
+import com.jiekai.wzgl.utils.nfcutils.NfcUtils;
+import com.jiekai.wzgl.utils.zxing.CaptureActivity;
+import com.jiekai.wzgl.utils.zxing.encoding.EncodingUtils;
 
 /**
  * Created by laowu on 2017/12/1.
  */
 
 public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClickListener {
+    private final static int SCAN = 0;
+
     private TextView nfcTextView;
     private Button upImage;
     private ImageView image1;
     private ImageView image2;
+    private Button scan;
+    private Button createCode;
     private String nfcString ;
 
     private FTPUtils ftpUtils = null;
@@ -47,66 +47,20 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
 
         image1 = (ImageView) findViewById(R.id.imag1);
         image2 = (ImageView) findViewById(R.id.image2);
-        GlidUtils.displayImage(this, "http://114.115.171.225/View/AppImage/1234.jpg", image1);
+        scan = (Button) findViewById(R.id.scan);
+        createCode = (Button) findViewById(R.id.create_code);
+        GlidUtils.displayImage(this, "http://114.115.171.225/View/AppImage/test.jpg", image1);
 
         upImage.setOnClickListener(this);
-        readNfcTag(getIntent());
+        scan.setOnClickListener(this);
+        createCode.setOnClickListener(this);
+        NfcUtils.readNfc(getIntent());
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        readNfcTag(intent);
-    }
-
-    private void readNfcTag(Intent intent) {
-        Tag detecedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-        if (detecedTag == null) {
-            return;
-        }
-        Ndef ndef = Ndef.get(detecedTag);
-        nfcString = ndef.getType() + "\n" + "max size:" + ndef.getMaxSize() + "byte\n";
-
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()) ||
-                NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction()) ||
-                NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-            NdefMessage msgs[] = null;
-            int contentSize = 0;
-            if (rawMsgs != null) {
-                msgs = new NdefMessage[rawMsgs.length];
-                for (int i=0; i<rawMsgs.length; i++) {
-                    msgs[i] = (NdefMessage) rawMsgs[i];
-                    contentSize += msgs[i].toByteArray().length;
-                }
-            }
-            if (msgs != null) {
-                NdefRecord record = msgs[0].getRecords()[0];
-                String textRecord = parseTextRecord(record);
-                nfcString += textRecord + "\n\ntext\n" + contentSize + "byte\n";
-            }
-        }
-
-        nfcTextView.setText(nfcString);
-    }
-
-    public static String parseTextRecord(NdefRecord ndefRecord) {
-        try {
-            if (ndefRecord.getTnf() != NdefRecord.TNF_WELL_KNOWN) {
-                return null;
-            }
-            if (!Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
-                return null;
-            }
-            byte[] payload = ndefRecord.getPayload();
-            String textEncoding = ((payload[0] & 0x80) == 0) ? "UTF-8" : "UTF-16";
-            int languageCodeLength = payload[0] & 0x3f;
-            String textRecord = new String(payload, languageCodeLength + 1,
-                    payload.length - languageCodeLength - 1, textEncoding);
-            return textRecord;
-        } catch (Exception e) {
-            throw  new IllegalArgumentException();
-        }
+        NfcUtils.readNfc(getIntent());
     }
 
     @Override
@@ -114,6 +68,15 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
         switch (v.getId()) {
             case R.id.up_image:
                 upImage();
+                break;
+            case R.id.scan:
+                startActivityForResult(new Intent(NfcReadTestActivity.this, CaptureActivity.class), SCAN);
+                break;
+            case R.id.create_code:
+                Bitmap logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+                //        Bitmap qr = EncodingUtils.createQRCode(phone, CommonUtil.dip2px(ContactsAddFriendActivity.this, 200), CommonUtil.dip2px(ContactsAddFriendActivity.this, 200), logo);
+                Bitmap qr = EncodingUtils.createQRCode("liuhaipeng", 250, 250, logo);
+                image2.setImageBitmap(qr);
                 break;
         }
     }
@@ -131,5 +94,14 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
                         Toast.makeText(NfcReadTestActivity.this, error, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SCAN && resultCode == RESULT_OK) {
+            String code = data.getExtras().getString("result");
+            nfcTextView.setText(code);
+        }
     }
 }

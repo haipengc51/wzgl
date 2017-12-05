@@ -1,6 +1,6 @@
-package com.jiekai.wzgl.ftputils;
+package com.jiekai.wzgl.utils.ftputils;
 
-import com.jiekai.wzgl.dbutils.PlantFrom;
+import com.jiekai.wzgl.utils.dbutils.PlantFrom;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

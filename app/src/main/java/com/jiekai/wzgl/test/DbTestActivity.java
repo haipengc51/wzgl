@@ -9,8 +9,9 @@ import android.widget.Button;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.Config;
-import com.jiekai.wzgl.dbutils.DbCallBack;
-import com.jiekai.wzgl.dbutils.ExecutorManager;
+import com.jiekai.wzgl.utils.dbutils.DbCallBack;
+import com.jiekai.wzgl.utils.dbutils.ExecutorManager;
+import com.jiekai.wzgl.entity.DepartmentEntity;
 import com.jiekai.wzgl.utils.LogUtils;
 
 import java.sql.Connection;
@@ -18,6 +19,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -101,14 +103,15 @@ public class DbTestActivity extends Activity {
             @Override
             public void onClick(View v) {
                 //用框架的形式加载数据库的内容
-            if (isFrameWork) {
-                if (frameWork != null) {
-                    frameWork.removeCallbacks(frameWorkRunnable);
-                }
-            } else {
+//            if (isFrameWork) {
+//                if (frameWork != null) {
+//                    frameWork.removeCallbacks(frameWorkRunnable);
+//                }
+//            } else {
+//                frameWork();
+//            }
+//            isFrameWork = !isFrameWork;
                 frameWork();
-            }
-                isFrameWork = !isFrameWork;
             }
         });
     }
@@ -194,33 +197,28 @@ public class DbTestActivity extends Activity {
     }
 
     private void frameWork() {
-        frameWork = new Handler();
-        frameWorkRunnable = new Runnable() {
-            @Override
-            public void run() {
-                ExecutorManager.dbDeal()
-                        .sql("select * from department")
-                        .execut(new DbCallBack() {
+//        frameWork = new Handler();
+//        frameWorkRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                frameWork.postDelayed(frameWorkRunnable, TIME);
+//            }
+//        };
+//        frameWork.postDelayed(frameWorkRunnable, TIME);
+        ExecutorManager.dbDeal()
+                .sql("select * from department")
+                .clazz(DepartmentEntity.class)
+                .execut(new DbCallBack() {
                     @Override
                     public void onError(String err) {
                         LogUtils.e(err);
                     }
 
                     @Override
-                    public void onResponse(ResultSet response) {
-                        LogUtils.i("接收数据成功");
-                        try {
-                            while (response.next()) {
-                                Log.i("liu", response.getString("DWMC"));
-                            }
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                    public void onResponse(List result) {
+                        LogUtils.i("接收数据成功:" + result);
                     }
                 });
-                frameWork.postDelayed(frameWorkRunnable, TIME);
-            }
-        };
-        frameWork.postDelayed(frameWorkRunnable, TIME);
     }
 }

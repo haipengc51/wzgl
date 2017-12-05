@@ -3,8 +3,7 @@ package com.jiekai.wzgl;
 import android.app.Application;
 
 import com.jiekai.wzgl.config.Config;
-import com.jiekai.wzgl.ftputils.FTPUtils;
-import com.jiekai.wzgl.ftputils.FtpManager;
+import com.jiekai.wzgl.utils.ftputils.FtpManager;
 
 /**
  * Created by LaoWu on 2017/11/27.

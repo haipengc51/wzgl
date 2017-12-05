@@ -3,15 +3,14 @@ package com.jiekai.wzgl.test;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import com.jiekai.wzgl.ui.base.MyBaseActivity;
 
 /**
  * Created by laowu on 2017/12/1.
  */
 
-public class NFCBaseActivity extends AppCompatActivity {
+public class NFCBaseActivity extends MyBaseActivity {
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 

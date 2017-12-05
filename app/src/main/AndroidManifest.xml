@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.NFC"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/> <!--扫描二维码是否需要动态权限-->
+    <uses-permission android:name="android.permission.VIBRATE"/>    <!--zxing震动权限-->
 
     <uses-feature android:name="android.hardware.nfc" android:required="true"/> <!--使用者必须有nfc功能-->
 
@@ -22,41 +24,11 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <!--程序不在前台时进行激活-->
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED"/>
-            </intent-filter>
-            <meta-data
-                android:name="android.nfc.action.TECH_DESCOVERED"
-                android:resource="@xml/nfc_tech_filter"/>
-            <intent-filter>
-                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
         </activity>
+        <activity android:name=".utils.zxing.CaptureActivity"
+            android:screenOrientation="portrait"/>
 
-        <!--<activity android:name=".test.DbTestActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.NDEF_DISCOVERED"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<data android:mimeType="text/plain"/>-->
-            <!--</intent-filter>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.TECH_DISCOVERED"/>-->
-            <!--</intent-filter>-->
-            <!--<meta-data-->
-                <!--android:name="android.nfc.action.TECH_DESCOVERED"-->
-                <!--android:resource="@xml/nfc_tech_filter"/>-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.nfc.action.TAG_DISCOVERED"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
+
     </application>
 
 </manifest>

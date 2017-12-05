@@ -1,6 +1,6 @@
-package com.jiekai.wzgl.dbutils;
+package com.jiekai.wzgl.utils.dbutils;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * Created by laowu on 2017/11/29.
@@ -9,5 +9,5 @@ import java.sql.ResultSet;
 public abstract class AsynCallBack {
     public abstract void onError(String errorMsg);
 
-    public abstract void onSuccess(ResultSet resultSet);
+    public abstract void onSuccess(List result);
 }

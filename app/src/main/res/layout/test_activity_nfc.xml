@@ -16,6 +16,18 @@
         android:layout_height="wrap_content"
         android:text="FTP上传图片"/>
 
+    <Button
+        android:id="@+id/scan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="扫描二维码"/>
+
+    <Button
+        android:id="@+id/create_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="生成二维码"/>
+
     <ImageView
         android:id="@+id/imag1"
         android:layout_width="match_parent"

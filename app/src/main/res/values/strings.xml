@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">wzgl</string>
+    <string name="sweep_string">将二维码/条码放入框内，即可自动扫描</string>
 </resources>

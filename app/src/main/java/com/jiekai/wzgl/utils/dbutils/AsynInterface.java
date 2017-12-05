@@ -1,4 +1,4 @@
-package com.jiekai.wzgl.dbutils;
+package com.jiekai.wzgl.utils.dbutils;
 
 /**
  * Created by laowu on 2017/11/29.
