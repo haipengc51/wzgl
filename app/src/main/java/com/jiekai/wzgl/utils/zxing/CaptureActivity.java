@@ -84,6 +84,21 @@ public final class CaptureActivity extends MyBaseActivity implements SurfaceHold
     }
 
     @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    public void initOperation() {
+
+    }
+
+    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 

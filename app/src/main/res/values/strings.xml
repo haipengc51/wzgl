@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">wzgl</string>
+    <string name="app_name">物资管理</string>
     <string name="sweep_string">将二维码/条码放入框内，即可自动扫描</string>
+    <string name="jiekai">东营杰开智能科技有限公司</string>
 </resources>

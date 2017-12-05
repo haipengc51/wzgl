@@ -39,6 +39,21 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
     private FTPUtils ftpUtils = null;
 
     @Override
+    public void initView() {
+
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    public void initOperation() {
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_nfc);

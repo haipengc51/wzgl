@@ -10,7 +10,7 @@ import com.jiekai.wzgl.ui.base.MyBaseActivity;
  * Created by laowu on 2017/12/1.
  */
 
-public class NFCBaseActivity extends MyBaseActivity {
+public abstract class NFCBaseActivity extends MyBaseActivity {
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
