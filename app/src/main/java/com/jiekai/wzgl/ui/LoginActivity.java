@@ -1,21 +1,26 @@
 package com.jiekai.wzgl.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.MainActivity;
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.config.ShareConstants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.UserInfoEntity;
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
 import com.jiekai.wzgl.utils.InputPasswordUtils;
+import com.jiekai.wzgl.utils.JSONHelper;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.ExecutorManager;
 import com.jiekai.wzgl.weight.ClickDrawableEdit;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import butterknife.BindView;
@@ -102,11 +107,21 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            saveLoginData((UserInfoEntity) result.get(0));
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
                         } else {
                             alert("用户名或密码错误");
                         }
                     }
                 });
+    }
+
+    private void saveLoginData(UserInfoEntity loginData) {
+        SharedPreferences sharedPreferences = getSharedPreferences(ShareConstants.USERINFO, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String userData = JSONHelper.toJSONString(loginData);
+        editor.putString(ShareConstants.USERINFO, userData);
+        editor.commit();
     }
 }

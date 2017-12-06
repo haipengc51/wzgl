@@ -138,8 +138,10 @@ public class DbDeal extends AsynInterface{
                     T t = clazz.newInstance();
                     Field[] fields = clazz.getDeclaredFields();
                     for (Field field : fields) {
-                        field.setAccessible(true);
-                        field.set(t, resultSet.getObject(field.getName()));
+                        if (!field.isSynthetic() && !field.getName().equals("serialVersionUID")) {
+                            field.setAccessible(true);
+                            field.set(t, resultSet.getObject(field.getName()));
+                        }
                     }
                     list.add(t);
                 } catch (InstantiationException e) {

@@ -1,12 +1,18 @@
 package com.jiekai.wzgl.ui.base;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.jiekai.wzgl.config.ShareConstants;
+import com.jiekai.wzgl.entity.UserInfoEntity;
 import com.jiekai.wzgl.utils.AnimationUtils;
+import com.jiekai.wzgl.utils.JSONHelper;
+import com.jiekai.wzgl.utils.StringUtils;
 
 import butterknife.ButterKnife;
 
@@ -21,14 +27,31 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     public abstract void initOperation();
 
     public boolean isAnimation = true;
+    private SharedPreferences sharedPreferences;
+    public UserInfoEntity userData;
+    public boolean isLogin = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         ButterKnife.bind(this);
+        getLoginData();
         initData();
         initOperation();
+    }
+
+    private void getLoginData() {
+        sharedPreferences = getSharedPreferences(ShareConstants.USERINFO, Context.MODE_PRIVATE);
+        String userString = sharedPreferences.getString(ShareConstants.USERINFO, "");
+        if (!StringUtils.isEmpty(userString)) {
+            isLogin = true;
+            userData = JSONHelper.fromJSONObject(userString, UserInfoEntity.class);
+        }
+    }
+
+    private void clearLoginData() {
+        sharedPreferences.edit().putString(ShareConstants.USERINFO, "").commit();
     }
 
     @Override
