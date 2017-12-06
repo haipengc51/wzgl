@@ -7,13 +7,13 @@ import com.jiekai.wzgl.entity.base.BaseEntity;
  */
 
 public class UserInfoEntity extends BaseEntity{
-    private String USERID;
-    private String PASSWORD;
-    private String USERNAME;
-    private String PHONE;
-    private String DEPT;
-    private String TEAM;
-    private String ENABLE;
+    private String USERID;      //用户id
+    private String PASSWORD;    //密码
+    private String USERNAME;    //用户姓名
+    private String PHONE;       //电话
+    private String DEPT;        //单位
+    private String TEAM;        //井队
+    private String ENABLE;      //是否启用
 
     public String getUSERID() {
         return USERID;
