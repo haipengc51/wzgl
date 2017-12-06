@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="main_color">#FF123456</color>
+    <color name="main_color_click">#FF125436</color>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="text_content_color">#FF000000</color>
+    <color name="text_content_color">#ff5d646f</color>
+    <color name="text_hint_color">#FFCCCCCC</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparency">#00000000</color>
+
+    <color name="divider_color">#FFCCCCCC</color>
+    <color name="line_color">@color/divider_color</color>
 </resources>

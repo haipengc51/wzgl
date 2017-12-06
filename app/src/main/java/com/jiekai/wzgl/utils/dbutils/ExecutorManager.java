@@ -11,6 +11,11 @@ import java.util.concurrent.Executors;
  */
 
 public class ExecutorManager {
+    public static final int SELECT = 0;
+    public static final int UPDATA = 1;
+    public static final int INSERT = 2;
+    public static final int DELET = 3;
+
     private static ExecutorManager executorManager = null;
     private PlantFrom plantFrom;
     private Executor executor;
@@ -24,8 +29,8 @@ public class ExecutorManager {
         }
     }
 
-    public static DbDeal dbDeal() {
-        return new DbDeal();
+    public static DbDeal dbDeal(int dbType) {
+        return new DbDeal(dbType);
     }
 
     /**

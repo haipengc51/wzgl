@@ -20,7 +20,7 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     public abstract void initData();
     public abstract void initOperation();
 
-    private boolean isAnimation = true;
+    public boolean isAnimation = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

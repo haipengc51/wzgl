@@ -20,9 +20,13 @@ import java.util.concurrent.Executor;
 public class DbDeal extends AsynInterface{
     private Executor executor;
     private String sql;
+    private String[] params;
+    private int dbType;
     private Class mClass;
 
-    private ResultSet resultSet;
+    public DbDeal(int dbType) {
+        this.dbType = dbType;
+    }
 
     public DbDeal sql(String sql) {
         this.sql = sql;
@@ -31,6 +35,16 @@ public class DbDeal extends AsynInterface{
 
     public DbDeal clazz(Class clazz) {
         this.mClass = clazz;
+        return this;
+    }
+
+    public DbDeal params(String[] params) {
+        this.params = params;
+        return this;
+    }
+
+    public DbDeal type(int dbType) {
+        this.dbType = dbType;
         return this;
     }
 
@@ -51,7 +65,12 @@ public class DbDeal extends AsynInterface{
             Class.forName(Config.DB_CLASS_NAME);
             Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            resultSet = preparedStatement.executeQuery();
+            if (params != null && params.length != 0) {
+                for (int i = 0; i < params.length; i++) {
+                    preparedStatement.setString(i + 1, params[i]);
+                }
+            }
+            ResultSet resultSet = preparedStatement.executeQuery();
             List list = transformData(resultSet, mClass);
             asynCallBack.onSuccess(list);
             resultSet.close();
@@ -66,9 +85,49 @@ public class DbDeal extends AsynInterface{
         }
     }
 
+    private void readBdUpdata(AsynCallBack asynCallBack) {
+        try {
+            if (sql == null || sql.length() == 0) {
+                asynCallBack.onError("sql命令为空");
+                return;
+            }
+            if (mClass == null) {
+                asynCallBack.onError("sql模型为空");
+                return;
+            }
+            Class.forName(Config.DB_CLASS_NAME);
+            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            if (params != null && params.length != 0) {
+                for (int i = 0; i < params.length; i++) {
+                    preparedStatement.setString(i, params[i]);
+                }
+            }
+            int result = preparedStatement.executeUpdate();
+            if (result > 0) {
+                asynCallBack.onSuccess(null);
+            } else {
+                asynCallBack.onError("数据库操作失败");
+            }
+            preparedStatement.close();
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            asynCallBack.onError(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            asynCallBack.onError(e.getMessage());
+        }
+    }
+
     @Override
     public void doExecutor(AsynCallBack asynCallBack) {
-        readDbDealProcess(asynCallBack);
+        if (dbType == ExecutorManager.SELECT) {
+            readDbDealProcess(asynCallBack);
+        } else if (dbType == ExecutorManager.INSERT || dbType == ExecutorManager.UPDATA
+                || dbType == ExecutorManager.DELET) {
+            readBdUpdata(asynCallBack);
+        }
     }
 
     private <T> List<T> transformData(ResultSet resultSet, Class<T> clazz) {

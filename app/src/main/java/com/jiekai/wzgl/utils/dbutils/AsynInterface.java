@@ -6,7 +6,7 @@ package com.jiekai.wzgl.utils.dbutils;
 
 public abstract class AsynInterface {
     /**
-     * 异步执行的接口
+     * 异步执行数据库操作
      */
     public abstract void doExecutor(AsynCallBack asynCallBack);
 }

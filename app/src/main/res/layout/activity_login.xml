@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/ic_login_bg"
+                android:orientation="vertical">
+
+    <include
+        layout="@layout/title_transparency_image_text_image"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/marginTop20"
+        android:layout_marginRight="@dimen/marginTop20"
+        android:layout_marginTop="-100dp"
+        android:background="@drawable/rectangle_divider"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.jiekai.wzgl.weight.ClickDrawableEdit
+                android:id="@+id/input_username"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_height"
+                android:drawableLeft="@drawable/ic_login_phone_num"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:hint="@string/please_input_username"
+                android:background="@null"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size"/>
+
+            <ImageView
+                android:id="@+id/cancle_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="7dp"
+                android:src="@drawable/delet"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+        <View
+            style="@style/line_d5"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.jiekai.wzgl.weight.ClickDrawableEdit
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edit_height"
+                android:drawableLeft="@drawable/ic_login_password"
+                android:drawablePadding="10dp"
+                android:ellipsize="end"
+                android:hint="@string/please_input_password"
+                android:background="@null"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:paddingLeft="10dp"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size"/>
+
+            <ImageView
+                android:id="@+id/cancle_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="7dp"
+                android:src="@drawable/delet"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edit_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="@dimen/marginTop20"
+        android:layout_marginRight="@dimen/marginTop20"
+        android:background="@drawable/login_button_shape"
+        android:gravity="center"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        android:textSize="@dimen/title_text_size"/>
+
+</RelativeLayout>

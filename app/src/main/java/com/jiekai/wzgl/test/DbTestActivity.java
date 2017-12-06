@@ -206,7 +206,7 @@ public class DbTestActivity extends Activity {
 //            }
 //        };
 //        frameWork.postDelayed(frameWorkRunnable, TIME);
-        ExecutorManager.dbDeal()
+        ExecutorManager.dbDeal(ExecutorManager.SELECT)
                 .sql("select * from department")
                 .clazz(DepartmentEntity.class)
                 .execut(new DbCallBack() {
