@@ -9,6 +9,7 @@
 
     <dimen name="title_height">40dp</dimen>
     <dimen name="edit_height">50dp</dimen>
+    <dimen name="item_height">40dp</dimen>
     <dimen name="marginTop10">10dp</dimen>
     <dimen name="marginTop20">20dp</dimen>
 </resources>

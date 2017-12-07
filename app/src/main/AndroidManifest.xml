@@ -29,6 +29,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.KeeperMainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.BindDeviceActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".utils.zxing.CaptureActivity"
             android:screenOrientation="portrait"/>
 

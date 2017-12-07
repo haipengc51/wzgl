@@ -60,6 +60,12 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
     @Override
     public void initData() {
         title.setText(getResources().getString(R.string.login));
+        if (isLogin) {
+            inputUsername.setText(userData.getUSERID());
+            inputUsername.setSelection(inputUsername.length());
+            inputPassword.setText(userData.getPASSWORD());
+            inputPassword.setSelection(inputPassword.length());
+        }
     }
 
     @Override
@@ -108,7 +114,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
                             saveLoginData((UserInfoEntity) result.get(0));
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, KeeperMainActivity.class);
                             startActivity(intent);
                         } else {
                             alert("用户名或密码错误");
