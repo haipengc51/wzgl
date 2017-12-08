@@ -15,9 +15,9 @@ import java.util.List;
  * 一个单独的文字的 spinner 适配器，可以当做公共类来使用
  */
 
-public class TextSpinnerAdapter extends MyBaseAdapter {
+public class TextPopupAdapter extends MyBaseAdapter {
 
-    public TextSpinnerAdapter(Context context, List dataList) {
+    public TextPopupAdapter(Context context, List dataList) {
         super(context, dataList);
     }
 

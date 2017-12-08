@@ -52,4 +52,14 @@ public class CommonUtils {
         }
         return statusBarHeight;
     }
+
+    public static int dip2Px(Context context, float dip) {
+        float density = context.getResources().getDisplayMetrics().density;
+        return (int) (dip * density + 0.5f);
+    }
+
+    public static int px2Dip(Context context, float px) {
+        float desity = context.getResources().getDisplayMetrics().density;
+        return (int) (px / desity + 0.5f) - 15;
+    }
 }
