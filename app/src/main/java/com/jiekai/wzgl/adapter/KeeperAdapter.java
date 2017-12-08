@@ -3,12 +3,13 @@ package com.jiekai.wzgl.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.base.MyBaseAdapter;
 import com.jiekai.wzgl.entity.KeeperEntity;
-import com.jiekai.wzgl.ui.base.MyBaseActivity;
+import com.jiekai.wzgl.utils.CommonUtils;
 
 import java.util.List;
 
@@ -17,8 +18,12 @@ import java.util.List;
  */
 
 public class KeeperAdapter extends MyBaseAdapter {
+    private int screenHightPx = 0;  //屏幕高度
+
     public KeeperAdapter(Context context, List dataList) {
         super(context, dataList);
+        screenHightPx = CommonUtils.getScreentHeight(context) -
+                        CommonUtils.getStatusBarHeight(context);
     }
 
     @Override
@@ -39,9 +44,15 @@ public class KeeperAdapter extends MyBaseAdapter {
 
     class MyViewHolder extends BusinessHolder {
         private TextView name;
+        private LinearLayout linear;
 
         public MyViewHolder(View view) {
+            linear = (LinearLayout) view.findViewById(R.id.linear);
             name = (TextView) view.findViewById(R.id.name);
+            int count = getCount();
+            ViewGroup.LayoutParams layoutParams = linear.getLayoutParams();
+            layoutParams.height = screenHightPx / (count % 2 == 0 ? count / 2 : count / 2 + 1);
+            linear.setLayoutParams(layoutParams);
         }
     }
 }

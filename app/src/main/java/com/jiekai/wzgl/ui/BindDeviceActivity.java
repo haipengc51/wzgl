@@ -1,6 +1,6 @@
 package com.jiekai.wzgl.ui;
 
-import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,14 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/7.
  * 设备绑定界面
  */
 
-public class BindDeviceActivity extends MyBaseActivity {
+public class BindDeviceActivity extends MyBaseActivity implements View.OnClickListener{
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -50,16 +49,38 @@ public class BindDeviceActivity extends MyBaseActivity {
     @Override
     public void initData() {
         initDeviceType();
+        title.setText(getResources().getString(R.string.device_bind));
     }
 
     @Override
     public void initOperation() {
-//        getDeviceTypeData();
+        back.setOnClickListener(this);
+        deviceType.setOnClickListener(this);
+        deviceName.setOnClickListener(this);
+        deviceId.setOnClickListener(this);
     }
 
     private void initDeviceType() {
         for (int i = 0; i < deviceCache.length; i++) {
             deviceTypeList.add(deviceCache[i]);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back:
+                finish();
+                break;
+            case R.id.device_type:
+
+                break;
+            case R.id.device_name:
+
+                break;
+            case R.id.device_id:
+
+                break;
         }
     }
 }
