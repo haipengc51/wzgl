@@ -73,6 +73,11 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
     }
 
     @Override
+    public void getNfcData(String nfcString) {
+
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         NfcUtils.readNfc(getIntent());

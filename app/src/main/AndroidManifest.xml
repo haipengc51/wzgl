@@ -18,8 +18,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme">
-        <activity android:name=".ui.WelcomActivity"
-            android:launchMode="singleTop">
+        <activity android:name=".ui.WelcomActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,6 +31,7 @@
         <activity android:name=".ui.KeeperMainActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.BindDeviceActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name=".utils.zxing.CaptureActivity"
             android:screenOrientation="portrait"/>

@@ -3,16 +3,34 @@ package com.jiekai.wzgl.test;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
+import com.jiekai.wzgl.utils.nfcutils.NfcUtils;
 
 /**
  * Created by laowu on 2017/12/1.
  */
 
 public abstract class NFCBaseActivity extends MyBaseActivity {
+    public boolean nfcEnable = false;
+
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
+
+    /**
+     * 获取到nfc卡的信息
+     * @param nfcString
+     */
+    public abstract void getNfcData(String nfcString);
+    //TODO 启动模式一应设置成singleTop，否则每次都走onCreate()
+
+//    @Override
+//    protected void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//
+//    }
 
     @Override
     protected void onStart() {
@@ -34,6 +52,14 @@ public abstract class NFCBaseActivity extends MyBaseActivity {
         super.onPause();
         if (nfcAdapter != null) {
             nfcAdapter.disableForegroundDispatch(this);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (nfcEnable) {
+            getNfcData(NfcUtils.readNfc(intent));
         }
     }
 }
