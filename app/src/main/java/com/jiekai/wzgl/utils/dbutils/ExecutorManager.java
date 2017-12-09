@@ -53,6 +53,7 @@ public class ExecutorManager {
         executor.execute(new Runnable() {
             @Override
             public void run() {
+                onDbStart(callBack);
                 asynInterface.doExecutor(new AsynCallBack() {
                     @Override
                     public void onError(String errorMsg) {
@@ -64,6 +65,15 @@ public class ExecutorManager {
                         doSuccess(callBack, result);
                     }
                 });
+            }
+        });
+    }
+
+    private void onDbStart(final DbCallBack dbCallBack) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                dbCallBack.onDbStart();
             }
         });
     }

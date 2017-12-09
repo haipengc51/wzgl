@@ -1,5 +1,6 @@
 package com.jiekai.wzgl.ui.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.ShareConstants;
 import com.jiekai.wzgl.entity.UserInfoEntity;
 import com.jiekai.wzgl.utils.AnimationUtils;
@@ -30,6 +32,8 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     public UserInfoEntity userData;
     public boolean isLogin = false;
+
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,7 +78,23 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         if (isAnimation) {
-            AnimationUtils.setAnimationOfRight(this);
+            AnimationUtils.setAnimationOfLeft(this);
+        }
+    }
+
+    public void showProgressDialog(String msg) {
+        dismissProgressDialog();
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle(getResources().getString(R.string.please_wait));
+        }
+        progressDialog.setMessage(msg);
+        progressDialog.show();
+    }
+
+    public void dismissProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
         }
     }
 
@@ -84,5 +104,11 @@ public abstract class MyBaseActivity extends AppCompatActivity {
 
     public void alert(int strId) {
         Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dismissProgressDialog();
     }
 }

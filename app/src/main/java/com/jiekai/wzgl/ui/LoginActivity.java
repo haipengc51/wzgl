@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jiekai.wzgl.MainActivity;
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.ShareConstants;
 import com.jiekai.wzgl.config.SqlUrl;
@@ -20,7 +19,6 @@ import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.ExecutorManager;
 import com.jiekai.wzgl.weight.ClickDrawableEdit;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import butterknife.BindView;
@@ -106,8 +104,14 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                 .clazz(UserInfoEntity.class)
                 .execut(new DbCallBack() {
                     @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loging));
+                    }
+
+                    @Override
                     public void onError(String err) {
                         alert(err);
+                        dismissProgressDialog();
                     }
 
                     @Override
@@ -119,6 +123,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                         } else {
                             alert("用户名或密码错误");
                         }
+                        dismissProgressDialog();
                     }
                 });
     }

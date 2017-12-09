@@ -30,7 +30,6 @@ public abstract class MyBaseAdapter extends BaseAdapter {
     }
 
     public void setDataList(List dataList) {
-        this.dataList.clear();
         this.dataList = dataList;
         notifyDataSetChanged();
     }

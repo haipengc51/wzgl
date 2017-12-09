@@ -211,6 +211,11 @@ public class DbTestActivity extends Activity {
                 .clazz(DepartmentEntity.class)
                 .execut(new DbCallBack() {
                     @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
                     public void onError(String err) {
                         LogUtils.e(err);
                     }

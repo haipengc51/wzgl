@@ -9,4 +9,7 @@
     <string name="device_name">设备名称</string>
     <string name="device_id">设备自编码</string>
     <string name="device_bind">绑定设备</string>
+    <string name="please_wait">请稍后</string>
+    <string name="loging">正在登录...</string>
+    <string name="image">图片</string>
 </resources>

@@ -8,6 +8,8 @@ import java.util.List;
  */
 
 public abstract class DbCallBack {
+    public abstract void onDbStart();
+
     public abstract void onError(String err);
 
     public abstract void onResponse(List result);
