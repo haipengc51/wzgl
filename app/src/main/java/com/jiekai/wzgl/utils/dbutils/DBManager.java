@@ -10,17 +10,17 @@ import java.util.concurrent.Executors;
  * 线程池的创建
  */
 
-public class ExecutorManager {
+public class DBManager {
     public static final int SELECT = 0;
     public static final int UPDATA = 1;
     public static final int INSERT = 2;
     public static final int DELET = 3;
 
-    private static ExecutorManager executorManager = null;
+    private static DBManager DBManager = null;
     private PlantFrom plantFrom;
     private Executor executor;
 
-    public ExecutorManager() {
+    public DBManager() {
         if (plantFrom == null) {
             plantFrom = PlantFrom.getInstance();
         }
@@ -36,13 +36,13 @@ public class ExecutorManager {
     /**
      * 创建单例, 并初始化
      */
-    public static ExecutorManager getInstance() {
-        if (executorManager == null) {
-            synchronized (ExecutorManager.class) {
-                executorManager = new ExecutorManager();
+    public static DBManager getInstance() {
+        if (DBManager == null) {
+            synchronized (DBManager.class) {
+                DBManager = new DBManager();
             }
         }
-        return executorManager;
+        return DBManager;
     }
 
     public Executor getExecutor() {

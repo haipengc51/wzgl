@@ -9,6 +9,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.jiekai.wzgl.utils.CommonUtils;
+
 import java.util.List;
 
 /**
@@ -21,6 +23,8 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 {
 
 	protected Context mContext;
+	protected int defaultExpandLevel;
+	protected int itemLevelPx = 0;
 	/**
 	 * 存储所有可见的Node
 	 */
@@ -47,6 +51,15 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 		this.onTreeNodeClickListener = onTreeNodeClickListener;
 	}
 
+	public void setDatas(List<T> datas) throws IllegalAccessException {
+		mAllNodes = TreeHelper.getSortedNodes(datas, defaultExpandLevel);
+		/**
+		 * 过滤出可见的Node
+		 */
+		mNodes = TreeHelper.filterVisibleNode(mAllNodes);
+		notifyDataSetChanged();
+	}
+
 	/**
 	 * 
 	 * @param mTree
@@ -62,6 +75,8 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 			IllegalAccessException
 	{
 		mContext = context;
+		this.defaultExpandLevel = defaultExpandLevel;
+		itemLevelPx = CommonUtils.dip2Px(context, 20);
 		/**
 		 * 对所有的Node进行排序
 		 */
@@ -138,7 +153,7 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 		Node node = mNodes.get(position);
 		convertView = getConvertView(node, position, convertView, parent);
 		// 设置内边距
-		convertView.setPadding(node.getLevel() * 30, 3, 3, 3);
+		convertView.setPadding(node.getLevel() * itemLevelPx, 3, 3, 3);
 		return convertView;
 	}
 

@@ -49,7 +49,7 @@ public class DbDeal extends AsynInterface{
     }
 
     public void execut(DbCallBack dbCallBack) {
-        ExecutorManager.getInstance().execute(DbDeal.this, dbCallBack);
+        DBManager.getInstance().execute(DbDeal.this, dbCallBack);
     }
 
     private void readDbDealProcess(AsynCallBack asynCallBack) {
@@ -122,10 +122,10 @@ public class DbDeal extends AsynInterface{
 
     @Override
     public void doExecutor(AsynCallBack asynCallBack) {
-        if (dbType == ExecutorManager.SELECT) {
+        if (dbType == DBManager.SELECT) {
             readDbDealProcess(asynCallBack);
-        } else if (dbType == ExecutorManager.INSERT || dbType == ExecutorManager.UPDATA
-                || dbType == ExecutorManager.DELET) {
+        } else if (dbType == DBManager.INSERT || dbType == DBManager.UPDATA
+                || dbType == DBManager.DELET) {
             readBdUpdata(asynCallBack);
         }
     }

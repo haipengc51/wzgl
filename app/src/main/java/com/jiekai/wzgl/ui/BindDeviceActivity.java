@@ -7,8 +7,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.config.SqlUrl;
+import com.jiekai.wzgl.entity.DeviceTypeEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.DeviceTypePopupWindowUtils;
 import com.jiekai.wzgl.utils.SpinnerPopupWindowUtils;
+import com.jiekai.wzgl.utils.dbutils.DBManager;
+import com.jiekai.wzgl.utils.dbutils.DbCallBack;
+import com.jiekai.wzgl.utils.treeutils.Node;
+import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +29,7 @@ import butterknife.ButterKnife;
  */
 
 public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, TreeListViewAdapter.OnTreeNodeClickListener {
     private static final int READ_DEVICE_NFC = 0;
     private static final int READ_PART_NFC = 1;
 
@@ -49,14 +56,10 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
     private int readNfcType;
 
-    private String[] deviceCache = new String[]{
-//            "抛光机", "粉碎机", "除湿机", "等等机器",
-//            "抛光机", "粉碎机", "除湿机", "等等机器",
-//            "抛光机", "粉碎机", "除湿机", "等等机器",
-//            "抛光机", "粉碎机", "除湿机", "等等机器",
-//            "抛光机", "粉碎机", "除湿机", "等等机器",
-            "抛光机", "粉碎机", "除湿机", "等等机器"
-    };
+    private List<DeviceTypeEntity> deviceTypeDatas = new ArrayList<>();
+    private DeviceTypePopupWindowUtils deviceTypePopupWindowUtilsl;
+    private DeviceTypeEntity currentDeviceType = new DeviceTypeEntity();
+
     private String[] deviceNameCache = new String[]{
             "1", "2", "3", "4", "5", "6",
             "7", "8", "9", "0", "-", "=",
@@ -87,12 +90,18 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         readDeviceNfc.setOnClickListener(this);
         readPartNfc.setOnClickListener(this);
 
-        initPopupWindow();
+        initDevicePopupWindow();
+        initSpinnerPopupWindow();
     }
 
-    private void initPopupWindow() {
+    private void initSpinnerPopupWindow() {
         popupWindowUtils = new SpinnerPopupWindowUtils(this);
         popupWindowUtils.setOnItemClickLisen(this);
+    }
+
+    private void initDevicePopupWindow() {
+        deviceTypePopupWindowUtilsl = new DeviceTypePopupWindowUtils(this);
+        deviceTypePopupWindowUtilsl.setOnItemClickLisen(this);
     }
 
     @Override
@@ -102,13 +111,11 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.device_type:
-                popupWindowUtils.setPopTitle(getResources().getString(R.string.device_type));
-                popListData.clear();
-                for (int i = 0; i < deviceCache.length; i++) {
-                    popListData.add(i, deviceCache[i]);
+                if (deviceTypeDatas == null || deviceTypeDatas.size() == 0) {
+                    getDeviceType();
+                } else {
+                    showDeviceType();
                 }
-                popupWindowUtils.setPopListData(popListData);
-                popupWindowUtils.showCenter(v);
                 break;
             case R.id.device_name:
                 popupWindowUtils.setPopTitle(getResources().getString(R.string.device_name));
@@ -156,6 +163,56 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         } else if (readNfcType == READ_PART_NFC) {
             partCard.setText(nfcString);
             nfcEnable = false;
+        }
+    }
+
+    private void getDeviceType() {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceType)
+                .clazz(DeviceTypeEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loding_device_type));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+//                        deviceTypePopupWindowUtilsl.setPopTitle(getResources().getString(R.string.device_type));
+                        deviceTypeDatas.clear();
+                        deviceTypeDatas.addAll(result);
+                        deviceTypePopupWindowUtilsl.setPopListData(deviceTypeDatas);
+                        showDeviceType();
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void showDeviceType() {
+        deviceTypePopupWindowUtilsl.showCenter(deviceType);
+    }
+
+    /**
+     * 树的点击事件
+     * @param view
+     * @param node
+     * @param position
+     */
+    @Override
+    public void onClick(View view, Node node, int position) {
+        if (node.isLeaf()) {
+            currentDeviceType.setCOOD(node.getId());
+            currentDeviceType.setPARENTCOOD(node.getpId());
+            currentDeviceType.setTEXT(node.getTEXT());
+            currentDeviceType.setPXXH(node.getPXXH());
+            deviceType.setText(currentDeviceType.getTEXT());
+            deviceTypePopupWindowUtilsl.dismiss();
         }
     }
 }

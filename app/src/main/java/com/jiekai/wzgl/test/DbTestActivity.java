@@ -10,7 +10,7 @@ import android.widget.Button;
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
-import com.jiekai.wzgl.utils.dbutils.ExecutorManager;
+import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.entity.DepartmentEntity;
 import com.jiekai.wzgl.utils.LogUtils;
 
@@ -206,7 +206,7 @@ public class DbTestActivity extends Activity {
 //            }
 //        };
 //        frameWork.postDelayed(frameWorkRunnable, TIME);
-        ExecutorManager.dbDeal(ExecutorManager.SELECT)
+        DBManager.dbDeal(DBManager.SELECT)
                 .sql("select * from department")
                 .clazz(DepartmentEntity.class)
                 .execut(new DbCallBack() {

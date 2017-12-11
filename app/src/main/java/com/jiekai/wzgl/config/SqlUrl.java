@@ -9,4 +9,8 @@ public class SqlUrl {
      * 登录数据库操作
      */
     public static final String LoginSql = "SELECT * FROM userinfo where USERID = ? AND PASSWORD = ?";
+    /**
+     * 获取设备类型
+     */
+    public static final String GetDeviceType = "SELECT * FROM devicesort";
 }

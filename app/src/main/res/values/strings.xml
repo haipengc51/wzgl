@@ -19,4 +19,5 @@
     <string name="image">图片</string>
     <string name="enter">确定</string>
     <string name="wait_read_nfc">请把标签贴近手机，准备读卡</string>
+    <string name="loding_device_type">正在加载设备类型</string>
 </resources>

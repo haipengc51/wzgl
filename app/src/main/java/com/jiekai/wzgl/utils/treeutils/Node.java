@@ -11,17 +11,18 @@ import java.util.List;
 public class Node
 {
 
-	private int id;
+	private String id;
 	/**
 	 * 根节点pId为0
 	 */
-	private int pId = 0;
+	private String pId = "0";
 
 	/**
 	 * 当前的级别
 	 */
 	private int type;
-	private Object object;
+	private String TEXT;
+	private String PXXH;
 
 	/**
 	 * 是否展开
@@ -44,13 +45,14 @@ public class Node
 	{
 	}
 
-	public Node(int id, int pId, int type, Object object)
+	public Node(String id, String pId, int type, String TEXT, String PXXH)
 	{
 		super();
 		this.id = id;
 		this.pId = pId;
 		this.type = type;
-		this.object = object;
+		this.TEXT = TEXT;
+		this.PXXH = PXXH;
 	}
 
 	public int getIcon()
@@ -63,32 +65,40 @@ public class Node
 		this.icon = icon;
 	}
 
-	public int getId()
+	public String getId()
 	{
 		return id;
 	}
 
-	public void setId(int id)
+	public void setId(String id)
 	{
 		this.id = id;
 	}
 
-	public int getpId()
+	public String getpId()
 	{
 		return pId;
 	}
 
-	public void setpId(int pId)
+	public void setpId(String pId)
 	{
 		this.pId = pId;
 	}
 
-	public Object getObject() {
-		return object;
+	public String getTEXT() {
+		return TEXT;
 	}
 
-	public void setObject(Object object) {
-		this.object = object;
+	public void setTEXT(String TEXT) {
+		this.TEXT = TEXT;
+	}
+
+	public String getPXXH() {
+		return PXXH;
+	}
+
+	public void setPXXH(String PXXH) {
+		this.PXXH = PXXH;
 	}
 
 	public int getType() {

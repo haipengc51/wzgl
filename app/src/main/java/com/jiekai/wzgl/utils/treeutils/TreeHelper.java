@@ -1,10 +1,11 @@
 package com.jiekai.wzgl.utils.treeutils;
 
-import com.jialianjia.bzwang.R;
+import com.jiekai.wzgl.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * http://blog.csdn.net/lmj623565791/article/details/40212367
@@ -80,10 +81,11 @@ public class TreeHelper
 
 		for (T t : datas)
 		{
-			int id = -1;
-			int pId = -1;
+			String id = null;
+			String pId = null;
 			int type = -1;
-			Object object = null;
+			String TEXT = null;
+			String PXXH = null;
 			Class<? extends Object> clazz = t.getClass();
 			Field[] declaredFields = clazz.getDeclaredFields();
 			for (Field f : declaredFields)
@@ -91,29 +93,33 @@ public class TreeHelper
 				if (f.getAnnotation(TreeNodeId.class) != null)
 				{
 					f.setAccessible(true);
-					id = f.getInt(t);
+					id = (String) f.get(t);
 				}
 				if (f.getAnnotation(TreeNodePid.class) != null)
 				{
 					f.setAccessible(true);
-					pId = f.getInt(t);
+					pId = (String) f.get(t);
 				}
 				if (f.getAnnotation(TreeNodeType.class) != null)
 				{
 					f.setAccessible(true);
 					type = f.getInt(t);
 				}
-				if (f.getAnnotation(TreeNodeObject.class) != null)
+				if (f.getAnnotation(TreeNodeTEXT.class) != null)
 				{
 					f.setAccessible(true);
-					object = (Object)f.get(t);
+					TEXT = (String) f.get(t);
 				}
-				if (id != -1 && pId != -1 && type != -1 && object != null)
+				if (f.getAnnotation(TreeNodePXXH.class) != null) {
+					f.setAccessible(true);
+					PXXH = (String)f.get(t);
+				}
+				if (id != null && pId != null && type != -1 && TEXT != null && PXXH != null)
 				{
 					break;
 				}
 			}
-			node = new Node(id, pId, type, object);
+			node = new Node(id, pId, type, TEXT, PXXH);
 			nodes.add(node);
 		}
 
@@ -126,11 +132,11 @@ public class TreeHelper
 			for (int j = i + 1; j < nodes.size(); j++)
 			{
 				Node m = nodes.get(j);
-				if (m.getpId() == n.getId())
+				if (m.getpId().equals(n.getId()))
 				{
 					n.getChildren().add(m);
 					m.setParent(n);
-				} else if (m.getId() == n.getpId())
+				} else if (m.getId().equals(n.getpId()))
 				{
 					m.getChildren().add(n);
 					n.setParent(m);

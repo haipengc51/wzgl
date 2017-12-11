@@ -16,7 +16,7 @@ import com.jiekai.wzgl.utils.InputPasswordUtils;
 import com.jiekai.wzgl.utils.JSONHelper;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
-import com.jiekai.wzgl.utils.dbutils.ExecutorManager;
+import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.weight.ClickDrawableEdit;
 
 import java.util.List;
@@ -98,7 +98,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
             alert(R.string.please_input_password);
             return;
         }
-        ExecutorManager.dbDeal(ExecutorManager.SELECT)
+        DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.LoginSql)
                 .params(new String[]{username, password})
                 .clazz(UserInfoEntity.class)
