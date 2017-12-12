@@ -89,7 +89,7 @@
                         android:drawablePadding="5dp"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:hint="@string/ic_code"
+                        android:hint="@string/device_ic_id"
                         android:lines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
@@ -150,21 +150,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:background="@drawable/input_bg"
-                        android:drawablePadding="5dp"
-                        android:drawableRight="@drawable/ic_arrow_down"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:hint="@string/device_type"
-                        android:lines="1"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:textColor="@color/text_content_color"
-                        android:textSize="@dimen/content_text_size" />
-
-                    <TextView
+                        android:id="@+id/part_name"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_marginTop="@dimen/marginTop10"
@@ -173,7 +159,7 @@
                         android:drawableRight="@drawable/ic_arrow_down"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:hint="@string/device_name"
+                        android:hint="@string/part_name"
                         android:lines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
@@ -181,6 +167,7 @@
                         android:textSize="@dimen/content_text_size" />
 
                     <TextView
+                        android:id="@+id/part_id"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
                         android:layout_marginTop="@dimen/marginTop10"
@@ -189,7 +176,7 @@
                         android:drawableRight="@drawable/ic_arrow_down"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:hint="@string/device_id"
+                        android:hint="@string/part_id"
                         android:lines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
@@ -205,7 +192,7 @@
                         android:drawablePadding="5dp"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:hint="@string/ic_code"
+                        android:hint="@string/part_ic_id"
                         android:lines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
@@ -240,7 +227,7 @@
 
             </LinearLayout>
 
-            <com.jiekai.wzgl.weight.MyGridView
+            <com.jiekai.wzgl.weight.MyListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginTop10" />

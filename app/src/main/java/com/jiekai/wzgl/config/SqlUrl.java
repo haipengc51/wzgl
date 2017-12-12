@@ -13,4 +13,24 @@ public class SqlUrl {
      * 获取设备类型
      */
     public static final String GetDeviceType = "SELECT * FROM devicesort";
+    /**
+     * 获取设备名称（通过第一级 设备类别）
+     */
+    public static final String GetDeviceMCByLB = "SELECT device.MC FROM device where LB = ?";
+    /**
+     * 获取设备名称（通过第二级 设备型号）
+     */
+    public static final String GetDeviceMCByXh = "SELECT device.MC FROM device where XH = ?";
+    /**
+     * 获取设备名称（通过第三级 设备规格）
+     */
+    public static final String GetDeviceMCByGG = "SELECT device.MC FROM device where GG = ?";
+    /**
+     * 获取设备自编号 通过设备名称
+     */
+    public static final String GetDeviceBHByMC = "SELECT device.BH FROM device where MC = ?";
+    /**
+     * 根据电子码编号获取设备信息
+     */
+    public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ?";
 }

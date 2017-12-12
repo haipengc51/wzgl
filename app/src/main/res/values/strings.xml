@@ -20,4 +20,12 @@
     <string name="enter">确定</string>
     <string name="wait_read_nfc">请把标签贴近手机，准备读卡</string>
     <string name="loding_device_type">正在加载设备类型</string>
+    <string name="loding_device_bh">正在加载设备自编号</string>
+    <string name="loding_device_mc">正在加载设备名称</string>
+    <string name="loading_device">正在加载设备信息</string>
+    <string name="please_nfc">请刷卡</string>
+    <string name="part_name">配件名称</string>
+    <string name="part_id">配件自编码</string>
+    <string name="part_ic_id">配件标签ID</string>
+    <string name="device_ic_id">设备标签ID</string>
 </resources>

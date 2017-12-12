@@ -1,19 +1,26 @@
 package com.jiekai.wzgl.ui;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.SqlUrl;
-import com.jiekai.wzgl.entity.DeviceTypeEntity;
+import com.jiekai.wzgl.entity.DeviceBHEntity;
+import com.jiekai.wzgl.entity.DeviceEntity;
+import com.jiekai.wzgl.entity.DeviceMCEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
-import com.jiekai.wzgl.utils.DeviceTypePopupWindowUtils;
-import com.jiekai.wzgl.utils.SpinnerPopupWindowUtils;
+import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
+import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
+import com.jiekai.wzgl.ui.popup.DeviceTypePopup;
+import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
+import com.jiekai.wzgl.utils.dbutils.DbDeal;
 import com.jiekai.wzgl.utils.treeutils.Node;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
 
@@ -29,10 +36,10 @@ import butterknife.ButterKnife;
  */
 
 public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener, TreeListViewAdapter.OnTreeNodeClickListener {
+        AdapterView.OnItemClickListener, TreeListViewAdapter.OnTreeNodeClickListener,
+        DeviceNamePopup.OnDeviceNameClick, DeviceCodePopup.OnDeviceCodeClick {
     private static final int READ_DEVICE_NFC = 0;
     private static final int READ_PART_NFC = 1;
-
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -49,27 +56,26 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     TextView deviceCard;
     @BindView(R.id.read_device_nfc)
     TextView readDeviceNfc;
-    @BindView(R.id.read_part_nfc)
-    TextView readPartNfc;
     @BindView(R.id.part_card)
     TextView partCard;
+    @BindView(R.id.read_part_nfc)
+    TextView readPartNfc;
+    @BindView(R.id.parent)
+    LinearLayout parent;
+    @BindView(R.id.part_name)
+    TextView partName;
+    @BindView(R.id.part_id)
+    TextView partId;
 
     private int readNfcType;
+    private String currentDeviceCode = null;    //选中设备的自编号
 
-    private List<DeviceTypeEntity> deviceTypeDatas = new ArrayList<>();
-    private DeviceTypePopupWindowUtils deviceTypePopupWindowUtilsl;
-    private DeviceTypeEntity currentDeviceType = new DeviceTypeEntity();
-
-    private String[] deviceNameCache = new String[]{
-            "1", "2", "3", "4", "5", "6",
-            "7", "8", "9", "0", "-", "=",
-    };
-    private String[] deviceIdCache = new String[]{
-            "11", "22", "33", "44", "55", "66",
-            "77", "88", "99", "00", "--", "==",
-    };
-    private SpinnerPopupWindowUtils popupWindowUtils;
-    private List<String> popListData = new ArrayList<>();
+    private DeviceTypePopup deviceTypePopup;
+    private DeviceNamePopup deviceNamePopup;
+    private List<String> deviceNameList = new ArrayList<>();
+    private DeviceCodePopup deviceCodePopup;
+    private List<String> deviceCodeList = new ArrayList<>();
+    private AlertDialog alertDialog;
 
     @Override
     public void initView() {
@@ -90,18 +96,17 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         readDeviceNfc.setOnClickListener(this);
         readPartNfc.setOnClickListener(this);
 
-        initDevicePopupWindow();
-        initSpinnerPopupWindow();
+        initPopupWindow();
     }
 
-    private void initSpinnerPopupWindow() {
-        popupWindowUtils = new SpinnerPopupWindowUtils(this);
-        popupWindowUtils.setOnItemClickLisen(this);
-    }
-
-    private void initDevicePopupWindow() {
-        deviceTypePopupWindowUtilsl = new DeviceTypePopupWindowUtils(this);
-        deviceTypePopupWindowUtilsl.setOnItemClickLisen(this);
+    private void initPopupWindow() {
+        deviceTypePopup = new DeviceTypePopup(this, deviceType, this);
+        deviceNamePopup = new DeviceNamePopup(this, deviceName, this);
+        deviceCodePopup = new DeviceCodePopup(this, deviceId, this);
+        alertDialog = new AlertDialog.Builder(this)
+                .setTitle("")
+                .setMessage(getResources().getString(R.string.please_nfc))
+                .create();
     }
 
     @Override
@@ -110,42 +115,26 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
             case R.id.back:
                 finish();
                 break;
-            case R.id.device_type:
-                if (deviceTypeDatas == null || deviceTypeDatas.size() == 0) {
-                    getDeviceType();
-                } else {
-                    showDeviceType();
-                }
-                break;
             case R.id.device_name:
-                popupWindowUtils.setPopTitle(getResources().getString(R.string.device_name));
-                popListData.clear();
-                for (int i = 0; i < deviceNameCache.length; i++) {
-                    popListData.add(i, deviceNameCache[i]);
-                }
-                popupWindowUtils.setPopListData(popListData);
-                popupWindowUtils.showCenter(v);
+                deviceNamePopup.setPopTitle(getResources().getString(R.string.device_name));
+                deviceNamePopup.setPopListData(deviceNameList);
+                deviceNamePopup.showCenter(v);
                 break;
             case R.id.device_id:
-                popupWindowUtils.setPopTitle(getResources().getString(R.string.device_id));
-                popListData.clear();
-                ;
-                for (int i = 0; i < deviceIdCache.length; i++) {
-                    popListData.add(i, deviceIdCache[i]);
-                }
-                popupWindowUtils.setPopListData(popListData);
-                popupWindowUtils.showCenter(v);
+                deviceCodePopup.setPopTitle(getResources().getString(R.string.device_id));
+                deviceCodePopup.setPopListData(deviceCodeList);
+                deviceCodePopup.showCenter(v);
                 break;
             case R.id.read_device_nfc:
                 //TODO 检查一下NFC是否启动
                 readNfcType = READ_DEVICE_NFC;
                 nfcEnable = true;
-                alert(R.string.wait_read_nfc);
+                alertDialog.show();
                 break;
             case R.id.read_part_nfc:
                 nfcEnable = true;
                 readNfcType = READ_PART_NFC;
-                alert(R.string.wait_read_nfc);
+                alertDialog.show();
                 break;
         }
     }
@@ -157,23 +146,89 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
     @Override
     public void getNfcData(String nfcString) {
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
         if (readNfcType == READ_DEVICE_NFC) {
             deviceCard.setText(nfcString);
             nfcEnable = false;
+            //TODO 如果上面的类型什么的没有选择，直接刷卡，此卡已经绑定设备的话，需要查询设备信息显示的上面
+            if (currentDeviceCode == null) {
+
+            }
         } else if (readNfcType == READ_PART_NFC) {
             partCard.setText(nfcString);
             nfcEnable = false;
+            findDeviceByID(nfcString);
         }
     }
 
-    private void getDeviceType() {
+    /**
+     * 树的点击事件
+     *
+     * @param view
+     * @param node
+     * @param position
+     */
+    @Override
+    public void onClick(View view, Node node, int position) {
+        if (StringUtils.isEmpty(node.getTEXT())) {
+            return;
+        }
+        deviceType.setText(node.getTEXT());
+        deviceTypePopup.dismiss();
+        DbDeal dbDeal = DBManager.dbDeal(DBManager.SELECT)
+                .clazz(DeviceMCEntity.class)
+                .params(new String[]{node.getId()});
+        switch (node.getLevel()) {
+            case 0:
+                dbDeal.sql(SqlUrl.GetDeviceMCByLB);
+                break;
+            case 1:
+                dbDeal.sql(SqlUrl.GetDeviceMCByXh);
+                break;
+            case 2:
+                dbDeal.sql(SqlUrl.GetDeviceMCByGG);
+                break;
+        }
+        dbDeal.execut(new DbCallBack() {
+            @Override
+            public void onDbStart() {
+                showProgressDialog(getResources().getString(R.string.loding_device_mc));
+            }
+
+            @Override
+            public void onError(String err) {
+                alert(err);
+                dismissProgressDialog();
+            }
+
+            @Override
+            public void onResponse(List result) {
+                deviceNameList.clear();
+                for (int i = 0; i < result.size(); i++) {
+                    deviceNameList.add(((DeviceMCEntity) result.get(i)).getMC());
+                }
+                dismissProgressDialog();
+            }
+        });
+    }
+
+    /**
+     * 设备名称点击回调
+     *
+     * @param deviceName
+     */
+    @Override
+    public void OnDeviceNameClick(String deviceName) {
         DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceType)
-                .clazz(DeviceTypeEntity.class)
+                .sql(SqlUrl.GetDeviceBHByMC)
+                .params(new String[]{deviceName})
+                .clazz(DeviceBHEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
-                        showProgressDialog(getResources().getString(R.string.loding_device_type));
+                        showProgressDialog(getResources().getString(R.string.loding_device_bh));
                     }
 
                     @Override
@@ -184,35 +239,57 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
                     @Override
                     public void onResponse(List result) {
-//                        deviceTypePopupWindowUtilsl.setPopTitle(getResources().getString(R.string.device_type));
-                        deviceTypeDatas.clear();
-                        deviceTypeDatas.addAll(result);
-                        deviceTypePopupWindowUtilsl.setPopListData(deviceTypeDatas);
-                        showDeviceType();
+                        deviceCodeList.clear();
+                        for (int i = 0; i < result.size(); i++) {
+                            deviceCodeList.add(((DeviceBHEntity) result.get(i)).getBH());
+                        }
                         dismissProgressDialog();
                     }
                 });
     }
 
-    private void showDeviceType() {
-        deviceTypePopupWindowUtilsl.showCenter(deviceType);
+    /**
+     * 设备自编码的点击回调
+     *
+     * @param deviceCode
+     */
+    @Override
+    public void OnDeviceCodeClick(String deviceCode) {
+        currentDeviceCode = deviceCode;
     }
 
     /**
-     * 树的点击事件
-     * @param view
-     * @param node
-     * @param position
+     * 根据id卡号，发现配件的名称和自编号
+     *
+     * @param idCard
      */
-    @Override
-    public void onClick(View view, Node node, int position) {
-        if (node.isLeaf()) {
-            currentDeviceType.setCOOD(node.getId());
-            currentDeviceType.setPARENTCOOD(node.getpId());
-            currentDeviceType.setTEXT(node.getTEXT());
-            currentDeviceType.setPXXH(node.getPXXH());
-            deviceType.setText(currentDeviceType.getTEXT());
-            deviceTypePopupWindowUtilsl.dismiss();
+    private void findDeviceByID(String idCard) {
+        if (StringUtils.isEmpty(idCard)) {
+            return;
         }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceByID)
+                .params(new String[]{idCard})
+                .clazz(DeviceEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_device));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        DeviceEntity item = (DeviceEntity) result.get(0);
+                        partName.setText(item.getMC());
+                        partId.setText(item.getBH());
+                        dismissProgressDialog();
+                    }
+                });
     }
 }

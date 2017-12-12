@@ -72,7 +72,11 @@ public class DbDeal extends AsynInterface{
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             List list = transformData(resultSet, mClass);
-            asynCallBack.onSuccess(list);
+            if (list != null && list.size() != 0) {
+                asynCallBack.onSuccess(list);
+            } else {
+                asynCallBack.onError("查找的内容为空");
+            }
             resultSet.close();
             preparedStatement.close();
             connection.close();
@@ -140,7 +144,15 @@ public class DbDeal extends AsynInterface{
                     for (Field field : fields) {
                         if (!field.isSynthetic() && !field.getName().equals("serialVersionUID")) {
                             field.setAccessible(true);
-                            field.set(t, resultSet.getObject(field.getName()));
+                            try {
+                                field.set(t, resultSet.getObject(field.getName()));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (IllegalArgumentException e) {
+                                e.printStackTrace();
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                     list.add(t);
