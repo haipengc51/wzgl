@@ -1,5 +1,7 @@
 package com.jiekai.wzgl.config;
 
+import android.os.Environment;
+
 /**
  * Created by LaoWu on 2017/11/19.
  * 程序的配置文件都这道这个里面
@@ -15,4 +17,5 @@ public class Config {
     public static final String FTP_USER_NAME = "FtpTest";
     public static final String FTP_PASSWORD = "haipengc51~";
     public static final String FTP_PATH_HANDLER = "/View/AppImage";
+    public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";
 }

@@ -120,11 +120,15 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="match_parent"
+                        android:id="@+id/device_picture"
+                        android:layout_width="100dp"
                         android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:scaleType="centerCrop"
                         android:src="@drawable/ic_choose_image" />
 
                     <TextView
+                        android:id="@+id/choose_picture"
                         style="@style/button_style"
                         android:background="@drawable/login_button_shape"
                         android:layout_width="wrap_content"

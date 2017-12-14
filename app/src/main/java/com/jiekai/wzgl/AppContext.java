@@ -3,6 +3,7 @@ package com.jiekai.wzgl;
 import android.app.Application;
 
 import com.jiekai.wzgl.config.Config;
+import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.ftputils.FtpManager;
 
 /**
@@ -15,6 +16,7 @@ public class AppContext extends Application {
         super.onCreate();
         initDbFrame();
         initFTP();
+        PictureSelectUtils.getCompressFile();
     }
 
     /**

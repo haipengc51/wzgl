@@ -1,6 +1,7 @@
 package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,12 +18,16 @@ import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
 import com.jiekai.wzgl.ui.popup.DeviceTypePopup;
+import com.jiekai.wzgl.utils.GlidUtils;
+import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.DbDeal;
 import com.jiekai.wzgl.utils.treeutils.Node;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +45,8 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         DeviceNamePopup.OnDeviceNameClick, DeviceCodePopup.OnDeviceCodeClick {
     private static final int READ_DEVICE_NFC = 0;
     private static final int READ_PART_NFC = 1;
+    private static final int CHOOSE_PICHTURE = 0;
+
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -66,9 +73,14 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     TextView partName;
     @BindView(R.id.part_id)
     TextView partId;
+    @BindView(R.id.choose_picture)
+    TextView choosePicture;
+    @BindView(R.id.device_picture)
+    ImageView devicePicture;
 
     private int readNfcType;
     private String currentDeviceCode = null;    //选中设备的自编号
+    private List<LocalMedia> choosePictures = null; //选中设备图片的地址
 
     private DeviceTypePopup deviceTypePopup;
     private DeviceNamePopup deviceNamePopup;
@@ -95,6 +107,8 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         deviceId.setOnClickListener(this);
         readDeviceNfc.setOnClickListener(this);
         readPartNfc.setOnClickListener(this);
+        choosePicture.setOnClickListener(this);
+        devicePicture.setOnClickListener(this);
 
         initPopupWindow();
     }
@@ -135,6 +149,14 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 nfcEnable = true;
                 readNfcType = READ_PART_NFC;
                 alertDialog.show();
+                break;
+            case R.id.choose_picture:
+                PictureSelectUtils.choosePicture(BindDeviceActivity.this, CHOOSE_PICHTURE);
+                break;
+            case R.id.device_picture:
+                if (choosePictures != null && choosePictures.size() != 0) {
+                    PictureSelectUtils.previewPicture(BindDeviceActivity.this, choosePictures);
+                }
                 break;
         }
     }
@@ -291,5 +313,17 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                         dismissProgressDialog();
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHOOSE_PICHTURE && resultCode == RESULT_OK) {
+            choosePictures = PictureSelector.obtainMultipleResult(data);
+            if (choosePictures != null && choosePictures.size() != 0) {
+                String currentDevicePicturePath = choosePictures.get(0).getCompressPath();
+                GlidUtils.displayImage(BindDeviceActivity.this, currentDevicePicturePath, devicePicture);
+            }
+        }
     }
 }
