@@ -2,7 +2,7 @@ package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -10,10 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.adapter.PartListAdapter;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceBHEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DeviceMCEntity;
+import com.jiekai.wzgl.entity.PartListEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
@@ -26,6 +28,7 @@ import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.DbDeal;
 import com.jiekai.wzgl.utils.treeutils.Node;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
+import com.jiekai.wzgl.weight.MyListView;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -33,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/7.
@@ -77,10 +79,18 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     TextView choosePicture;
     @BindView(R.id.device_picture)
     ImageView devicePicture;
+    @BindView(R.id.add_part_button)
+    TextView addPartButton;
+    @BindView(R.id.cancle)
+    TextView cancle;
+    @BindView(R.id.bind_button)
+    TextView bindButton;
+    @BindView(R.id.part_list)
+    MyListView partList;
 
     private int readNfcType;
     private String currentDeviceCode = null;    //选中设备的自编号
-    private List<LocalMedia> choosePictures = null; //选中设备图片的地址
+    private List<LocalMedia> choosePictures = null;     //选中设备图片的地址
 
     private DeviceTypePopup deviceTypePopup;
     private DeviceNamePopup deviceNamePopup;
@@ -88,6 +98,10 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     private DeviceCodePopup deviceCodePopup;
     private List<String> deviceCodeList = new ArrayList<>();
     private AlertDialog alertDialog;
+
+    private List<PartListEntity> partListDatas = new ArrayList<>();
+    private PartListAdapter partListAdapter;
+    private View partListHeaderView;
 
     @Override
     public void initView() {
@@ -109,11 +123,14 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         readPartNfc.setOnClickListener(this);
         choosePicture.setOnClickListener(this);
         devicePicture.setOnClickListener(this);
+        addPartButton.setOnClickListener(this);
+        cancle.setOnClickListener(this);
+        bindButton.setOnClickListener(this);
 
-        initPopupWindow();
+        init();
     }
 
-    private void initPopupWindow() {
+    private void init() {
         deviceTypePopup = new DeviceTypePopup(this, deviceType, this);
         deviceNamePopup = new DeviceNamePopup(this, deviceName, this);
         deviceCodePopup = new DeviceCodePopup(this, deviceId, this);
@@ -121,6 +138,22 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 .setTitle("")
                 .setMessage(getResources().getString(R.string.please_nfc))
                 .create();
+        if (partListAdapter == null) {
+            partListAdapter = new PartListAdapter(BindDeviceActivity.this, partListDatas);
+            partListHeaderView= LayoutInflater.from(this).inflate(R.layout.header_depart_list, null);
+            partListHeaderView.setVisibility(View.GONE);
+            partList.addHeaderView(partListHeaderView);
+            partList.setAdapter(partListAdapter);
+        }
+    }
+
+    private void clearView() {
+        deviceType.setText("");
+        deviceName.setText("");
+        deviceId.setText("");
+        partListDatas.clear();
+        partListAdapter.setDataList(partListDatas);
+        partListHeaderView.setVisibility(View.GONE);
     }
 
     @Override
@@ -158,6 +191,23 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                     PictureSelectUtils.previewPicture(BindDeviceActivity.this, choosePictures);
                 }
                 break;
+            case R.id.add_part_button:
+                String partBh = partId.getText().toString();
+                if (StringUtils.isEmpty(currentDeviceCode)) {
+                    alert(getResources().getString(R.string.please_first_get_device));
+                }
+                if (StringUtils.isEmpty(partBh)) {
+                    alert(getResources().getString(R.string.please_first_get_part_bh));
+                    return;
+                }
+                addDepart("1", currentDeviceCode, partBh);
+                break;
+            case R.id.cancle:
+                finish();
+                break;
+            case R.id.bind_button:
+
+                break;
         }
     }
 
@@ -193,11 +243,17 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
      * @param position
      */
     @Override
-    public void onClick(View view, Node node, int position) {
+    public void onTreeClick(View view, Node node, int position) {
         if (StringUtils.isEmpty(node.getTEXT())) {
             return;
         }
         deviceType.setText(node.getTEXT());
+        //犹豫选择了新的内容，所以重新恢复一下
+        deviceName.setText("");
+        deviceId.setText("");
+        partListDatas.clear();
+        partListAdapter.setDataList(partListDatas);
+        partListHeaderView.setVisibility(View.GONE);
         deviceTypePopup.dismiss();
         DbDeal dbDeal = DBManager.dbDeal(DBManager.SELECT)
                 .clazz(DeviceMCEntity.class)
@@ -243,6 +299,10 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
      */
     @Override
     public void OnDeviceNameClick(String deviceName) {
+        deviceId.setText("");
+        partListDatas.clear();
+        partListAdapter.setDataList(partListDatas);
+        partListHeaderView.setVisibility(View.GONE);
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceBHByMC)
                 .params(new String[]{deviceName})
@@ -278,11 +338,13 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     @Override
     public void OnDeviceCodeClick(String deviceCode) {
         currentDeviceCode = deviceCode;
+        if (!StringUtils.isEmpty(currentDeviceCode)) {
+            findPartsByDeviceID(currentDeviceCode);
+        }
     }
 
     /**
-     * 根据id卡号，发现配件的名称和自编号
-     *
+     * 根据配件的id卡号，发现配件的名称和自编号
      * @param idCard
      */
     private void findDeviceByID(String idCard) {
@@ -311,6 +373,69 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                         partName.setText(item.getMC());
                         partId.setText(item.getBH());
                         dismissProgressDialog();
+                    }
+                });
+    }
+
+    /**
+     * 把配件添加到设备上
+     * @param sspj   是否添加配件（1是配件，0不是配件）
+     * @param sssbbh 所属设备编号，如果是删除设配件的话，需要传空
+     * @param partID 配件的自编号
+     */
+    private void addDepart(String sspj, String sssbbh, String partID) {
+        DBManager.dbDeal(DBManager.UPDATA)
+                .sql(SqlUrl.AddDepart)
+                .params(new String[]{sspj, sssbbh, partID})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.adding_depart));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        alert(getResources().getString(R.string.add_depart_success));
+                        findPartsByDeviceID(currentDeviceCode);
+                    }
+                });
+    }
+
+    /**
+     * 根据设备的id获取配件列表
+     * @param deviceId
+     */
+    private void findPartsByDeviceID(String deviceId) {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetPartListByDeviceId)
+                .params(new String[]{deviceId})
+                .clazz(PartListEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        partListAdapter.setDataList(result);
+                        if (result.size() != 0) {
+                            partListHeaderView.setVisibility(View.VISIBLE);
+                        } else {
+                            partListHeaderView.setVisibility(View.GONE);
+                        }
                     }
                 });
     }

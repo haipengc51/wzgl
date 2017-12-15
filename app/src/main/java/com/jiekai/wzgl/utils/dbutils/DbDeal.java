@@ -72,11 +72,7 @@ public class DbDeal extends AsynInterface{
             }
             ResultSet resultSet = preparedStatement.executeQuery();
             List list = transformData(resultSet, mClass);
-            if (list != null && list.size() != 0) {
-                asynCallBack.onSuccess(list);
-            } else {
-                asynCallBack.onError("查找的内容为空");
-            }
+            asynCallBack.onSuccess(list);
             resultSet.close();
             preparedStatement.close();
             connection.close();
@@ -95,16 +91,12 @@ public class DbDeal extends AsynInterface{
                 asynCallBack.onError("sql命令为空");
                 return;
             }
-            if (mClass == null) {
-                asynCallBack.onError("sql模型为空");
-                return;
-            }
             Class.forName(Config.DB_CLASS_NAME);
             Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             if (params != null && params.length != 0) {
                 for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i, params[i]);
+                    preparedStatement.setString(i + 1, params[i]);
                 }
             }
             int result = preparedStatement.executeUpdate();

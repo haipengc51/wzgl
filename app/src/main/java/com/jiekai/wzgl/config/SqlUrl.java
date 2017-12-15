@@ -33,4 +33,12 @@ public class SqlUrl {
      * 根据电子码编号获取设备信息
      */
     public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ?";
+    /**
+     * 往一个设备中添加配件
+     */
+    public static final String AddDepart = "UPDATE device SET SFPJ = ? , SSSBBH = ? WHERE BH = ?";
+    /**
+     * 根据设备id查询其配件的列表
+     */
+    public static final String GetPartListByDeviceId = "SELECT BH, MC, IDDZMBH1 FROM device WHERE SFPJ = \"1\" AND SSSBBH = ?";
 }

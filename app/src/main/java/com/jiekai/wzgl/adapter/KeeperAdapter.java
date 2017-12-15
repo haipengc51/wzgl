@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Created by laowu on 2017/12/7.
+ * 库管功能列表页
  */
 
 public class KeeperAdapter extends MyBaseAdapter {

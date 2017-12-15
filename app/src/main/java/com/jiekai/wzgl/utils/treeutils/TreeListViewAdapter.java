@@ -42,7 +42,7 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 
 	public interface OnTreeNodeClickListener
 	{
-		void onClick(View view, Node node, int position);
+		void onTreeClick(View view, Node node, int position);
 	}
 
 	public void setOnTreeNodeClickListener(
@@ -100,7 +100,7 @@ public abstract class TreeListViewAdapter<T> extends BaseAdapter
 
 				if (onTreeNodeClickListener != null)
 				{
-					onTreeNodeClickListener.onClick(view, mNodes.get((int)id),
+					onTreeNodeClickListener.onTreeClick(view, mNodes.get((int)id),
 							(int)id);
 				}
 			}
