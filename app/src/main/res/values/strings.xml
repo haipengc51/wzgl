@@ -30,7 +30,9 @@
     <string name="device_ic_id">设备标签ID</string>
     <string name="adding_depart">正在添加配件</string>
     <string name="please_first_get_part_bh">请先扫描卡片，获取配件信息</string>
+    <string name="please_first_get_device_card">请扫描设备ID卡，获取ID号</string>
     <string name="please_first_get_device">请先添加设备信息</string>
     <string name="add_depart_success">添加配件成功</string>
     <string name="serial_num">序号</string>
+    <string name="bindding_device">正在绑定设备...</string>
 </resources>

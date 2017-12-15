@@ -2,21 +2,25 @@ package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.PartListAdapter;
+import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceBHEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DeviceMCEntity;
 import com.jiekai.wzgl.entity.PartListEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.test.NfcReadTestActivity;
 import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
 import com.jiekai.wzgl.ui.popup.DeviceTypePopup;
@@ -26,6 +30,8 @@ import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.DbDeal;
+import com.jiekai.wzgl.utils.ftputils.FtpCallBack;
+import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.treeutils.Node;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
 import com.jiekai.wzgl.weight.MyListView;
@@ -206,7 +212,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.bind_button:
-
+                bindDevice();
                 break;
         }
     }
@@ -436,6 +442,56 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                         } else {
                             partListHeaderView.setVisibility(View.GONE);
                         }
+                    }
+                });
+    }
+
+    /**
+     * 提交绑定设备
+     */
+    private void bindDevice() {
+        String deviceCardID = deviceCard.getText().toString();
+        String deviceBH = deviceId.getText().toString();
+        if (StringUtils.isEmpty(deviceBH)) {
+            alert(getResources().getString(R.string.please_first_get_device));
+            return;
+        }
+        if (StringUtils.isEmpty(deviceCardID)) {
+            alert(getResources().getString(R.string.please_first_get_device_card));
+            return;
+        }
+        DBManager.dbDeal(DBManager.UPDATA)
+                .sql(SqlUrl.BIND_DEVICE)
+                .params(new String[]{deviceCardID, deviceBH})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.bindding_device));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        String localPath = choosePictures.get(0).getCompressPath();
+
+                        FtpManager.getInstance().uploadFile(localPath,
+                                Config.BINDIMAGE_PATH, "test.jpg", new FtpCallBack() {
+                                    @Override
+                                    public void ftpSuccess(String remotePath) {
+                                        Toast.makeText(BindDeviceActivity.this, remotePath, Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void ftpFaild(String error) {
+                                        Toast.makeText(BindDeviceActivity.this, error, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                 });
     }

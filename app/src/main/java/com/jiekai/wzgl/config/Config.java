@@ -17,5 +17,6 @@ public class Config {
     public static final String FTP_USER_NAME = "FtpTest";
     public static final String FTP_PASSWORD = "haipengc51~";
     public static final String FTP_PATH_HANDLER = "/View/AppImage";
+    public static final String BINDIMAGE_PATH = FTP_PATH_HANDLER + "/bind/";
     public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";
 }

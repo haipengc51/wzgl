@@ -41,4 +41,8 @@ public class SqlUrl {
      * 根据设备id查询其配件的列表
      */
     public static final String GetPartListByDeviceId = "SELECT BH, MC, IDDZMBH1 FROM device WHERE SFPJ = \"1\" AND SSSBBH = ?";
+    /**
+     * 绑定设备
+     */
+    public static final String BIND_DEVICE = "UPDATE device SET IDDZMBH1 = ? WHERE BH = ?";
 }

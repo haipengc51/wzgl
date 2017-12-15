@@ -34,6 +34,13 @@ public class FtpManager {
         return mFtpManager;
     }
 
+    /**
+     * FTC上传图片
+     * @param localFilePath
+     * @param remotePath
+     * @param remoteFileName
+     * @param ftpCallBack
+     */
     public void uploadFile(final String localFilePath, final String remotePath, final String remoteFileName,
                            final FtpCallBack ftpCallBack) {
         mExecutor.execute(new Runnable() {
