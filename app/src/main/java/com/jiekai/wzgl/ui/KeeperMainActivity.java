@@ -1,12 +1,8 @@
 package com.jiekai.wzgl.ui;
 
-import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.jiekai.wzgl.R;
@@ -18,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/7.
@@ -40,7 +35,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
     @Override
     public void initData() {
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_output), BindDeviceActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));

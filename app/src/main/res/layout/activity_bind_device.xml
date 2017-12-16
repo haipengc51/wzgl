@@ -105,11 +105,13 @@
                         android:text="@string/read_card" />
 
                     <TextView
+                        android:id="@+id/create_code"
                         style="@style/button_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/marginTop10"
-                        android:text="@string/create_code" />
+                        android:text="@string/create_code"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 
@@ -254,7 +256,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="@dimen/marginTop10"
-                    android:layout_marginLeft="@dimen/marginTop20"
+                    android:layout_marginLeft="@dimen/marginTop10"
                     android:text="@string/picture_cancel" />
 
                 <TextView
@@ -264,7 +266,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="@dimen/marginTop10"
-                    android:layout_marginRight="@dimen/marginTop20"
+                    android:layout_marginRight="@dimen/marginTop10"
                     android:text="@string/enter" />
 
             </RelativeLayout>

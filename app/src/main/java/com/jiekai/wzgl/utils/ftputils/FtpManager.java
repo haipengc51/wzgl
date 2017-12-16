@@ -46,6 +46,7 @@ public class FtpManager {
         mExecutor.execute(new Runnable() {
             @Override
             public void run() {
+                doStart(ftpCallBack);
                 final String result = mFtpUtils.uploadFile(localFilePath, remotePath, remoteFileName);
                 {
                     if (result != null && result.contains(FTPUtils.SUCCESS)) {
@@ -72,6 +73,15 @@ public class FtpManager {
             mFtpUtils = mFtpUtils.getInstance();
         }
         mFtpUtils.initFTPSetting(FtpUrl, FtpPort, FtpUserName, FtpPassword);
+    }
+
+    private void doStart(final FtpCallBack ftpCallBack) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                ftpCallBack.ftpStart();
+            }
+        });
     }
 
     private void doSuccess(final String result, final FtpCallBack ftpCallBack) {

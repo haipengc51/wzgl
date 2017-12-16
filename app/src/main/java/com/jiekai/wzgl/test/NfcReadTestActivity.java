@@ -105,6 +105,11 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
         FtpManager.getInstance().uploadFile(Environment.getExternalStorageDirectory() + "/123.jpg",
                 "/test/", "test.jpg", new FtpCallBack() {
                     @Override
+                    public void ftpStart() {
+
+                    }
+
+                    @Override
                     public void ftpSuccess(String remotePath) {
                         Toast.makeText(NfcReadTestActivity.this, remotePath, Toast.LENGTH_SHORT).show();
                     }

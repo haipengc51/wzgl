@@ -8,15 +8,16 @@ import android.os.Environment;
  */
 
 public class Config {
-    public static final String DB_CLASS_NAME = "com.mysql.jdbc.Driver";
-    public static final String IP = "114.115.171.225";
+    public static final String DB_CLASS_NAME = "com.mysql.jdbc.Driver";     //数据库链接驱动
+    public static final String IP = "114.115.171.225";      //服务器地址
     public static final String DB_URL = "jdbc:mysql://" + IP + ":3306/wzgl";   //mysql数据库url
     public static final String DB_USER_NAME = "root";  //用户名
     public static final String DB_USER_PASSWORD = "admin2017@";
-    public static final int FTP_PORT = 21;
-    public static final String FTP_USER_NAME = "FtpTest";
+    public static final int FTP_PORT = 21;                      //FTP端口号
+    public static final String FTP_USER_NAME = "FtpTest";      //FTP用户名
     public static final String FTP_PASSWORD = "haipengc51~";
-    public static final String FTP_PATH_HANDLER = "/View/AppImage";
-    public static final String BINDIMAGE_PATH = FTP_PATH_HANDLER + "/bind/";
-    public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";
+    public static final String FTP_PATH_HANDLER = "/View/AppImage";     //FTP上传图片的基础目录地址
+    public static final String BINDIMAGE_PATH = FTP_PATH_HANDLER + "/bind/";    //设备绑定所上传图片的地址
+    public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";    //图片压缩的地址
+    public static final String SBBD = "sbbd";   //设备绑定的类型
 }

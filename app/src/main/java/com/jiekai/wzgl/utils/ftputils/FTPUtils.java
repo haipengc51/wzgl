@@ -142,6 +142,12 @@ public class FTPUtils {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            try {
+                ftpClient.logout();
+                ftpClient.disconnect();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             return e.getMessage();
         }
     }

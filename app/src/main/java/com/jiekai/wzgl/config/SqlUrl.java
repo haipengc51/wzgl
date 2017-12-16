@@ -45,4 +45,8 @@ public class SqlUrl {
      * 绑定设备
      */
     public static final String BIND_DEVICE = "UPDATE device SET IDDZMBH1 = ? WHERE BH = ?";
+    /**
+     * 插入设备文档表（绑定图片）
+     */
+    public static final String SaveDoc = "INSERT INTO devicedoc (SBBH, WJMC, WJDX, WJDZ, WDLX, LB) VALUES (?, ?, ?, ?, ?, ?)";
 }

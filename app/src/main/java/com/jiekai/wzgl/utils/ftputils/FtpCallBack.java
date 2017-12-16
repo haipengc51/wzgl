@@ -7,6 +7,10 @@ package com.jiekai.wzgl.utils.ftputils;
 
 public interface FtpCallBack {
     /**
+     * 开始上传之前的回调
+     */
+    public void ftpStart();
+    /**
      * 上传成功的回调
      * @param remotePath 上传成功后服务器端的地址（路径+文件名）
      */

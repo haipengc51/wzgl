@@ -2,14 +2,15 @@ package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Environment;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.PartListAdapter;
@@ -20,10 +21,12 @@ import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DeviceMCEntity;
 import com.jiekai.wzgl.entity.PartListEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
-import com.jiekai.wzgl.test.NfcReadTestActivity;
+import com.jiekai.wzgl.ui.popup.CodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
 import com.jiekai.wzgl.ui.popup.DeviceTypePopup;
+import com.jiekai.wzgl.utils.CommonUtils;
+import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -34,6 +37,7 @@ import com.jiekai.wzgl.utils.ftputils.FtpCallBack;
 import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.treeutils.Node;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
+import com.jiekai.wzgl.utils.zxing.encoding.EncodingUtils;
 import com.jiekai.wzgl.weight.MyListView;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -93,6 +97,8 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     TextView bindButton;
     @BindView(R.id.part_list)
     MyListView partList;
+    @BindView(R.id.create_code)
+    TextView createCode;
 
     private int readNfcType;
     private String currentDeviceCode = null;    //选中设备的自编号
@@ -108,6 +114,9 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     private List<PartListEntity> partListDatas = new ArrayList<>();
     private PartListAdapter partListAdapter;
     private View partListHeaderView;
+
+    private Bitmap logo;
+    private Bitmap code;
 
     @Override
     public void initView() {
@@ -132,6 +141,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
         addPartButton.setOnClickListener(this);
         cancle.setOnClickListener(this);
         bindButton.setOnClickListener(this);
+        createCode.setOnClickListener(this);
 
         init();
     }
@@ -146,7 +156,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 .create();
         if (partListAdapter == null) {
             partListAdapter = new PartListAdapter(BindDeviceActivity.this, partListDatas);
-            partListHeaderView= LayoutInflater.from(this).inflate(R.layout.header_depart_list, null);
+            partListHeaderView = LayoutInflater.from(this).inflate(R.layout.header_depart_list, null);
             partListHeaderView.setVisibility(View.GONE);
             partList.addHeaderView(partListHeaderView);
             partList.setAdapter(partListAdapter);
@@ -213,6 +223,9 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                 break;
             case R.id.bind_button:
                 bindDevice();
+                break;
+            case R.id.create_code:
+                createCode(deviceCard.getText().toString());
                 break;
         }
     }
@@ -351,6 +364,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
     /**
      * 根据配件的id卡号，发现配件的名称和自编号
+     *
      * @param idCard
      */
     private void findDeviceByID(String idCard) {
@@ -385,6 +399,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
     /**
      * 把配件添加到设备上
+     *
      * @param sspj   是否添加配件（1是配件，0不是配件）
      * @param sssbbh 所属设备编号，如果是删除设配件的话，需要传空
      * @param partID 配件的自编号
@@ -416,6 +431,7 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
 
     /**
      * 根据设备的id获取配件列表
+     *
      * @param deviceId
      */
     private void findPartsByDeviceID(String deviceId) {
@@ -460,6 +476,20 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
             alert(getResources().getString(R.string.please_first_get_device_card));
             return;
         }
+        if (choosePictures == null || choosePictures.size() == 0) {
+            alert(getResources().getString(R.string.please_choose_image));
+            return;
+        }
+        String fileType = null;
+        try {
+            fileType = choosePictures.get(0).getCompressPath().substring(choosePictures.get(0).getCompressPath().lastIndexOf("."));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (StringUtils.isEmpty(fileType)) {
+            alert(getResources().getString(R.string.please_choose_true_iamge));
+            return;
+        }
         DBManager.dbDeal(DBManager.UPDATA)
                 .sql(SqlUrl.BIND_DEVICE)
                 .params(new String[]{deviceCardID, deviceBH})
@@ -478,22 +508,91 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
                     @Override
                     public void onResponse(List result) {
                         dismissProgressDialog();
-                        String localPath = choosePictures.get(0).getCompressPath();
-
-                        FtpManager.getInstance().uploadFile(localPath,
-                                Config.BINDIMAGE_PATH, "test.jpg", new FtpCallBack() {
-                                    @Override
-                                    public void ftpSuccess(String remotePath) {
-                                        Toast.makeText(BindDeviceActivity.this, remotePath, Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void ftpFaild(String error) {
-                                        Toast.makeText(BindDeviceActivity.this, error, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        upLoadImage();
                     }
                 });
+    }
+
+    /**
+     * 上传图片
+     */
+    private void upLoadImage() {
+        final String localPath = choosePictures.get(0).getCompressPath();
+        final String romoteName = deviceId.getText().toString() + SystemClock.currentThreadTimeMillis();
+        final String fileType = localPath.substring(localPath.lastIndexOf("."));
+        FtpManager.getInstance().uploadFile(localPath,
+                Config.BINDIMAGE_PATH, romoteName, new FtpCallBack() {
+                    @Override
+                    public void ftpStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_image));
+                    }
+
+                    @Override
+                    public void ftpSuccess(String remotePath) {
+                        saveImagePathToRemoteDB(romoteName,
+                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
+                                Config.BINDIMAGE_PATH + romoteName + fileType,
+                                fileType);
+                    }
+
+                    @Override
+                    public void ftpFaild(String error) {
+                        alert(error);
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
+    /**
+     * 把上传的图片地址存到自己的服务器上面
+     */
+    private void saveImagePathToRemoteDB(String wjmc, String wjdx, String wjdz, String wjlx) {
+        DBManager.dbDeal(DBManager.INSERT)
+                .sql(SqlUrl.SaveDoc)
+                .params(new String[]{deviceId.getText().toString(), wjmc, wjdx, wjdz, wjlx, Config.SBBD})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        alert(getResources().getString(R.string.device_bind_success));
+                        finish();
+                    }
+                });
+    }
+
+    /**
+     * 生成二维码界面
+     */
+    private void createCode(String code) {
+//        if (StringUtils.isEmpty(code)) {
+//            alert("没有发现要生成二维码的ID号");
+//            return;
+//        }
+        int bitmapWidth = CommonUtils.dip2Px(BindDeviceActivity.this, 150);
+        logo = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        this.code = EncodingUtils.createQRCode("00000000001", bitmapWidth, bitmapWidth, logo);
+        CodePopup codePopup = new CodePopup(BindDeviceActivity.this);
+        codePopup.showCenter(createCode);
+        codePopup.setCodeMap(this.code);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PictureSelectUtils.clearPictureSelectorCache(BindDeviceActivity.this);
+        this.code.recycle();
+        this.code = null;
     }
 
     @Override
