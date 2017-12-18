@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/xuhao"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="0.7"
+        android:text="@string/xuhao"
+        android:gravity="center"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/device_name"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+    <TextView
+        android:id="@+id/shebeixinghao"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/shebeixinghao"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+    <TextView
+        android:id="@+id/lingyongdanwei"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/use_compone"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+    <TextView
+        android:id="@+id/shiyongjinghao"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/shiyongjinghao"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+    <TextView
+        android:id="@+id/shenqingzhuangtai"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/item_height"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/shenqingzhuangtai"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size"/>
+
+</LinearLayout>

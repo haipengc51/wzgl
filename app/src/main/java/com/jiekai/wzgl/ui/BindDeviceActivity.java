@@ -591,8 +591,10 @@ public class BindDeviceActivity extends NFCBaseActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(BindDeviceActivity.this);
-        this.code.recycle();
-        this.code = null;
+        if (this.code != null) {
+            this.code.recycle();
+            this.code = null;
+        }
     }
 
     @Override

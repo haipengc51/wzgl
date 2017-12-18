@@ -35,6 +35,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".utils.zxing.CaptureActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeviceOutListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeviceOutput"
+            android:screenOrientation="portrait"/>
 
     </application>
 

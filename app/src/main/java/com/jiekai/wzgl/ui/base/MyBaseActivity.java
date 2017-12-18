@@ -1,5 +1,6 @@
 package com.jiekai.wzgl.ui.base;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,7 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     public UserInfoEntity userData;
     public boolean isLogin = false;
+    public Activity mActivity;
 
     private ProgressDialog progressDialog = null;
 
@@ -39,6 +41,7 @@ public abstract class MyBaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
+        mActivity = this;
         ButterKnife.bind(this);
         getLoginData();
         initData();

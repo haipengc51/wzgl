@@ -49,4 +49,8 @@ public class SqlUrl {
      * 插入设备文档表（绑定图片）
      */
     public static final String SaveDoc = "INSERT INTO devicedoc (SBBH, WJMC, WJDX, WJDZ, WDLX, LB) VALUES (?, ?, ?, ?, ?, ?)";
+    /**
+     * 获取已经审核通过，的结果
+     */
+    public static final String GetShenHeList = "SELECT * FROM deviceapply WHERE SPZT = \"1\"";
 }
