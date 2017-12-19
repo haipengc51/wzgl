@@ -1,210 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/title_image_text_image"/>
+    <include layout="@layout/title_image_text_image" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/out_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/marginTop10"
+            android:src="@drawable/ic_choose_image" />
+
+        <TextView
+            android:id="@+id/choose_picture"
+            style="@style/button_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/marginTop10"
+            android:background="@drawable/login_button_shape"
+            android:text="@string/take_picture" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/out_image"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/marginTop10"
-                android:src="@drawable/ic_choose_image"/>
-
-            <TextView
-                android:id="@+id/choose_picture"
-                style="@style/button_style"
-                android:background="@drawable/login_button_shape"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/marginTop10"
-                android:text="@string/take_picture" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:layout_marginTop="@dimen/marginTop10"
-                    android:layout_marginLeft="@dimen/marginTop10">
-
-                    <TextView
-                        android:id="@+id/wzmc_cache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:text="@string/wuzimingcheng"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                    <TextView
-                        android:id="@+id/wzmc"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:layout_toRightOf="@+id/wzmc_cache"
-                        android:layout_marginLeft="@dimen/marginTop10"
-                        android:layout_marginRight="@dimen/marginTop10"
-                        android:layout_alignTop="@+id/wzmc_cache"
-                        android:layout_alignBottom="@+id/wzmc_cache"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:background="@drawable/input_bg"
-                        android:hint="@string/wuzimingcheng"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                    <TextView
-                        android:id="@+id/sbzbm_cache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:layout_below="@+id/wzmc_cache"
-                        android:layout_marginTop="@dimen/marginTop10"
-                        android:text="@string/device_id"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                    <TextView
-                        android:id="@+id/sbzbm"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:layout_toRightOf="@+id/sbzbm_cache"
-                        android:layout_marginLeft="@dimen/marginTop10"
-                        android:layout_marginRight="@dimen/marginTop10"
-                        android:layout_alignTop="@+id/sbzbm_cache"
-                        android:layout_alignBottom="@+id/sbzbm_cache"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:background="@drawable/input_bg"
-                        android:hint="@string/device_id"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                    <TextView
-                        android:id="@+id/syjh_cache"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:layout_below="@+id/sbzbm_cache"
-                        android:layout_marginTop="@dimen/marginTop10"
-                        android:text="@string/shiyongjinghao"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                    <TextView
-                        android:id="@+id/syjh"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/item_height"
-                        android:gravity="center_vertical"
-                        android:layout_toRightOf="@+id/syjh_cache"
-                        android:layout_marginLeft="@dimen/marginTop10"
-                        android:layout_marginRight="@dimen/marginTop10"
-                        android:layout_alignTop="@+id/syjh_cache"
-                        android:layout_alignBottom="@+id/syjh_cache"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:background="@drawable/input_bg"
-                        android:hint="@string/shiyongjinghao"
-                        android:textSize="@dimen/content_text_size"
-                        android:textColor="@color/text_content_color"/>
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginTop="@dimen/marginTop10"
-                    android:layout_marginLeft="@dimen/marginTop10"
-                    android:layout_marginRight="@dimen/marginTop10"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/read_card"
-                        style="@style/button_style"
-                        android:background="@drawable/login_button_shape"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/marginTop20"
-                        android:text="@string/read_card" />
-
-                    <TextView
-                        android:id="@+id/recognize"
-                        style="@style/button_style"
-                        android:background="@drawable/login_button_shape"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/marginTop20"
-                        android:text="@string/recongnize_code" />
-
-                </LinearLayout>
-
-            </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginTop10"
                 android:layout_marginTop="@dimen/marginTop10"
-                android:layout_marginBottom="@dimen/marginTop20"
-                android:orientation="horizontal">
+                android:layout_weight="2">
 
                 <TextView
-                    android:id="@+id/enter"
-                    style="@style/button_style"
+                    android:id="@+id/wzmc_cache"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="@dimen/marginTop10"
+                    android:layout_height="@dimen/item_height"
+                    android:gravity="center_vertical"
+                    android:text="@string/wuzimingcheng"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size" />
+
+                <TextView
+                    android:id="@+id/wzmc"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_alignBottom="@+id/wzmc_cache"
+                    android:layout_alignTop="@+id/wzmc_cache"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="@dimen/marginTop10"
-                    android:text="@string/enter" />
+                    android:layout_marginRight="@dimen/marginTop10"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/wzmc_cache"
+                    android:background="@drawable/input_bg"
+                    android:gravity="center_vertical"
+                    android:hint="@string/wuzimingcheng"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size" />
 
                 <TextView
-                    android:id="@+id/cancle"
-                    style="@style/button_style"
+                    android:id="@+id/sbzbm_cache"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_below="@+id/wzmc_cache"
                     android:layout_marginTop="@dimen/marginTop10"
+                    android:gravity="center_vertical"
+                    android:text="@string/device_id"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size" />
+
+                <TextView
+                    android:id="@+id/sbzbm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_alignBottom="@+id/sbzbm_cache"
+                    android:layout_alignTop="@+id/sbzbm_cache"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/marginTop10"
                     android:layout_marginRight="@dimen/marginTop10"
-                    android:text="@string/picture_cancel" />
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/sbzbm_cache"
+                    android:background="@drawable/input_bg"
+                    android:gravity="center_vertical"
+                    android:hint="@string/device_id"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size" />
+
+                <TextView
+                    android:id="@+id/syjh_cache"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_below="@+id/sbzbm_cache"
+                    android:layout_marginTop="@dimen/marginTop10"
+                    android:gravity="center_vertical"
+                    android:text="@string/shiyongjinghao"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/syjh"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/item_height"
+                    android:layout_alignBottom="@+id/syjh_cache"
+                    android:layout_alignTop="@+id/syjh_cache"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="@dimen/marginTop10"
+                    android:layout_marginRight="@dimen/marginTop10"
+                    android:layout_marginTop="5dp"
+                    android:layout_toRightOf="@+id/syjh_cache"
+                    android:background="@drawable/input_bg"
+                    android:gravity="center_vertical"
+                    android:hint="@string/shiyongjinghao"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:textColor="@color/text_content_color"
+                    android:textSize="@dimen/content_text_size"
+                    android:visibility="gone"/>
 
             </RelativeLayout>
 
-            <com.jiekai.wzgl.weight.MyListView
-                android:id="@+id/agree_list"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/marginTop10"
+                android:layout_marginRight="@dimen/marginTop10"
                 android:layout_marginTop="@dimen/marginTop10"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"/>
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/read_card"
+                    style="@style/button_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginTop10"
+                    android:background="@drawable/login_button_shape"
+                    android:text="@string/read_card" />
+
+                <TextView
+                    android:id="@+id/recognize"
+                    style="@style/button_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/marginTop20"
+                    android:background="@drawable/login_button_shape"
+                    android:text="@string/recongnize_code" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/marginTop20"
+            android:layout_marginTop="@dimen/marginTop10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/enter"
+                style="@style/button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="@dimen/marginTop10"
+                android:layout_marginTop="@dimen/marginTop10"
+                android:text="@string/enter" />
+
+            <TextView
+                android:id="@+id/cancle"
+                style="@style/button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/marginTop10"
+                android:layout_marginTop="@dimen/marginTop10"
+                android:text="@string/picture_cancel" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
 
 </LinearLayout>

@@ -53,4 +53,15 @@ public class SqlUrl {
      * 获取已经审核通过，的结果
      */
     public static final String GetShenHeList = "SELECT * FROM deviceapply WHERE SPZT = \"1\"";
+    /**
+     * 执行设备出库操作
+     */
+    public static final String OUT_DEVICE = "IF EXISTS(SELECT * FROM deviceout WHERE deviceout.SBBH = \"123\") \n" +
+            "BEGIN\n" +
+            "\t\tUPDATE deviceout SET CKR = \"123\" WHERE SBBH = \"123\"\n" +
+            "END\n" +
+            "ELSE\n" +
+            "BEGIN\n" +
+            "\t\tINSERT INTO deviceout (SBBH, CKR) VALUES (\"123\", \"admin\")\n" +
+            "END";
 }

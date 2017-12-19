@@ -8,7 +8,8 @@ import com.jiekai.wzgl.entity.base.BaseEntity;
 
 public class DeviceapplyEntity extends BaseEntity {
     private String SQID;        //
-    private String SBBH;        //
+    private String SBMC;        //  （设备名称）
+    private String SBXH;
     private String SYJH;        //
     private String LYDW;        //
     private String LYR;        //
@@ -30,12 +31,20 @@ public class DeviceapplyEntity extends BaseEntity {
         this.SQID = SQID;
     }
 
-    public String getSBBH() {
-        return SBBH;
+    public String getSBMC() {
+        return SBMC;
     }
 
-    public void setSBBH(String SBBH) {
-        this.SBBH = SBBH;
+    public void setSBMC(String SBMC) {
+        this.SBMC = SBMC;
+    }
+
+    public String getSBXH() {
+        return SBXH;
+    }
+
+    public void setSBXH(String SBXH) {
+        this.SBXH = SBXH;
     }
 
     public String getSYJH() {

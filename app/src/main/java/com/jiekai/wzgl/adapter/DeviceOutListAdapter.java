@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.base.MyBaseAdapter;
+import com.jiekai.wzgl.config.Constants;
+import com.jiekai.wzgl.entity.DeviceapplyEntity;
 
 import java.util.List;
 
@@ -33,6 +35,16 @@ public class DeviceOutListAdapter extends MyBaseAdapter {
 
     @Override
     public View buildData(int position, View cellView, BusinessHolder viewHolder) {
+        MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
+        DeviceapplyEntity entity = (DeviceapplyEntity) dataList.get(position);
+        myViewHolder.xuhao.setText(entity.getSQID());
+        myViewHolder.deviceName.setText(entity.getSBMC());
+        myViewHolder.shebeixinghao.setText(entity.getSBXH());
+        myViewHolder.lingyongdanwei.setText(entity.getLYDW());
+        myViewHolder.shiyongjinghao.setText(entity.getSYJH());
+        if (entity.getSQZT().equals(Constants.TONG_YI)) {
+            myViewHolder.shenqingzhuangtai.setText(Constants.tongyi);
+        }
         return null;
     }
 

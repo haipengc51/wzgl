@@ -1,5 +1,6 @@
 package com.jiekai.wzgl.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,8 @@ import butterknife.ButterKnife;
 
 public class DeviceOutListActivity extends MyBaseActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener{
+    private final static int START_OUT = 0;
+
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -104,6 +107,15 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        DeviceapplyEntity entity = (DeviceapplyEntity) parent.getItemAtPosition(position);
+        DeviceOutput.startForResult(DeviceOutListActivity.this, START_OUT);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == START_OUT && resultCode == RESULT_OK) {
+            getData();
+        }
     }
 }
