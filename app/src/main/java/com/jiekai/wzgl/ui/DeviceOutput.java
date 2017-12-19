@@ -201,8 +201,8 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
      * @return
      */
     private void deviceOut() {
-        DBManager.dbDeal(DBManager.UPDATA)
-                .sql(SqlUrl.OUT_DEVICE)
+//        DBManager.dbDeal(DBManager.UPDATA)
+//                .sql(SqlUrl.OUT_DEVICE)
     }
 
     @Override
