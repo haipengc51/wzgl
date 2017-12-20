@@ -85,4 +85,28 @@ public class NfcUtils {
             throw  new IllegalArgumentException();
         }
     }
+
+    public static String getNFCNum(Intent intent) {
+        Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+        byte[] dataId = tag.getId();
+        return bytesToHexString(dataId);// 字符序列转换为16进制字符串
+    }
+
+    private static String bytesToHexString(byte[] src) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        char[] buffer = new char[2];
+        for (int i = 0; i < src.length; i++) {
+            buffer[0] = Character.toUpperCase(Character.forDigit(
+                    (src[i] >>> 4) & 0x0F, 16));
+            buffer[1] = Character.toUpperCase(Character.forDigit(src[i] & 0x0F,
+                    16));
+            System.out.println(buffer);
+            stringBuilder.append(buffer);
+        }
+        return stringBuilder.toString();
+    }
 }

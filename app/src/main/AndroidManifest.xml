@@ -38,7 +38,8 @@
         <activity android:name=".ui.DeviceOutListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.DeviceOutput"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
 
     </application>
 

@@ -59,7 +59,7 @@ public abstract class NFCBaseActivity extends MyBaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (nfcEnable) {
-            getNfcData(NfcUtils.readNfc(intent));
+            getNfcData(NfcUtils.getNFCNum(intent));
         }
     }
 }

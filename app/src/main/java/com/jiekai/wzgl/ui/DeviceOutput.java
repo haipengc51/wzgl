@@ -4,21 +4,27 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.IntentFlag;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
+import com.jiekai.wzgl.entity.DeviceOutEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
+import com.jiekai.wzgl.utils.ftputils.FtpCallBack;
+import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -187,6 +193,31 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
     }
 
     private boolean checkDevice() {
+        boolean isRight = false;
+        //匹配设备是否已经出库
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceOut)
+                .params(new String[]{deviceEntity.getBH()})
+                .clazz(DeviceOutEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            alert(getResources().getString(R.string.device_already_out));
+                        }
+                    }
+                });
+
         if (outMc != null && outMc.equals(deviceEntity.getMC()) &&
                 outXh != null && outXh.equals(deviceEntity.getXH())) {
             return true;
@@ -201,8 +232,30 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
      * @return
      */
     private void deviceOut() {
-//        DBManager.dbDeal(DBManager.UPDATA)
-//                .sql(SqlUrl.OUT_DEVICE)
+        final String localPath = choosePictures.get(0).getCompressPath();
+        final String romoteName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis();
+        final String fileType = localPath.substring(localPath.lastIndexOf("."));
+        FtpManager.getInstance().uploadFile(localPath,
+                Config.BINDIMAGE_PATH, romoteName, new FtpCallBack() {
+                    @Override
+                    public void ftpStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_image));
+                    }
+
+                    @Override
+                    public void ftpSuccess(String remotePath) {
+                        saveImagePathToRemoteDB(romoteName,
+                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
+                                Config.BINDIMAGE_PATH + romoteName + fileType,
+                                fileType);
+                    }
+
+                    @Override
+                    public void ftpFaild(String error) {
+                        alert(error);
+                        dismissProgressDialog();
+                    }
+                });
     }
 
     @Override

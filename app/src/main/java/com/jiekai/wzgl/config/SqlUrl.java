@@ -64,4 +64,9 @@ public class SqlUrl {
             "BEGIN\n" +
             "\t\tINSERT INTO deviceout (SBBH, CKR) VALUES (\"123\", \"admin\")\n" +
             "END";
+
+    /**
+     * 查找设备出库表
+     */
+    public static final String GetDeviceOut = "SELECT * FROM deviceout WHERE SBBH = ?";
 }

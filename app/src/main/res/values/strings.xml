@@ -50,4 +50,5 @@
     <string name="loading_data">正在加载数据</string>
     <string name="no_data">没有找到数据</string>
     <string name="out_device_erro">此设备和申请的设备不匹配</string>
+    <string name="device_already_out">此设备已经出库，请重新选择设备</string>
 </resources>
