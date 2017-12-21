@@ -108,8 +108,10 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DeviceapplyEntity entity = (DeviceapplyEntity) parent.getItemAtPosition(position);
-        DeviceOutput.startForResult(DeviceOutListActivity.this, START_OUT,
-                entity.getSBMC(), entity.getSBXH());
+        if (entity != null) {
+            DeviceOutput.startForResult(DeviceOutListActivity.this, START_OUT,
+                    entity.getSBMC(), entity.getSBXH());
+        }
     }
 
     @Override

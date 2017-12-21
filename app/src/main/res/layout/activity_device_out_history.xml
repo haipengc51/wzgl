@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/title_image_text_image"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/marginTop10"
+        android:paddingBottom="@dimen/marginTop10">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="50dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/start_data"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:background="@drawable/input_bg"
+                android:gravity="center"
+                android:hint="@string/input_start_data"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size"  />
+
+            <TextView
+                android:id="@+id/end_data"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_height"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/input_bg"
+                android:gravity="center"
+                android:hint="@string/input_end_data"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size"  />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/find"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="50dp"
+            android:gravity="center">
+
+            <TextView
+                style="@style/button_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/login_button_shape"
+                android:text="@string/find"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lisview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/marginTop10"
+        android:layout_marginRight="@dimen/marginTop10"/>
+
+</LinearLayout>

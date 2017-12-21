@@ -16,9 +16,9 @@ import java.util.List;
  * 一个单独的文字的 spinner 适配器，可以当做公共类来使用
  */
 
-public class TextPopupAdapter extends MyBaseAdapter {
+public class DeviceNamePopupAdapter extends MyBaseAdapter {
 
-    public TextPopupAdapter(Context context, List dataList) {
+    public DeviceNamePopupAdapter(Context context, List dataList) {
         super(context, dataList);
     }
 
@@ -36,8 +36,8 @@ public class TextPopupAdapter extends MyBaseAdapter {
     @Override
     public View buildData(int position, View cellView, BusinessHolder viewHolder) {
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-        String entity = (String) dataList.get(position);
-        myViewHolder.content.setText(entity);
+        DevicesortEntity entity = (DevicesortEntity) dataList.get(position);
+        myViewHolder.content.setText(entity.getTEXT());
         return null;
     }
 

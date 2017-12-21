@@ -1,17 +1,12 @@
 package com.jiekai.wzgl.ui.popup;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.jiekai.wzgl.R;
-import com.jiekai.wzgl.adapter.TextPopupAdapter;
+import com.jiekai.wzgl.adapter.DeviceNamePopupAdapter;
+import com.jiekai.wzgl.entity.DevicesortEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +19,10 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  */
 
 public class DeviceNamePopup extends BasePopup {
-    private TextPopupAdapter textPopupAdapter;
-    private List<String> popListData = new ArrayList<>();
+    private DeviceNamePopupAdapter popupAdapter;
+    private List<DevicesortEntity> popListData = new ArrayList<>();
     public interface OnDeviceNameClick {
-        void OnDeviceNameClick(String deviceName);
+        void OnDeviceNameClick(DevicesortEntity devicesortEntity);
     }
 
     /**
@@ -40,16 +35,16 @@ public class DeviceNamePopup extends BasePopup {
                            final OnDeviceNameClick onDeviceNameClick ) {
         super(context);
 
-        if (textPopupAdapter == null) {
-            textPopupAdapter = new TextPopupAdapter(context, popListData);
-            popList.setAdapter(textPopupAdapter);
+        if (popupAdapter == null) {
+            popupAdapter = new DeviceNamePopupAdapter(context, popListData);
+            popList.setAdapter(popupAdapter);
             popList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String deviceName = (String) parent.getItemAtPosition(position);
-                    if (deviceName != null && deviceName.length() != 0) {
-                        textView.setText(deviceName);
-                        onDeviceNameClick.OnDeviceNameClick(deviceName);
+                    DevicesortEntity entity = (DevicesortEntity) parent.getItemAtPosition(position);
+                    if (entity != null) {
+                        textView.setText(entity.getTEXT());
+                        onDeviceNameClick.OnDeviceNameClick(entity);
                     }
                     dismiss();
                 }
@@ -61,11 +56,11 @@ public class DeviceNamePopup extends BasePopup {
      * 设置listView的数据
      * @param listData
      */
-    public void setPopListData(List<String> listData) {
+    public void setPopListData(List<DevicesortEntity> listData) {
         popListData.clear();
         popListData.addAll(listData);
-        if (textPopupAdapter != null) {
-            textPopupAdapter.notifyDataSetChanged();
+        if (popupAdapter != null) {
+            popupAdapter.notifyDataSetChanged();
         }
     }
 }

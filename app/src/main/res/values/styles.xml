@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/main_color</item>
         <item name="android:textColorLink">@color/main_color</item>
         <item name="android:textColor">@color/text_content_color</item>
-        <item name="android:editTextColor">@color/text_hint_color</item>
+        <item name="android:editTextColor">@color/text_content_color</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="android:windowBackground">@android:color/white</item>
     </style>

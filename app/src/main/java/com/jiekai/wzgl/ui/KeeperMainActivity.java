@@ -34,14 +34,14 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
 
     @Override
     public void initData() {
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_output), DeviceOutListActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
-        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_out_history), DeviceOutPutHistoryActivity.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.device_bind), BindDeviceActivity_new.class));
     }
 
     @Override

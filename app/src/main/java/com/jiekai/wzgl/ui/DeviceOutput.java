@@ -19,6 +19,7 @@ import com.jiekai.wzgl.entity.DeviceOutEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
+import com.jiekai.wzgl.utils.LogUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
@@ -106,6 +107,7 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
         readCard.setOnClickListener(this);
         recognize.setOnClickListener(this);
         enter.setOnClickListener(this);
+        cancle.setOnClickListener(this);
     }
 
     @Override
@@ -148,6 +150,9 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
                 break;
             case R.id.enter:
                 deviceOut();
+                break;
+            case R.id.cancle:
+                finish();
                 break;
         }
     }
@@ -232,11 +237,15 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
      * @return
      */
     private void deviceOut() {
+        if (deviceEntity == null) {
+            alert(getResources().getString(R.string.choose_out_device));
+            return;
+        }
         final String localPath = choosePictures.get(0).getCompressPath();
-        final String romoteName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis();
         final String fileType = localPath.substring(localPath.lastIndexOf("."));
+        final String romoteName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis();
         FtpManager.getInstance().uploadFile(localPath,
-                Config.BINDIMAGE_PATH, romoteName, new FtpCallBack() {
+                Config.BINDIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
                     @Override
                     public void ftpStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_image));
@@ -244,10 +253,11 @@ public class DeviceOutput extends NFCBaseActivity implements View.OnClickListene
 
                     @Override
                     public void ftpSuccess(String remotePath) {
-                        saveImagePathToRemoteDB(romoteName,
-                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
-                                Config.BINDIMAGE_PATH + romoteName + fileType,
-                                fileType);
+                        dismissProgressDialog();
+//                        saveImagePathToRemoteDB(romoteName,
+//                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
+//                                Config.BINDIMAGE_PATH + romoteName + fileType,
+//                                fileType);
                     }
 
                     @Override

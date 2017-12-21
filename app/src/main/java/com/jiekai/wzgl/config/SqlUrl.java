@@ -14,6 +14,22 @@ public class SqlUrl {
      */
     public static final String GetDeviceType = "SELECT * FROM devicesort";
     /**
+     * 查询全部的设备类别
+     */
+    public static final String GetAllLeiBie = "SELECT * FROM devicesort WHERE PARENTCOOD = \"0\"";
+    /**
+     * 查询对应类别的设备型号
+     */
+    public static final String GetXingHaoByLeiBie = "SELECT * FROM devicesort WHERE PARENTCOOD = ?";
+    /**
+     * 查询对应设备型号的规格
+     */
+    public static final String GetGuiGeByXingHao = "SELECT * FROM devicesort WHERE PARENTCOOD = ?";
+    /**
+     * 通过类别，型号，规格获取设备信息
+     */
+    public static final String GetBHByLeiBieXinghaoGuige = "SELECT device.BH FROM device where LB = ? AND XH = ? AND GG = ?";
+    /**
      * 获取设备名称（通过第一级 设备类别）
      */
     public static final String GetDeviceMCByLB = "SELECT device.MC FROM device where LB = ?";

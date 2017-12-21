@@ -1,21 +1,13 @@
 package com.jiekai.wzgl.ui.popup;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.DeviceTypeAdapter;
-import com.jiekai.wzgl.adapter.TextPopupAdapter;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceTypeEntity;
-import com.jiekai.wzgl.ui.popup.BasePopup;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
