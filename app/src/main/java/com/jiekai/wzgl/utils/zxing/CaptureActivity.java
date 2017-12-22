@@ -32,6 +32,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.zxing.Result;
 import com.jiekai.wzgl.R;
@@ -60,6 +61,7 @@ public final class CaptureActivity extends MyBaseActivity implements SurfaceHold
     private static final String TAG = CaptureActivity.class.getSimpleName();
 
     private ImageView back;
+    private TextView title;
 
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
@@ -107,11 +109,13 @@ public final class CaptureActivity extends MyBaseActivity implements SurfaceHold
         setContentView(R.layout.activity_capture);
 
         back = (ImageView) findViewById(R.id.back);
+        title = (TextView) findViewById(R.id.title);
         scanPreview = (SurfaceView) findViewById(R.id.capture_preview);
         scanContainer = (RelativeLayout) findViewById(R.id.capture_container);
         scanCropView = (RelativeLayout) findViewById(R.id.capture_crop_view);
         scanLine = (ImageView) findViewById(R.id.capture_scan_line);
 
+        title.setText("扫码");
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

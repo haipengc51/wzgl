@@ -42,7 +42,18 @@
             android:launchMode="singleTop"/>
         <activity android:name=".ui.DeviceOutPutHistoryActivity"
             android:screenOrientation="portrait"/>
-
+        <activity android:name=".ui.DeviceInputActivity"
+            android:label="@string/device_input"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop" />
+        <activity android:name=".ui.DeviceDetailActivity"
+            android:label="@string/device_detail"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.DeviceScrapActivity"
+            android:label="@string/device_scrap"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>

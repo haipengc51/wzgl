@@ -12,4 +12,7 @@
     <dimen name="item_height">40dp</dimen>
     <dimen name="marginTop10">10dp</dimen>
     <dimen name="marginTop20">20dp</dimen>
+    <dimen name="marginTop30">30dp</dimen>
+    <dimen name="marginTop40">40dp</dimen>
+    <dimen name="marginTop50">50dp</dimen>
 </resources>

@@ -10,52 +10,52 @@ import java.sql.Timestamp;
  */
 
 public class DeviceEntity extends BaseEntity {
-    private String BH;
-    private String MC;
-    private String LB;
-    private String XH;
-    private String GG;
-    private String JLQDMC;
-    private String LZJLBH;
-    private String TMBH;
-    private String EWMBH;
-    private String KWZT;
-    private String CCBH;
-    private String GYS;
-    private String GYSGB;
-    private String IDDZMBH1;
-    private String IDDZMBH2;
-    private String IDDZMBH3;
-    private String ZCLY;
-    private String SYDW;
-    private String SHIYDW;
-    private String GYSDH;
-    private String GYSDZ;
-    private String GYSJSFWDH;
-    private Date SCRQ;
-    private Date DHRQ;
-    private Date JHRQ;
-    private Date TCRQ;
-    private String JLDW;
-    private String JBR;
-    private String YSJCBG;
-    private String AZJCXM;
-    private String FFDJ;
-    private String CCHGZ;
-    private String ZJFS;
-    private String SYSM;
-    private String WZMP;
-    private String WZYZ;
-    private String WZJZ;
-    private String WZCZ;
-    private String JGTZ;
-    private String SMS;
-    private String YSPJ;
-    private String QTFJ;
-    private String SFPJ;
-    private String SSSBBH;
-    private String SBZT;
-    private Timestamp DJSJ;
+    private String BH;      //自编号
+    private String MC;      //设备名称
+    private String LB;      //设备类别
+    private String XH;      //设备型号
+    private String GG;      //设备规格
+    private String JLQDMC;      //物资记录清单名称
+    private String LZJLBH;      //物资流转记录编号
+    private String TMBH;      //条码编号
+    private String EWMBH;      //二维码编号
+    private String KWZT;      //物资库位状态
+    private String CCBH;      //出厂编号
+    private String GYS;      //供应商
+    private String GYSGB;      //供应商国别
+    private String IDDZMBH1;      //ID电子码编号1
+    private String IDDZMBH2;      //ID电子码编号2
+    private String IDDZMBH3;      //ID电子码编号3
+    private String ZCLY;      //物资资产来源
+    private String SYDW;      //物资所有单位
+    private String SHIYDW;      //物资使用单位
+    private String GYSDH;      //供应商电话
+    private String GYSDZ;      //供应商地址
+    private String GYSJSFWDH;      //供应商技术服务电话
+    private Date SCRQ;      //生产日期
+    private Date DHRQ;      //到货日期
+    private Date JHRQ;      //进货日期
+    private Date TCRQ;      //投产日期
+    private String JLDW;      //计量单位
+    private String JBR;      //经办人
+    private String YSJCBG;      //原始检测报告
+    private String AZJCXM;      //安装检查项目
+    private String FFDJ;      //防腐等级
+    private String CCHGZ;      //出厂合格证
+    private String ZJFS;      //折旧方式
+    private String SYSM;      //物资使用寿命
+    private String WZMP;      //物资铭牌
+    private String WZYZ;      //物资原值
+    private String WZJZ;      //物资净值
+    private String WZCZ;      //物资残值
+    private String JGTZ;      //结构图纸
+    private String SMS;      //使用维护说明书
+    private String YSPJ;      //易损配件
+    private String QTFJ;      //其他附件
+    private String SFPJ;      //是否配件
+    private String SSSBBH;      //如果是配件，所属主设备编号
+    private String SBZT;      //设备状态
+    private Timestamp DJSJ;      //登记时间
 
     public String getBH() {
         return BH;

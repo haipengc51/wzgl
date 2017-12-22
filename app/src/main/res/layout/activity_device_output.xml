@@ -17,6 +17,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/marginTop10"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_choose_image" />
 
         <TextView
@@ -26,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/marginTop10"
-            android:background="@drawable/login_button_shape"
             android:text="@string/take_picture" />
 
         <LinearLayout

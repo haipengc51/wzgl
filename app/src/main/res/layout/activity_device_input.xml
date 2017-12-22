@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/title_image_text_image"/>
+
+    <ImageView
+        android:id="@+id/input_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTop10"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_choose_image" />
+
+    <TextView
+        android:id="@+id/choose_picture"
+        style="@style/button_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/marginTop10"
+        android:background="@drawable/login_button_shape"
+        android:text="@string/take_picture" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginTop="@dimen/marginTop10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/marginTop20"
+            android:text="@string/device_name"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/content_text_size"/>
+
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/marginTop10"
+            android:background="@drawable/input_bg"
+            android:gravity="center_vertical"
+            android:hint="@string/device_name"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/content_text_size"/>
+
+        <TextView
+            android:id="@+id/read_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:layout_marginRight="@dimen/marginTop20"
+            android:layout_marginLeft="@dimen/marginTop10"
+            android:layout_gravity="center_vertical"
+            android:text="@string/read_card"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginTop="@dimen/marginTop10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/marginTop20"
+            android:text="@string/device_id"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/content_text_size"/>
+
+        <TextView
+            android:id="@+id/device_id"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/marginTop10"
+            android:background="@drawable/input_bg"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:hint="@string/device_id"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/content_text_size"/>
+
+        <TextView
+            android:id="@+id/sao_ma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:layout_marginRight="@dimen/marginTop20"
+            android:layout_marginLeft="@dimen/marginTop10"
+            android:layout_gravity="center_vertical"
+            android:text="@string/recongnize_code"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/item_height"
+        android:layout_marginTop="@dimen/marginTop50"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:layout_marginLeft="@dimen/marginTop20"
+            android:layout_alignParentLeft="true"
+            android:text="@string/enter"/>
+
+        <TextView
+            android:id="@+id/cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/button_style"
+            android:layout_marginRight="@dimen/marginTop20"
+            android:layout_alignParentRight="true"
+            android:text="@string/picture_cancel"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

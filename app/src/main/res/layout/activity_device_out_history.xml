@@ -63,17 +63,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/login_button_shape"
-                android:text="@string/find"/>
+                android:text="@string/search"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <View
+        style="@style/line_d5"/>
+
     <ListView
-        android:id="@+id/lisview"
+        android:id="@+id/listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/marginTop10"
-        android:layout_marginRight="@dimen/marginTop10"/>
+        android:layout_marginRight="@dimen/marginTop10"
+        android:scrollbars="none"/>
 
 </LinearLayout>

@@ -52,6 +52,8 @@
     <string name="out_device_erro">此设备和申请的设备不匹配</string>
     <string name="device_already_out">此设备已经出库，请重新选择设备</string>
     <string name="choose_out_device">请选择要出库的设备</string>
+    <string name="choose_in_device">请选择要入库的设备</string>
+    <string name="choose_scrap_device">请选择要报废的设备</string>
     <string name="shebei_leibie">设备类别</string>
     <string name="shebei_xinghao">设备型号</string>
     <string name="shebei_guige">设备规格</string>
@@ -62,4 +64,12 @@
     <string name="device_out_history">出库查询</string>
     <string name="input_end_data">选择结束日期</string>
     <string name="find">查询</string>
+    <string name="search">搜索</string>
+    <string name="device_unit_type">设备型号</string>
+    <string name="outpu_time">出库时间</string>
+    <string name="picture">照片</string>
+    <string name="device_input">设备入库</string>
+    <string name="device_detail">设备详情</string>
+    <string name="get_id_err">读卡失败</string>
+    <string name="device_scrap">设备报废</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.jiekai.wzgl.ui;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -8,8 +9,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
+import com.jiekai.wzgl.adapter.DeviceOutputHistoryAdapter;
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
 import com.jiekai.wzgl.utils.TimePickerDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by laowu on 2017/12/21.
  * 设备出库历史查询
+ * 数据来源还有数据显示的东西有多少？先写界面吧
  */
 
 public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.OnClickListener {
@@ -32,11 +38,17 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     TextView endData;
     @BindView(R.id.find)
     LinearLayout find;
-    @BindView(R.id.lisview)
-    ListView lisview;
+    @BindView(R.id.listview)
+    ListView listview;
 
     private TimePickerDialog startDataDialog;
     private TimePickerDialog endDataDialog;
+    private DeviceOutputHistoryAdapter historyAdapter;
+    private List<String> dataList = new ArrayList<>();
+    private String[] historyListData = new String[]{"", "", "", "", "", "", ""
+            , "", "", "", "", "", ""
+            , "", "", "", "", "", ""
+            , "", "", "", "", "", ""};
 
     @Override
     public void initView() {
@@ -56,6 +68,17 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     public void initOperation() {
         startDataDialog = new TimePickerDialog(mActivity, startDataInterface);
         endDataDialog = new TimePickerDialog(mActivity, endDataInterface);
+
+        for (int i=0; i<historyListData.length; i++) {
+            dataList.add(historyListData[i]);
+        }
+
+        if (historyAdapter == null) {
+            historyAdapter = new DeviceOutputHistoryAdapter(mActivity, dataList);
+            View headerView = LayoutInflater.from(mActivity).inflate(R.layout.adapter_device_output_history_list, null);
+            listview.addHeaderView(headerView);
+            listview.setAdapter(historyAdapter);
+        }
     }
 
     @Override
