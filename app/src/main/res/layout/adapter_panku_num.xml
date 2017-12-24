@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/device_leibie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minHeight="@dimen/item_height"
+        android:text="@string/shebei_leibie"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size" />
+
+    <TextView
+        android:id="@+id/device_xinghao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minHeight="@dimen/item_height"
+        android:text="@string/shebei_xinghao"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size" />
+
+    <TextView
+        android:id="@+id/device_guige"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minHeight="@dimen/item_height"
+        android:text="@string/shebei_guige"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size" />
+    <TextView
+        android:id="@+id/device_num"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:minHeight="@dimen/item_height"
+        android:text="@string/device_num"
+        android:textColor="@color/text_content_color"
+        android:textSize="@dimen/content_text_size" />
+
+</LinearLayout>

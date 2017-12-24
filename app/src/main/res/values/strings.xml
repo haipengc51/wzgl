@@ -54,6 +54,7 @@
     <string name="choose_out_device">请选择要出库的设备</string>
     <string name="choose_in_device">请选择要入库的设备</string>
     <string name="choose_scrap_device">请选择要报废的设备</string>
+    <string name="choose_repair_device">请选择要维修的设备</string>
     <string name="shebei_leibie">设备类别</string>
     <string name="shebei_xinghao">设备型号</string>
     <string name="shebei_guige">设备规格</string>
@@ -72,4 +73,21 @@
     <string name="device_detail">设备详情</string>
     <string name="get_id_err">读卡失败</string>
     <string name="device_scrap">设备报废</string>
+    <string name="repair_type">维修类型</string>
+    <string name="device_repair">设备维修</string>
+    <string name="pan_ku">盘库</string>
+    <string name="start">开始</string>
+    <string name="finish">结束</string>
+    <string name="upload">上传</string>
+    <string name="detail">详情</string>
+    <string name="stop_pan_ku">盘库结束</string>
+    <string name="device_has_panku">该设备已经盘库</string>
+    <string name="this_device_panku_failed">该设备盘库失败</string>
+    <string name="panku_detail">盘库详情</string>
+    <string name="device_num">设备数量</string>
+    <string name="cancle">取消</string>
+    <string name="logout">退出登录</string>
+    <string name="click_again_finish">在此点击退出物资管理</string>
+    <string name="input_jinghao">请输入井号</string>
+    <string name="please_input_jinghao">请输入井号</string>
 </resources>

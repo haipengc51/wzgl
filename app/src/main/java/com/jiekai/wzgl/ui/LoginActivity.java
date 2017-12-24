@@ -120,6 +120,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                             saveLoginData((UserInfoEntity) result.get(0));
                             Intent intent = new Intent(LoginActivity.this, KeeperMainActivity.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             alert("用户名或密码错误");
                         }

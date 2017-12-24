@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparency"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/round_white_shape"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/marginTop10"
+            android:text="提示"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/title_text_size" />
+
+        <TextView
+            android:id="@+id/kickout_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:minWidth="200dp"
+            android:layout_marginBottom="@dimen/marginTop20"
+            android:layout_marginLeft="@dimen/marginTop20"
+            android:layout_marginRight="@dimen/marginTop20"
+            android:layout_marginTop="@dimen/marginTop20"
+            android:text="您确定退出此账号吗？"
+            android:textColor="@color/text_content_color"
+            android:textSize="@dimen/content_text_size" />
+
+        <View style="@style/line_d5" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:background="@color/transparency"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/enter"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/enter"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size" />
+
+            <View
+                android:layout_height="match_parent"
+                android:layout_width="0.5dp"
+                android:background="@color/line_color"/>
+
+            <TextView
+                android:id="@+id/cancle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/cancle"
+                android:textColor="@color/text_content_color"
+                android:textSize="@dimen/content_text_size" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

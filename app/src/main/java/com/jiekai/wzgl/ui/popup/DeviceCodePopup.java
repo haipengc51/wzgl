@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Created by LaoWu on 2017/12/8.
  * 仿照spinner的弹窗 工具类
+ * 设备自编码弹窗类
  */
 
 public class DeviceCodePopup extends BasePopup {

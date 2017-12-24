@@ -1,7 +1,6 @@
 package com.jiekai.wzgl.ui;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/18.
@@ -109,7 +107,7 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DeviceapplyEntity entity = (DeviceapplyEntity) parent.getItemAtPosition(position);
         if (entity != null) {
-            DeviceOutput.startForResult(DeviceOutListActivity.this, START_OUT,
+            DeviceOutputActivity.startForResult(DeviceOutListActivity.this, START_OUT,
                     entity.getSBMC(), entity.getSBXH());
         }
     }

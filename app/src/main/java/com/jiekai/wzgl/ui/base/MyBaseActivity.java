@@ -57,7 +57,7 @@ public abstract class MyBaseActivity extends AppCompatActivity {
         }
     }
 
-    private void clearLoginData() {
+    public void clearLoginData() {
         sharedPreferences.edit().putString(ShareConstants.USERINFO, "").commit();
     }
 

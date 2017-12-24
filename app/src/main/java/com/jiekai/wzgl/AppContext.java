@@ -5,17 +5,21 @@ import android.app.Application;
 import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.ftputils.FtpManager;
+import com.jiekai.wzgl.utils.localDbUtils.DBHelper;
 
 /**
  * Created by LaoWu on 2017/11/27.
  */
 
 public class AppContext extends Application {
+    public static DBHelper dbHelper;
+
     @Override
     public void onCreate() {
         super.onCreate();
         initDbFrame();
         initFTP();
+        dbHelper = DBHelper.getInstance(getApplicationContext());
         PictureSelectUtils.getCompressFile();
     }
 

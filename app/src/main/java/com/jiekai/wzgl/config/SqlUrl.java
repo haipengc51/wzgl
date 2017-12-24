@@ -72,17 +72,22 @@ public class SqlUrl {
     /**
      * 执行设备出库操作
      */
-    public static final String OUT_DEVICE = "IF EXISTS(SELECT * FROM deviceout WHERE deviceout.SBBH = \"123\") \n" +
-            "BEGIN\n" +
-            "\t\tUPDATE deviceout SET CKR = \"123\" WHERE SBBH = \"123\"\n" +
-            "END\n" +
-            "ELSE\n" +
-            "BEGIN\n" +
-            "\t\tINSERT INTO deviceout (SBBH, CKR) VALUES (\"123\", \"admin\")\n" +
-            "END";
+    public static final String OUT_DEVICE = "";
 
     /**
      * 查找设备出库表
      */
     public static final String GetDeviceOut = "SELECT * FROM deviceout WHERE SBBH = ?";
+    /**
+     * 根据盘库的需求查询数据库
+     */
+    public static final String GetPanKuDataByID = "SELECT " +
+            "dv.BH, dv.MC, leibie.TEXT AS LB,xinghao.TEXT AS XH,guige.TEXT AS GG" +
+            " FROM " +
+            "devicesort AS leibie, devicesort AS xinghao, devicesort AS guige, device as dv" +
+            " WHERE " +
+            "dv.IDDZMBH1 = ? " +
+            "AND leibie.COOD = dv.LB " +
+            "AND xinghao.COOD = dv.XH " +
+            "AND guige.COOD = dv.GG";
 }

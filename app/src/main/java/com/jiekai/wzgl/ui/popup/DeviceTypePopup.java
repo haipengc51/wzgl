@@ -20,6 +20,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 /**
  * Created by LaoWu on 2017/12/8.
  * 设备类型的弹窗
+ * 设备类型的树形弹窗类，后来放弃了
  */
 
 public class DeviceTypePopup extends BasePopup{

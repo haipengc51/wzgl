@@ -37,7 +37,7 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.DeviceOutListActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".ui.DeviceOutput"
+        <activity android:name=".ui.DeviceOutputActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.DeviceOutPutHistoryActivity"
@@ -54,6 +54,21 @@
             android:label="@string/device_scrap"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
+        <activity android:name=".ui.DeviceRepairActivity"
+            android:label="@string/device_repair"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.PanKuActivity"
+            android:label="@string/pan_ku"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.PanKuNumActivity"
+            android:label="@string/panku_detail"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.LogOutActivity"
+            android:label="@string/logout"
+            android:screenOrientation="portrait"
+            android:theme="@style/Activity_Dialog"/>
     </application>
 
 </manifest>

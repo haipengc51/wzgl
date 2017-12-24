@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
  * Created by laowu on 2017/11/26.
  */
 
-public class DbDeal extends AsynInterface{
+public class DbDeal extends AsynInterface {
     private Executor executor;
     private String sql;
     private String[] params;

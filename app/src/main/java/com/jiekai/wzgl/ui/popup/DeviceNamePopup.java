@@ -16,6 +16,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 /**
  * Created by LaoWu on 2017/12/8.
  * 仿照spinner的弹窗 设备名称弹窗
+ * 设备三级名称的弹窗类
  */
 
 public class DeviceNamePopup extends BasePopup {
