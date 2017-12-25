@@ -90,4 +90,7 @@ public class SqlUrl {
             "AND leibie.COOD = dv.LB " +
             "AND xinghao.COOD = dv.XH " +
             "AND guige.COOD = dv.GG";
+
+    public static final String START_EVENT = "START TRANSACTION;";
+    public static final String ROLLBACK = "ROLLBACK;";
 }

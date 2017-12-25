@@ -15,6 +15,9 @@ public class DBManager {
     public static final int UPDATA = 1;
     public static final int INSERT = 2;
     public static final int DELET = 3;
+    public static final int START_EVENT = 4;
+    public static final int COMMIT = 5;
+    public static final int ROLLBACK = 6;
 
     private static DBManager DBManager = null;
     private PlantFrom plantFrom;
