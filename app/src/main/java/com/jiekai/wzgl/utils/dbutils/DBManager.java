@@ -18,6 +18,10 @@ public class DBManager {
     public static final int START_EVENT = 4;
     public static final int COMMIT = 5;
     public static final int ROLLBACK = 6;
+    public static final int EVENT_SELECT = 7;
+    public static final int EVENT_UPDATA = 8;
+    public static final int EVENT_INSERT = 9;
+    public static final int EVENT_DELET = 10;
 
     private static DBManager DBManager = null;
     private PlantFrom plantFrom;
@@ -33,7 +37,12 @@ public class DBManager {
     }
 
     public static DbDeal dbDeal(int dbType) {
-        return new DbDeal(dbType);
+        DbDeal dbDeal = DbDeal.getInstance();
+        dbDeal.type(dbType);
+        dbDeal.sql(null);
+        dbDeal.params(null);
+        dbDeal.clazz(null);
+        return dbDeal;
     }
 
     /**

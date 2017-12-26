@@ -2,6 +2,7 @@ package com.jiekai.wzgl.utils.dbutils;
 
 
 import com.jiekai.wzgl.config.Config;
+import com.mysql.jdbc.log.Log;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -18,14 +19,19 @@ import java.util.concurrent.Executor;
  */
 
 public class DbDeal extends AsynInterface {
+    private static DbDeal mDbDeal = null;
+    private Connection connection = null;
     private Executor executor;
     private String sql;
-    private String[] params;
+    private Object[] params;
     private int dbType;
     private Class mClass;
 
-    public DbDeal(int dbType) {
-        this.dbType = dbType;
+    public static DbDeal getInstance() {
+        if (mDbDeal == null) {
+            mDbDeal = new DbDeal();
+        }
+        return mDbDeal;
     }
 
     public DbDeal sql(String sql) {
@@ -38,7 +44,7 @@ public class DbDeal extends AsynInterface {
         return this;
     }
 
-    public DbDeal params(String[] params) {
+    public DbDeal params(Object[] params) {
         this.params = params;
         return this;
     }
@@ -52,6 +58,40 @@ public class DbDeal extends AsynInterface {
         DBManager.getInstance().execute(DbDeal.this, dbCallBack);
     }
 
+    @Override
+    public void doExecutor(AsynCallBack asynCallBack) {
+        if (dbType == DBManager.SELECT || dbType == DBManager.EVENT_SELECT) {
+            readDbDealProcess(asynCallBack);
+        } else if (dbType == DBManager.INSERT || dbType == DBManager.UPDATA || dbType == DBManager.DELET
+                || dbType == DBManager.EVENT_INSERT || dbType == DBManager.EVENT_UPDATA || dbType == DBManager.EVENT_DELET) {
+            readBdUpdata(asynCallBack);
+        } else if (dbType == DBManager.START_EVENT) {   //开启事务
+            startEvent(asynCallBack);
+        } else if (dbType == DBManager.COMMIT) {    //提交事务
+            commitEvent(asynCallBack);
+        } else if (dbType == DBManager.ROLLBACK) {      //回滚事务
+            rollbackEvent(asynCallBack);
+        }
+    }
+
+    /**
+     * 数据库连接
+     * @return
+     */
+    private boolean initConnection() {
+        try {
+            Class.forName(Config.DB_CLASS_NAME);
+            connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private void readDbDealProcess(AsynCallBack asynCallBack) {
         try {
             if (sql == null || sql.length() == 0) {
@@ -62,12 +102,19 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("sql模型为空");
                 return;
             }
-            Class.forName(Config.DB_CLASS_NAME);
-            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
+            if (connection == null || connection.isClosed()) {
+                if (dbType == DBManager.EVENT_SELECT) {
+                    asynCallBack.onError("数据库连接失败");
+                    return;
+                } else if (!initConnection()) {
+                    asynCallBack.onError("数据库连接失败");
+                    return;
+                }
+            }
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             if (params != null && params.length != 0) {
                 for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i + 1, params[i]);
+                    preparedStatement.setObject(i + 1, params[i]);
                 }
             }
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -75,10 +122,6 @@ public class DbDeal extends AsynInterface {
             asynCallBack.onSuccess(list);
             resultSet.close();
             preparedStatement.close();
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            asynCallBack.onError(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
@@ -91,12 +134,21 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("sql命令为空");
                 return;
             }
-            Class.forName(Config.DB_CLASS_NAME);
-            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
+                if (connection == null || connection.isClosed()) {
+                    if (dbType == DBManager.EVENT_INSERT ||
+                            dbType == DBManager.EVENT_UPDATA ||
+                            dbType == DBManager.EVENT_DELET) {
+                        asynCallBack.onError("数据库连接失败");
+                        return;
+                    } else if (!initConnection()) {
+                        asynCallBack.onError("数据库连接失败");
+                        return;
+                    }
+                }
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             if (params != null && params.length != 0) {
                 for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i + 1, params[i]);
+                    preparedStatement.setObject(i + 1, params[i]);
                 }
             }
             int result = preparedStatement.executeUpdate();
@@ -106,128 +158,62 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("数据库操作失败");
             }
             preparedStatement.close();
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            asynCallBack.onError(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
         }
     }
 
-    private void startEvent() {
+    private void startEvent(AsynCallBack asynCallBack) {
         try {
-            if (sql == null || sql.length() == 0) {
-                asynCallBack.onError("sql命令为空");
-                return;
-            }
-            if (mClass == null) {
-                asynCallBack.onError("sql模型为空");
-                return;
-            }
-            Class.forName(Config.DB_CLASS_NAME);
-            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            if (params != null && params.length != 0) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i + 1, params[i]);
+            if (connection == null || connection.isClosed()) {
+                if (!initConnection()) {
+                    asynCallBack.onError("数据库连接失败");
+                    return;
                 }
             }
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List list = transformData(resultSet, mClass);
-            asynCallBack.onSuccess(list);
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-        } catch (ClassNotFoundException e) {
+            connection.setAutoCommit(false);
+            asynCallBack.onSuccess(null);
+        }
+        catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
+        }
+    }
+
+    private void commitEvent(AsynCallBack asynCallBack) {
+        try {
+            if (connection == null || connection.isClosed()) {
+                asynCallBack.onError("数据库连接失败");
+                return;
+            }
+            PreparedStatement preparedStatement = connection.prepareStatement("COMMIT;");
+            int resultSet = preparedStatement.executeUpdate();
+            asynCallBack.onSuccess(null);
+            connection.setAutoCommit(true);
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
         }
     }
 
-    private void commitEvent() {
+    private void rollbackEvent(AsynCallBack asynCallBack) {
         try {
-            if (sql == null || sql.length() == 0) {
-                asynCallBack.onError("sql命令为空");
-                return;
-            }
-            if (mClass == null) {
-                asynCallBack.onError("sql模型为空");
-                return;
-            }
-            Class.forName(Config.DB_CLASS_NAME);
-            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            if (params != null && params.length != 0) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i + 1, params[i]);
+            if (connection == null || connection.isClosed()) {
+                if (!initConnection()) {
+                    asynCallBack.onError("数据库连接失败");
+                    return;
                 }
             }
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List list = transformData(resultSet, mClass);
-            asynCallBack.onSuccess(list);
-            resultSet.close();
+            PreparedStatement preparedStatement = connection.prepareStatement("ROLLBACK;");
+            int resultSet = preparedStatement.executeUpdate();
+            asynCallBack.onSuccess(null);
+            connection.setAutoCommit(true);
             preparedStatement.close();
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            asynCallBack.onError(e.getMessage());
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
-        }
-    }
-
-    private void rollbackEvent() {
-        try {
-            if (sql == null || sql.length() == 0) {
-                asynCallBack.onError("sql命令为空");
-                return;
-            }
-            if (mClass == null) {
-                asynCallBack.onError("sql模型为空");
-                return;
-            }
-            Class.forName(Config.DB_CLASS_NAME);
-            Connection connection = DriverManager.getConnection(Config.DB_URL, Config.DB_USER_NAME, Config.DB_USER_PASSWORD);
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            if (params != null && params.length != 0) {
-                for (int i = 0; i < params.length; i++) {
-                    preparedStatement.setString(i + 1, params[i]);
-                }
-            }
-            ResultSet resultSet = preparedStatement.executeQuery();
-            List list = transformData(resultSet, mClass);
-            asynCallBack.onSuccess(list);
-            resultSet.close();
-            preparedStatement.close();
-            connection.close();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            asynCallBack.onError(e.getMessage());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            asynCallBack.onError(e.getMessage());
-        }
-    }
-
-    @Override
-    public void doExecutor(AsynCallBack asynCallBack) {
-        if (dbType == DBManager.SELECT) {
-            readDbDealProcess(asynCallBack);
-        } else if (dbType == DBManager.INSERT || dbType == DBManager.UPDATA
-                || dbType == DBManager.DELET) {
-            readBdUpdata(asynCallBack);
-        } else if (dbType == DBManager.START_EVENT) {   //开启事务
-            startEvent();
-        } else if (dbType == DBManager.COMMIT) {    //提交事务
-            commitEvent();
-        } else if (dbType == DBManager.ROLLBACK) {      //回滚事务
-            rollbackEvent();
         }
     }
 

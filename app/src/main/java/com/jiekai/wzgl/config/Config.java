@@ -17,7 +17,8 @@ public class Config {
     public static final String FTP_USER_NAME = "FtpTest";      //FTP用户名
     public static final String FTP_PASSWORD = "haipengc51~";
     public static final String FTP_PATH_HANDLER = "/View/AppImage";     //FTP上传图片的基础目录地址
-    public static final String BINDIMAGE_PATH = FTP_PATH_HANDLER + "/bind/";    //设备绑定所上传图片的地址
+    public static final String BINDIMAGE_PATH = "/bind/";    //设备绑定所上传图片的地址
+    public static final String OUTIMAGE_PATH = "/out/";
     public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";    //图片压缩的地址
     public static final String SBBD = "sbbd";   //设备绑定的类型
 }

@@ -102,7 +102,7 @@ public class FTPUtils {
         }
         try {
             //设置存储路径
-            if (ftpClient.listDirectories(remotePath).length == 0) {
+            if (!ftpClient.changeWorkingDirectory(remotePath)) {
                 ftpClient.makeDirectory(remotePath);
             }
             if (!ftpClient.changeWorkingDirectory(remotePath)) {
@@ -147,6 +147,11 @@ public class FTPUtils {
                 ftpClient.disconnect();
             } catch (IOException e1) {
                 e1.printStackTrace();
+                try {
+                    ftpClient.disconnect();
+                } catch (IOException e2) {
+                    e2.printStackTrace();
+                }
             }
             return e.getMessage();
         }

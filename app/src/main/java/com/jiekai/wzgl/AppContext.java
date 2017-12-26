@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
+import com.jiekai.wzgl.utils.dbutils.DbDeal;
 import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.localDbUtils.DBHelper;
 
@@ -20,6 +21,7 @@ public class AppContext extends Application {
         initDbFrame();
         initFTP();
         dbHelper = DBHelper.getInstance(getApplicationContext());
+        DbDeal.getInstance();   //初始化dbDeal
         PictureSelectUtils.getCompressFile();
     }
 

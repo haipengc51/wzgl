@@ -70,10 +70,9 @@ public class SqlUrl {
      */
     public static final String GetShenHeList = "SELECT * FROM deviceapply WHERE SPZT = \"1\"";
     /**
-     * 执行设备出库操作
+     * 执行设备出库操作 (设备自编码，操作时间，操作人，类别， 井号)
      */
-    public static final String OUT_DEVICE = "";
-
+    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH) VALUES (?, ?, ?, ?, ?);";
     /**
      * 查找设备出库表
      */
@@ -93,4 +92,8 @@ public class SqlUrl {
 
     public static final String START_EVENT = "START TRANSACTION;";
     public static final String ROLLBACK = "ROLLBACK;";
+    /**
+     * 插入图片到服务器中（ID, 文件名称， 文件大小， 文件地址，文件类型，类别）
+     */
+    public static final String INSERT_IAMGE = "INSERT INTO devicedoc (SBBH, WJMC, WJDX, WJDZ, WDLX, LB) VALUES (?, ?, ?, ?, ?, ?)";
 }

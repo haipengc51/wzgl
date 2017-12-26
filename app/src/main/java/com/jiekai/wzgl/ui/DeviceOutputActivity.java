@@ -1,20 +1,19 @@
 package com.jiekai.wzgl.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
-import com.jiekai.wzgl.config.IntentFlag;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DeviceOutEntity;
+import com.jiekai.wzgl.entity.LastInsertIdEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
@@ -26,8 +25,11 @@ import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.mysql.fabric.xmlrpc.base.Data;
+import com.mysql.jdbc.DatabaseMetaData;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,7 +61,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     @BindView(R.id.sao_ma)
     TextView saoMa;
     @BindView(R.id.input_jinghao)
-    TextView inputJinghao;
+    EditText inputJinghao;
     @BindView(R.id.enter)
     TextView enter;
     @BindView(R.id.cancle)
@@ -67,19 +69,9 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
-    private String outMc;
-    private String outXh;
 
     private DeviceEntity deviceEntity;
-
-    public static void startForResult(Activity activity, int ResultCode, String outMC,
-                                      String outXH) {
-        Intent intent = new Intent();
-        intent.setClass(activity, DeviceOutputActivity.class);
-        intent.putExtra(IntentFlag.MC, outMC);
-        intent.putExtra(IntentFlag.XH, outXH);
-        activity.startActivityForResult(intent, ResultCode);
-    }
+    private boolean isOutAlready = false;
 
     @Override
     public void initView() {
@@ -89,9 +81,6 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     @Override
     public void initData() {
         title.setText(getResources().getString(R.string.device_output));
-
-        outMc = getIntent().getStringExtra(IntentFlag.MC);
-        outXh = getIntent().getStringExtra(IntentFlag.XH);
 
         back.setOnClickListener(this);
         choosePicture.setOnClickListener(this);
@@ -189,8 +178,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                 });
     }
 
-    private boolean checkDevice() {
-        boolean isRight = false;
+    private void checkDevice() {
         //匹配设备是否已经出库
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceOut)
@@ -211,17 +199,12 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
                             alert(getResources().getString(R.string.device_already_out));
+                            isOutAlready = true;
+                        } else {
+                            isOutAlready = false;
                         }
                     }
                 });
-
-        if (outMc != null && outMc.equals(deviceEntity.getMC()) &&
-                outXh != null && outXh.equals(deviceEntity.getXH())) {
-            return true;
-        } else {
-            alert(getResources().getString(R.string.out_device_erro));
-            return false;
-        }
     }
 
     /**
@@ -230,6 +213,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
      * @return
      */
     private void deviceOut() {
+        if (isOutAlready) {
+            alert(R.string.device_is_already_out);
+            return;
+        }
         if (deviceEntity == null) {
             alert(getResources().getString(R.string.choose_out_device));
             return;
@@ -242,9 +229,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
             alert(R.string.please_input_jinghao);
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.OUT_DEVICE)
-                .
+        updataImage();
     }
 
     private void updataImage() {
@@ -252,7 +237,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         final String fileType = localPath.substring(localPath.lastIndexOf("."));
         final String romoteName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis();
         FtpManager.getInstance().uploadFile(localPath,
-                Config.BINDIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
+                Config.OUTIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
                     @Override
                     public void ftpStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_image));
@@ -261,16 +246,146 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     @Override
                     public void ftpSuccess(String remotePath) {
                         dismissProgressDialog();
-//                        saveImagePathToRemoteDB(romoteName,
-//                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
-//                                Config.BINDIMAGE_PATH + romoteName + fileType,
-//                                fileType);
+                        startEvent(remotePath);
                     }
 
                     @Override
                     public void ftpFaild(String error) {
                         alert(error);
                         dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void startEvent(final String imagePath) {
+        DBManager.dbDeal(DBManager.START_EVENT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_db));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        insertOutDevice(imagePath);
+                    }
+                });
+    }
+
+    private void insertOutDevice(String imagePath) {
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
+                .sql(SqlUrl.OUT_DEVICE)
+                .params(new Object[]{deviceEntity.getBH(), new java.sql.Date(new java.util.Date().getTime()),
+                        userData.getUSERID(), "0", inputJinghao.getText().toString()})
+                .clazz(LastInsertIdEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        dismissProgressDialog();
+                        rollback();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        getInsertId();
+//                        insertImagePath();
+                    }
+                });
+    }
+
+    private void getInsertId() {
+        DBManager.dbDeal(DBManager.EVENT_SELECT)
+                .sql("SELECT LAST_INSERT_ID() AS last_insert_id")
+                .clazz(LastInsertIdEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+
+                    }
+                });
+    }
+
+    private void insertImagePath() {
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
+                .sql(SqlUrl.INSERT_IAMGE)
+                .params(new String[]{"1","2","3","4","5","6"})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        dismissProgressDialog();
+                        rollback();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void rollback() {
+        DBManager.dbDeal(DBManager.ROLLBACK)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+
+                    }
+                });
+    }
+
+    private void commit() {
+        DBManager.dbDeal(DBManager.COMMIT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+
                     }
                 });
     }
