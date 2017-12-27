@@ -59,6 +59,21 @@ public class FtpManager {
         });
     }
 
+    public void deletFile(final String filePath, final FtpCallBack ftpCallBack) {
+        mExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                doStart(ftpCallBack);
+                boolean success = mFtpUtils.deletFile(filePath);
+                if (success) {
+                    doSuccess("", ftpCallBack);
+                } else {
+                    doFaild("", ftpCallBack);
+                }
+            }
+        });
+    }
+
     public void initFTP(final String FtpUrl, final int FtpPort, final String FtpUserName, final String FtpPassword) {
         mExecutor.execute(new Runnable() {
             @Override
@@ -89,7 +104,7 @@ public class FtpManager {
             @Override
             public void run() {
                 String filePath = "";
-                if (result.indexOf(FTPUtils.DIVITION) != 0) {
+                if (result.indexOf(FTPUtils.DIVITION) != 0 && result.indexOf(FTPUtils.DIVITION) != -1) {
                     filePath = result.substring(result.indexOf(FTPUtils.DIVITION) + FTPUtils.DIVITION.length());
                 }
                 ftpCallBack.ftpSuccess(filePath);

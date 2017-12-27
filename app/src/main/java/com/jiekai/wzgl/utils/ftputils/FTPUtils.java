@@ -196,4 +196,32 @@ public class FTPUtils {
         }
         return true;
     }
+
+    /**
+     * 删除FTP服务器上的文件
+     * @param pathName  服务器上的文件路径
+     * @return
+     */
+    public boolean deletFile(String pathName) {
+        if (!ftpClient.isConnected()) {
+            if (!initFTPSetting(FTPUrl,  FTPPort,  UserName,  UserPassword)) {
+                return false;
+            }
+        }
+        try {
+            ftpClient.setBufferSize(1024);
+            ftpClient.setControlEncoding("UTF-8");
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            boolean deleted = ftpClient.deleteFile(pathName);
+            //退出登陆FTP，关闭ftpCLient的连接
+            ftpClient.logout();
+            ftpClient.disconnect();
+            return  deleted;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

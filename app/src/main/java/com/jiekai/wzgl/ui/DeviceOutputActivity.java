@@ -25,15 +25,11 @@ import com.jiekai.wzgl.utils.ftputils.FtpManager;
 import com.jiekai.wzgl.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.mysql.fabric.xmlrpc.base.Data;
-import com.mysql.jdbc.DatabaseMetaData;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2017/12/16.
@@ -213,23 +209,39 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
      * @return
      */
     private void deviceOut() {
-        if (isOutAlready) {
-            alert(R.string.device_is_already_out);
-            return;
-        }
-        if (deviceEntity == null) {
-            alert(getResources().getString(R.string.choose_out_device));
-            return;
-        }
-        if (choosePictures == null || choosePictures.size() == 0) {
-            alert(R.string.please_choose_image);
-            return;
-        }
-        if (StringUtils.isEmpty(inputJinghao.getText().toString())) {
-            alert(R.string.please_input_jinghao);
-            return;
-        }
-        updataImage();
+//        if (isOutAlready) {
+//            alert(R.string.device_is_already_out);
+//            return;
+//        }
+//        if (deviceEntity == null) {
+//            alert(getResources().getString(R.string.choose_out_device));
+//            return;
+//        }
+//        if (choosePictures == null || choosePictures.size() == 0) {
+//            alert(R.string.please_choose_image);
+//            return;
+//        }
+//        if (StringUtils.isEmpty(inputJinghao.getText().toString())) {
+//            alert(R.string.please_input_jinghao);
+//            return;
+//        }
+//        updataImage();
+        FtpManager.getInstance().deletFile(Config.OUTIMAGE_PATH + "admin22-11-11-111514298768312.jpg", new FtpCallBack() {
+            @Override
+            public void ftpStart() {
+
+            }
+
+            @Override
+            public void ftpSuccess(String remotePath) {
+
+            }
+
+            @Override
+            public void ftpFaild(String error) {
+
+            }
+        });
     }
 
     private void updataImage() {
