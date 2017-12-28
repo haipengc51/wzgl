@@ -74,6 +74,10 @@ public class SqlUrl {
      */
     public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH) VALUES (?, ?, ?, ?, ?);";
     /**
+     * 执行设备入库操作 (设备自编码，操作时间，操作人，类别)
+     */
+    public static final String IN_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB) VALUES (?, ?, ?, ?);";
+    /**
      * 查找设备出库表
      */
     public static final String GetDeviceOut = "SELECT * FROM deviceout WHERE SBBH = ?";

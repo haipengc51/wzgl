@@ -2,7 +2,6 @@ package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,7 +11,10 @@ import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
+import com.jiekai.wzgl.entity.DeviceOutEntity;
+import com.jiekai.wzgl.entity.LastInsertIdEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -28,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/22.
@@ -62,6 +63,11 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
     private DeviceEntity currentDevice;
+
+    private String imagePath;       //图片的远程地址 /out/123.jpg
+    private String imageType;       //图片的类型     .jpg
+    private String romoteImageName;     //图片远程服务器的名称 123.jpg
+    private String localPath;   //图片本地的地址
 
     @Override
     public void initView() {
@@ -166,24 +172,53 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                 });
     }
 
+    private void checkDevice() {
+        //TODO 匹配设备是否已经出库
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceOut)
+                .params(new String[]{currentDevice.getBH()})
+                .clazz(DeviceOutEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            alert(getResources().getString(R.string.device_already_out));
+                            isOutAlready = true;
+                        } else {
+                            isOutAlready = false;
+                        }
+                    }
+                });
+    }
+
     private void deviceIn() {
+        if (currentDevice == null) {
+            alert(R.string.choose_in_device);
+            return;
+        }
+        if (choosePictures == null || choosePictures.size() == 0) {
+            alert(R.string.please_choose_image);
+            return;
+        }
         uploadImage();
     }
 
     private void uploadImage() {
-        if (currentDevice == null) {
-            alert(getResources().getString(R.string.choose_in_device));
-            return;
-        }
-        if (choosePictures == null || choosePictures.size() == 0) {
-            alert(getResources().getString(R.string.please_choose_image));
-            return;
-        }
-        final String localPath = choosePictures.get(0).getCompressPath();
-        final String fileType = localPath.substring(localPath.lastIndexOf("."));
-        final String romoteName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis();
+        localPath = choosePictures.get(0).getCompressPath();
+        imageType = localPath.substring(localPath.lastIndexOf("."));
+        romoteImageName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis() + imageType;
         FtpManager.getInstance().uploadFile(localPath,
-                Config.BINDIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
+                Config.INIMAGE_PATH, romoteImageName, new FtpCallBack() {
                     @Override
                     public void ftpStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_image));
@@ -192,16 +227,200 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void ftpSuccess(String remotePath) {
                         dismissProgressDialog();
-//                        saveImagePathToRemoteDB(romoteName,
-//                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
-//                                Config.BINDIMAGE_PATH + romoteName + fileType,
-//                                fileType);
+                        imagePath = Config.FTP_PATH_HANDLER + remotePath;
+                        startEvent();
                     }
 
                     @Override
                     public void ftpFaild(String error) {
                         alert(error);
                         dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void deletImage() {
+        String path = Config.INIMAGE_PATH + romoteImageName;
+        if (StringUtils.isEmpty(path)) {
+            return;
+        }
+        FtpManager.getInstance().deletFile(path, new FtpCallBack() {
+            @Override
+            public void ftpStart() {
+
+            }
+
+            @Override
+            public void ftpSuccess(String remotePath) {
+
+            }
+
+            @Override
+            public void ftpFaild(String error) {
+
+            }
+        });
+    }
+
+    /**
+     * 开启数据库事务
+     */
+    private void startEvent() {
+        DBManager.dbDeal(DBManager.START_EVENT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_db));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        insertInDevice();
+                    }
+                });
+    }
+
+
+    /**
+     * 插入出库的数据库
+     */
+    private void insertInDevice() {
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
+                .sql(SqlUrl.IN_DEVICE)
+                .params(new Object[]{currentDevice.getBH(), new java.sql.Date(new java.util.Date().getTime()),
+                        userData.getUSERID(), "1"})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        deletImage();
+                        rollback();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        getInsertId();
+                    }
+                });
+    }
+
+    private void getInsertId() {
+        DBManager.dbDeal(DBManager.EVENT_SELECT)
+                .sql("SELECT LAST_INSERT_ID() AS last_insert_id")
+                .clazz(LastInsertIdEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        rollback();
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            insertImagePath(String.valueOf(((LastInsertIdEntity)result.get(0)).getLast_insert_id()));
+                        } else {
+                            alert(R.string.insert_erro);
+                            dismissProgressDialog();
+                            rollback();
+                            deletImage();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 图片路径插入到数据库中
+     * SBBH就是上次插入的id
+     */
+    private void insertImagePath(String SBBH) {
+        String fileSize = FileSizeUtils.getAutoFileOrFilesSize(localPath);
+        if (StringUtils.isEmpty(fileSize)) {
+            rollback();
+            deletImage();
+            return;
+        }
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
+                .sql(SqlUrl.INSERT_IAMGE)
+                .params(new String[]{SBBH, romoteImageName, fileSize, imagePath, imageType, Config.doc_sbrk})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        rollback();
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void rollback() {
+        DBManager.dbDeal(DBManager.ROLLBACK)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.device_in_faild);
+                    }
+                });
+    }
+
+    private void commit() {
+        DBManager.dbDeal(DBManager.COMMIT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(R.string.device_in_faild);
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.device_in_success);
+                        finish();
                     }
                 });
     }

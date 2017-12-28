@@ -72,7 +72,6 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private String imagePath;       //图片的远程地址 /out/123.jpg
     private String imageType;       //图片的类型     .jpg
-    private String imageSize;       //图片的大小     30k
     private String romoteImageName;     //图片远程服务器的名称 123.jpg
     private String localPath;   //图片本地的地址
 
@@ -182,7 +181,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void checkDevice() {
-        //匹配设备是否已经出库
+        //TODO 匹配设备是否已经出库
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceOut)
                 .params(new String[]{deviceEntity.getBH()})
@@ -327,6 +326,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                         alert(err);
                         dismissProgressDialog();
                         deletImage();
+                        rollback();
                     }
 
                     @Override
@@ -359,6 +359,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                         if (result != null && result.size() != 0) {
                             insertImagePath(String.valueOf(((LastInsertIdEntity)result.get(0)).getLast_insert_id()));
                         } else {
+                            alert(R.string.insert_erro);
                             dismissProgressDialog();
                             rollback();
                             deletImage();
