@@ -92,4 +92,6 @@
     <string name="please_input_jinghao">请输入井号</string>
     <string name="device_is_already_out">该设备已经出库，请重新选择设备</string>
     <string name="uploading_db">正在上传数据库</string>
+    <string name="device_out_success">设备出库成功</string>
+    <string name="device_out_faild">设备出库失败</string>
 </resources>

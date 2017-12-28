@@ -15,6 +15,7 @@ import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DeviceOutEntity;
 import com.jiekai.wzgl.entity.LastInsertIdEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -68,6 +69,12 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private DeviceEntity deviceEntity;
     private boolean isOutAlready = false;
+
+    private String imagePath;       //图片的远程地址 /out/123.jpg
+    private String imageType;       //图片的类型     .jpg
+    private String imageSize;       //图片的大小     30k
+    private String romoteImageName;     //图片远程服务器的名称 123.jpg
+    private String localPath;   //图片本地的地址
 
     @Override
     public void initView() {
@@ -209,24 +216,57 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
      * @return
      */
     private void deviceOut() {
-//        if (isOutAlready) {
-//            alert(R.string.device_is_already_out);
-//            return;
-//        }
-//        if (deviceEntity == null) {
-//            alert(getResources().getString(R.string.choose_out_device));
-//            return;
-//        }
-//        if (choosePictures == null || choosePictures.size() == 0) {
-//            alert(R.string.please_choose_image);
-//            return;
-//        }
-//        if (StringUtils.isEmpty(inputJinghao.getText().toString())) {
-//            alert(R.string.please_input_jinghao);
-//            return;
-//        }
-//        updataImage();
-        FtpManager.getInstance().deletFile(Config.OUTIMAGE_PATH + "admin22-11-11-111514298768312.jpg", new FtpCallBack() {
+        if (isOutAlready) {
+            alert(R.string.device_is_already_out);
+            return;
+        }
+        if (deviceEntity == null) {
+            alert(getResources().getString(R.string.choose_out_device));
+            return;
+        }
+        if (choosePictures == null || choosePictures.size() == 0) {
+            alert(R.string.please_choose_image);
+            return;
+        }
+        if (StringUtils.isEmpty(inputJinghao.getText().toString())) {
+            alert(R.string.please_input_jinghao);
+            return;
+        }
+        updataImage();
+    }
+
+    private void updataImage() {
+        localPath = choosePictures.get(0).getCompressPath();
+        imageType = localPath.substring(localPath.lastIndexOf("."));
+        romoteImageName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis() + imageType;
+        FtpManager.getInstance().uploadFile(localPath,
+                Config.OUTIMAGE_PATH, romoteImageName, new FtpCallBack() {
+                    @Override
+                    public void ftpStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_image));
+                    }
+
+                    @Override
+                    public void ftpSuccess(String remotePath) {
+                        dismissProgressDialog();
+                        imagePath = Config.FTP_PATH_HANDLER + remotePath;
+                        startEvent();
+                    }
+
+                    @Override
+                    public void ftpFaild(String error) {
+                        alert(error);
+                        dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void deletImage() {
+        String path = Config.OUTIMAGE_PATH + romoteImageName;
+        if (StringUtils.isEmpty(path)) {
+            return;
+        }
+        FtpManager.getInstance().deletFile(path, new FtpCallBack() {
             @Override
             public void ftpStart() {
 
@@ -244,32 +284,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         });
     }
 
-    private void updataImage() {
-        final String localPath = choosePictures.get(0).getCompressPath();
-        final String fileType = localPath.substring(localPath.lastIndexOf("."));
-        final String romoteName = userData.getUSERID() + deviceEntity.getBH().toString() + System.currentTimeMillis();
-        FtpManager.getInstance().uploadFile(localPath,
-                Config.OUTIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
-                    @Override
-                    public void ftpStart() {
-                        showProgressDialog(getResources().getString(R.string.uploading_image));
-                    }
-
-                    @Override
-                    public void ftpSuccess(String remotePath) {
-                        dismissProgressDialog();
-                        startEvent(remotePath);
-                    }
-
-                    @Override
-                    public void ftpFaild(String error) {
-                        alert(error);
-                        dismissProgressDialog();
-                    }
-                });
-    }
-
-    private void startEvent(final String imagePath) {
+    /**
+     * 开启数据库事务
+     */
+    private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
                 .execut(new DbCallBack() {
                     @Override
@@ -285,17 +303,19 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onResponse(List result) {
-                        insertOutDevice(imagePath);
+                        insertOutDevice();
                     }
                 });
     }
 
-    private void insertOutDevice(String imagePath) {
+    /**
+     * 插入出库的数据库
+     */
+    private void insertOutDevice() {
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.OUT_DEVICE)
                 .params(new Object[]{deviceEntity.getBH(), new java.sql.Date(new java.util.Date().getTime()),
                         userData.getUSERID(), "0", inputJinghao.getText().toString()})
-                .clazz(LastInsertIdEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -304,14 +324,14 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onError(String err) {
+                        alert(err);
                         dismissProgressDialog();
-                        rollback();
+                        deletImage();
                     }
 
                     @Override
                     public void onResponse(List result) {
                         getInsertId();
-//                        insertImagePath();
                     }
                 });
     }
@@ -328,20 +348,39 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onError(String err) {
-
+                        alert(err);
+                        dismissProgressDialog();
+                        rollback();
+                        deletImage();
                     }
 
                     @Override
                     public void onResponse(List result) {
-
+                        if (result != null && result.size() != 0) {
+                            insertImagePath(String.valueOf(((LastInsertIdEntity)result.get(0)).getLast_insert_id()));
+                        } else {
+                            dismissProgressDialog();
+                            rollback();
+                            deletImage();
+                        }
                     }
                 });
     }
 
-    private void insertImagePath() {
+    /**
+     * 图片路径插入到数据库中
+     * SBBH就是上次插入的id
+     */
+    private void insertImagePath(String SBBH) {
+        String fileSize = FileSizeUtils.getAutoFileOrFilesSize(localPath);
+        if (StringUtils.isEmpty(fileSize)) {
+            rollback();
+            deletImage();
+            return;
+        }
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
-                .params(new String[]{"1","2","3","4","5","6"})
+                .params(new String[]{SBBH, romoteImageName, fileSize, imagePath, imageType, Config.doc_sbck})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -350,8 +389,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onError(String err) {
+                        alert(err);
                         dismissProgressDialog();
                         rollback();
+                        deletImage();
                     }
 
                     @Override
@@ -372,12 +413,12 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onError(String err) {
-
+                        alert(err);
                     }
 
                     @Override
                     public void onResponse(List result) {
-
+                        alert(R.string.device_out_faild);
                     }
                 });
     }
@@ -392,12 +433,13 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onError(String err) {
-
+                        alert(R.string.device_out_faild);
                     }
 
                     @Override
                     public void onResponse(List result) {
-
+                        alert(R.string.device_out_success);
+                        finish();
                     }
                 });
     }

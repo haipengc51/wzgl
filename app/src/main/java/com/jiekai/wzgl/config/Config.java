@@ -21,4 +21,5 @@ public class Config {
     public static final String OUTIMAGE_PATH = "/out/";
     public static final String PICTURE_COMPRESS_PATH = Environment.getExternalStorageDirectory().toString() + "/wzgl/imag/compress";    //图片压缩的地址
     public static final String SBBD = "sbbd";   //设备绑定的类型
+    public static final String doc_sbck= "sbck";    //设备出库的类型
 }

@@ -2,7 +2,6 @@ package com.jiekai.wzgl.utils.dbutils;
 
 
 import com.jiekai.wzgl.config.Config;
-import com.mysql.jdbc.log.Log;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -184,6 +183,7 @@ public class DbDeal extends AsynInterface {
     private void commitEvent(AsynCallBack asynCallBack) {
         try {
             if (connection == null || connection.isClosed()) {
+                connection.close();
                 asynCallBack.onError("数据库连接失败");
                 return;
             }
@@ -193,6 +193,11 @@ public class DbDeal extends AsynInterface {
             connection.setAutoCommit(true);
             preparedStatement.close();
         } catch (SQLException e) {
+            try {
+                connection.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
         }
@@ -201,10 +206,9 @@ public class DbDeal extends AsynInterface {
     private void rollbackEvent(AsynCallBack asynCallBack) {
         try {
             if (connection == null || connection.isClosed()) {
-                if (!initConnection()) {
-                    asynCallBack.onError("数据库连接失败");
-                    return;
-                }
+                connection.close();
+                asynCallBack.onError("数据库连接失败");
+                return;
             }
             PreparedStatement preparedStatement = connection.prepareStatement("ROLLBACK;");
             int resultSet = preparedStatement.executeUpdate();
@@ -212,6 +216,11 @@ public class DbDeal extends AsynInterface {
             connection.setAutoCommit(true);
             preparedStatement.close();
         } catch (SQLException e) {
+            try {
+                connection.close();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
         }
