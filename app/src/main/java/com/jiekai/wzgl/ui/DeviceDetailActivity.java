@@ -165,9 +165,9 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String LZJLBH;      //物资流转记录编号
         dataList.add(new DeviceDetailAdapterEntity("物资流转记录编号", deviceEntity.getLZJLBH()));
 //        private String TMBH;      //条码编号
-        dataList.add(new DeviceDetailAdapterEntity("条码编号", deviceEntity.getTMBH()));
+//        dataList.add(new DeviceDetailAdapterEntity("条码编号", deviceEntity.getTMBH()));
 //        private String EWMBH;      //二维码编号
-        dataList.add(new DeviceDetailAdapterEntity("二维码编号", deviceEntity.getEWMBH()));
+//        dataList.add(new DeviceDetailAdapterEntity("二维码编号", deviceEntity.getEWMBH()));
 //        private String KWZT;      //物资库位状态
         dataList.add(new DeviceDetailAdapterEntity("物资库位状态", deviceEntity.getKWZT()));
 //        private String CCBH;      //出厂编号
@@ -177,11 +177,11 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String GYSGB;      //供应商国别
         dataList.add(new DeviceDetailAdapterEntity("供应商国别", deviceEntity.getGYSGB()));
 //        private String IDDZMBH1;      //ID电子码编号1
-        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号1", deviceEntity.getIDDZMBH1()));
+//        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号1", deviceEntity.getIDDZMBH1()));
 //        private String IDDZMBH2;      //ID电子码编号2
-        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号2", deviceEntity.getIDDZMBH2()));
+//        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号2", deviceEntity.getIDDZMBH2()));
 //        private String IDDZMBH3;      //ID电子码编号3
-        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号3", deviceEntity.getIDDZMBH3()));
+//        dataList.add(new DeviceDetailAdapterEntity("ID电子码编号3", deviceEntity.getIDDZMBH3()));
 //        private String ZCLY;      //物资资产来源
         dataList.add(new DeviceDetailAdapterEntity("物资资产来源", deviceEntity.getZCLY()));
 //        private String SYDW;      //物资所有单位
@@ -235,7 +235,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String QTFJ;      //其他附件
         dataList.add(new DeviceDetailAdapterEntity("其他附件", deviceEntity.getQTFJ()));
 //        private String SFPJ;      //是否配件
-        dataList.add(new DeviceDetailAdapterEntity("是否配件", deviceEntity.getSFPJ()));
+        dataList.add(new DeviceDetailAdapterEntity("是否配件", deviceEntity.getSFPJ().equals("0") ? "是" : "否"));
 //        private String SSSBBH;      //如果是配件，所属主设备编号
         dataList.add(new DeviceDetailAdapterEntity("", deviceEntity.getSSSBBH()));
 //        private String SBZT;      //设备状态

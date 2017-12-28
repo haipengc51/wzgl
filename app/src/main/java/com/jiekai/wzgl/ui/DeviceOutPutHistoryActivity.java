@@ -10,9 +10,16 @@ import android.widget.TextView;
 
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.DeviceOutputHistoryAdapter;
+import com.jiekai.wzgl.config.SqlUrl;
+import com.jiekai.wzgl.entity.DeviceOutHistoryEntity;
+import com.jiekai.wzgl.entity.DevicestoreEntity;
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
+import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.TimePickerDialog;
+import com.jiekai.wzgl.utils.dbutils.DBManager;
+import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,11 +51,10 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     private TimePickerDialog startDataDialog;
     private TimePickerDialog endDataDialog;
     private DeviceOutputHistoryAdapter historyAdapter;
-    private List<String> dataList = new ArrayList<>();
-    private String[] historyListData = new String[]{"", "", "", "", "", "", ""
-            , "", "", "", "", "", ""
-            , "", "", "", "", "", ""
-            , "", "", "", "", "", ""};
+    private List<DeviceOutHistoryEntity> dataList = new ArrayList<>();
+
+    private String startTiem;
+    private String endTime;
 
     @Override
     public void initView() {
@@ -68,10 +74,6 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     public void initOperation() {
         startDataDialog = new TimePickerDialog(mActivity, startDataInterface);
         endDataDialog = new TimePickerDialog(mActivity, endDataInterface);
-
-        for (int i=0; i<historyListData.length; i++) {
-            dataList.add(historyListData[i]);
-        }
 
         if (historyAdapter == null) {
             historyAdapter = new DeviceOutputHistoryAdapter(mActivity, dataList);
@@ -94,17 +96,62 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
                 endDataDialog.showDatePickerDialog();
                 break;
             case R.id.find:
-
+                getList();
                 break;
         }
+    }
+
+    /**
+     * 获取出库历史
+     */
+    private void getList() {
+        startTiem = startData.getText().toString();
+        endTime = endData.getText().toString();
+        if (StringUtils.isEmpty(startTiem)) {
+            alert(R.string.input_start_data);
+            return;
+        }
+        if (StringUtils.isEmpty(endTime)) {
+            alert(R.string.input_end_data);
+            return;
+        }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GET_OUT_HISTORY)
+                .params(new Object[]{ Date.valueOf(startTiem), Date.valueOf(endTime)})
+                .clazz(DeviceOutHistoryEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_data));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            dataList.clear();
+                            dataList.addAll(result);
+                        } else {
+                            alert(R.string.no_data);
+                            dataList.clear();
+                        }
+                        historyAdapter.notifyDataSetChanged();
+                        dismissProgressDialog();
+                    }
+                });
     }
 
     private TimePickerDialog.TimePickerDialogInterface startDataInterface = new TimePickerDialog.TimePickerDialogInterface() {
         @Override
         public void positiveListener() {
-            startData.setText(startDataDialog.getYear() + "年"+
-                startDataDialog.getMonth() + "月" +
-                startDataDialog.getDay() + "日");
+            startData.setText(startDataDialog.getYear() + "-"+
+                startDataDialog.getMonth() + "-" +
+                startDataDialog.getDay());
         }
 
         @Override
@@ -116,9 +163,9 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     private TimePickerDialog.TimePickerDialogInterface endDataInterface = new TimePickerDialog.TimePickerDialogInterface() {
         @Override
         public void positiveListener() {
-            endData.setText(endDataDialog.getYear() + "年"+
-                    endDataDialog.getMonth() + "月" +
-                    endDataDialog.getDay() + "日");
+            endData.setText(endDataDialog.getYear() + "-"+
+                    endDataDialog.getMonth() + "-" +
+                    endDataDialog.getDay());
         }
 
         @Override

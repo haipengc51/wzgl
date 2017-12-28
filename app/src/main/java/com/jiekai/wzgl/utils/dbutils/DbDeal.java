@@ -121,6 +121,9 @@ public class DbDeal extends AsynInterface {
             asynCallBack.onSuccess(list);
             resultSet.close();
             preparedStatement.close();
+            if (dbType != DBManager.EVENT_SELECT) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
@@ -157,6 +160,11 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("数据库操作失败");
             }
             preparedStatement.close();
+            if (!(dbType == DBManager.EVENT_INSERT ||
+                    dbType == DBManager.EVENT_UPDATA ||
+                    dbType == DBManager.EVENT_DELET)) {
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
@@ -192,6 +200,7 @@ public class DbDeal extends AsynInterface {
             asynCallBack.onSuccess(null);
             connection.setAutoCommit(true);
             preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             try {
                 connection.close();
@@ -215,6 +224,7 @@ public class DbDeal extends AsynInterface {
             asynCallBack.onSuccess(null);
             connection.setAutoCommit(true);
             preparedStatement.close();
+            connection.close();
         } catch (SQLException e) {
             try {
                 connection.close();

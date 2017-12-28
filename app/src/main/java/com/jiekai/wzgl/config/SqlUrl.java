@@ -121,4 +121,14 @@ public class SqlUrl {
      * 更改设备状态
      */
     public static final String CHANGE_DEVICE_STATE = "UPDATE device SET SBZT = ? WHERE BH = ?";
+    /**
+     * 根据时间段 获取设备出库历史
+     */
+    public static final String GET_OUT_HISTORY = "SELECT " +
+            "device.MC, " +
+            "devicestore.SBBH, devicestore.CZSJ, devicestore.JH, devicestore.LYDW, " +
+            "userinfo.USERNAME " +
+            "FROM devicestore, device, userinfo WHERE " +
+            "devicestore.CZSJ >=?  AND devicestore.CZSJ <=? AND devicestore.LB = 0 " +
+            "AND device.BH = devicestore.SBBH AND userinfo.USERID = devicestore.CZR";
 }

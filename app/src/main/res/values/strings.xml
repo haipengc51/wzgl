@@ -103,4 +103,7 @@
     <string name="device_scrap_success">设备报废成功</string>
     <string name="device_scrap_faild">设备报废失败</string>
     <string name="insert_erro">插入数据库错误</string>
+    <string name="out_people">出库人</string>
+    <string name="lingyongdanwei">领用单位</string>
+    <string name="jinghao">井号</string>
 </resources>

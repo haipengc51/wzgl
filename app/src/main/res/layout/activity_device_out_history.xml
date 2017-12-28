@@ -70,7 +70,9 @@
     </LinearLayout>
 
     <View
-        style="@style/line_d5"/>
+        style="@style/line_d5"
+        android:layout_marginLeft="@dimen/marginTop10"
+        android:layout_marginRight="@dimen/marginTop10"/>
 
     <ListView
         android:id="@+id/listview"

@@ -5,84 +5,97 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:minHeight="@dimen/item_height"
-        android:text="@string/serial_num"
-        android:gravity="center"
-        android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
+        android:id="@+id/device_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:minHeight="@dimen/item_height"
         android:text="@string/device_name"
         android:gravity="center"
         android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
+        android:id="@+id/device_id"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:minHeight="@dimen/item_height"
-        android:text="@string/device_unit_type"
-        android:gravity="center"
-        android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:minHeight="@dimen/item_height"
         android:text="@string/device_id"
         android:gravity="center"
         android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
+        android:id="@+id/out_people"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:minHeight="@dimen/item_height"
-        android:text="@string/device_name"
+        android:text="@string/out_people"
         android:gravity="center"
         android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
+        android:id="@+id/out_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:minHeight="@dimen/item_height"
         android:text="@string/outpu_time"
         android:gravity="center"
         android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
+        android:id="@+id/lydw"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:minHeight="@dimen/item_height"
+        android:text="@string/lingyongdanwei"
+        android:gravity="center"
+        android:textSize="@dimen/content_text_size"
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
+
+    <TextView
+        android:id="@+id/jinghao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:minHeight="@dimen/item_height"
-        android:text="@string/device_id"
+        android:text="@string/jinghao"
         android:gravity="center"
         android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+        android:textColor="@color/text_content_color"
+        android:visibility="visible"/>
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:minHeight="@dimen/item_height"
-        android:text="@string/picture"
-        android:gravity="center"
-        android:textSize="@dimen/content_text_size"
-        android:textColor="@color/text_content_color"/>
+    <View
+        style="@style/vertile_line_d5"/>
 
 </LinearLayout>
