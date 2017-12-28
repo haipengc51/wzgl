@@ -12,6 +12,8 @@ import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
+import com.jiekai.wzgl.entity.DevicescrapEntity;
+import com.jiekai.wzgl.entity.DevicestoreEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
@@ -65,6 +67,10 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
     private DeviceEntity currentDevice;
+
+    private String romoteImageName;
+    private String imagePath;   //图片的远程地址 /out/123.jpg
+    private boolean isScrap = false;
 
     @Override
     public void initView() {
@@ -164,6 +170,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                             deviceName.setText(currentDevice.getMC());
                             deviceXinghao.setText(currentDevice.getXH());
                             deviceId.setText(currentDevice.getBH());
+                            checkDevice();
                         } else {
                             alert(getResources().getString(R.string.no_data));
                         }
@@ -171,11 +178,42 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 });
     }
 
-    private void deviceScrap() {
-        uploadImage();
+    /**
+     * 查找该设备是否报废
+     */
+    private void checkDevice() {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GET_SCRAP_DEVICE)
+                .params(new String[]{currentDevice.getBH()})
+                .clazz(DevicescrapEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            alert(R.string.device_already_out);
+                            isScrap = true;
+                        } else {
+                            isScrap = false;
+                        }
+                    }
+                });
     }
 
-    private void uploadImage() {
+    private void deviceScrap() {
+        if (isScrap) {
+            alert(R.string.device_already_scrap);
+            return;
+        }
         if (currentDevice == null) {
             alert(getResources().getString(R.string.choose_scrap_device));
             return;
@@ -184,11 +222,15 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
             alert(getResources().getString(R.string.please_choose_image));
             return;
         }
+        uploadImage();
+    }
+
+    private void uploadImage() {
         final String localPath = choosePictures.get(0).getCompressPath();
         final String fileType = localPath.substring(localPath.lastIndexOf("."));
-        final String romoteName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis();
+        romoteImageName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis() + fileType;
         FtpManager.getInstance().uploadFile(localPath,
-                Config.BINDIMAGE_PATH, romoteName + fileType, new FtpCallBack() {
+                Config.SCRAP_PATH, romoteImageName, new FtpCallBack() {
                     @Override
                     public void ftpStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_image));
@@ -197,16 +239,157 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void ftpSuccess(String remotePath) {
                         dismissProgressDialog();
-//                        saveImagePathToRemoteDB(romoteName,
-//                                FileSizeUtils.getAutoFileOrFilesSize(localPath),
-//                                Config.BINDIMAGE_PATH + romoteName + fileType,
-//                                fileType);
+                        imagePath = Config.FTP_PATH_HANDLER + remotePath;
+                        startEvent();
                     }
 
                     @Override
                     public void ftpFaild(String error) {
                         alert(error);
                         dismissProgressDialog();
+                    }
+                });
+    }
+
+    private void deletImage() {
+        String path = Config.SCRAP_PATH + romoteImageName;
+        if (StringUtils.isEmpty(path)) {
+            return;
+        }
+        FtpManager.getInstance().deletFile(path, new FtpCallBack() {
+            @Override
+            public void ftpStart() {
+
+            }
+
+            @Override
+            public void ftpSuccess(String remotePath) {
+
+            }
+
+            @Override
+            public void ftpFaild(String error) {
+
+            }
+        });
+    }
+
+    /**
+     * 开启数据库事务
+     */
+    private void startEvent() {
+        DBManager.dbDeal(DBManager.START_EVENT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_db));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        deletImage();
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        insertScrap();
+                    }
+                });
+    }
+
+    private void insertScrap() {
+        DBManager.dbDeal(DBManager.INSERT)
+                .sql(SqlUrl.ADD_DEVICE_SCRAP)
+                .params(new Object[]{currentDevice.getBH(), imagePath,
+                        new java.sql.Date(new java.util.Date().getTime()), userData.getUSERID()})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_db));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        dismissProgressDialog();
+                        alert(err);
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        changeDeviceState();
+                    }
+                });
+    }
+
+    private void changeDeviceState() {
+        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+                .sql(SqlUrl.CHANGE_DEVICE_STATE)
+                .params(new String[]{"4", currentDevice.getBH()})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        rollback();
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
+                    }
+                });
+    }
+
+    private void rollback() {
+        DBManager.dbDeal(DBManager.ROLLBACK)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        alert(R.string.device_scrap_faild);
+                    }
+                });
+    }
+
+    private void commit() {
+        DBManager.dbDeal(DBManager.COMMIT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(R.string.device_scrap_faild);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.device_scrap_success);
+                        dismissProgressDialog();
+                        finish();
                     }
                 });
     }
@@ -224,5 +407,11 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
             String code = data.getExtras().getString("result");
             getDeviceDataById(code);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PictureSelectUtils.clearPictureSelectorCache(this);
     }
 }

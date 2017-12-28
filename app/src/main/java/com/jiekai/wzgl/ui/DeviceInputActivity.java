@@ -11,7 +11,7 @@ import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
-import com.jiekai.wzgl.entity.DeviceOutEntity;
+import com.jiekai.wzgl.entity.DevicestoreEntity;
 import com.jiekai.wzgl.entity.LastInsertIdEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.FileSizeUtils;
@@ -63,6 +63,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
     private DeviceEntity currentDevice;
+    private boolean isInAlready = false;
 
     private String imagePath;       //图片的远程地址 /out/123.jpg
     private String imageType;       //图片的类型     .jpg
@@ -165,6 +166,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                             currentDevice = (DeviceEntity) result.get(0);
                             deviceName.setText(currentDevice.getMC());
                             deviceId.setText(currentDevice.getBH());
+                            checkDevice();
                         } else {
                             alert(getResources().getString(R.string.no_data));
                         }
@@ -173,11 +175,10 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void checkDevice() {
-        //TODO 匹配设备是否已经出库
         DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceOut)
+                .sql(SqlUrl.GetDeviceIN)
                 .params(new String[]{currentDevice.getBH()})
-                .clazz(DeviceOutEntity.class)
+                .clazz(DevicestoreEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -192,16 +193,20 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            alert(getResources().getString(R.string.device_already_out));
-                            isOutAlready = true;
+                            alert(R.string.device_already_in);
+                            isInAlready = true;
                         } else {
-                            isOutAlready = false;
+                            isInAlready = false;
                         }
                     }
                 });
     }
 
     private void deviceIn() {
+        if (isInAlready) {
+            alert(R.string.device_already_in);
+            return;
+        }
         if (currentDevice == null) {
             alert(R.string.choose_in_device);
             return;
@@ -276,6 +281,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void onError(String err) {
                         alert(err);
+                        deletImage();
                         dismissProgressDialog();
                     }
 
@@ -318,7 +324,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
     private void getInsertId() {
         DBManager.dbDeal(DBManager.EVENT_SELECT)
-                .sql("SELECT LAST_INSERT_ID() AS last_insert_id")
+                .sql(SqlUrl.SELECT_INSERT_ID)
                 .clazz(LastInsertIdEntity.class)
                 .execut(new DbCallBack() {
                     @Override
@@ -378,8 +384,32 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
                     @Override
                     public void onResponse(List result) {
-                        commit();
+                        changeDeviceState();
+                    }
+                });
+    }
+
+    private void changeDeviceState() {
+        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+                .sql(SqlUrl.CHANGE_DEVICE_STATE)
+                .params(new String[]{"0", currentDevice.getBH()})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
                         dismissProgressDialog();
+                        rollback();
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
                     }
                 });
     }
@@ -415,11 +445,13 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void onError(String err) {
                         alert(R.string.device_in_faild);
+                        dismissProgressDialog();
                     }
 
                     @Override
                     public void onResponse(List result) {
                         alert(R.string.device_in_success);
+                        dismissProgressDialog();
                         finish();
                     }
                 });

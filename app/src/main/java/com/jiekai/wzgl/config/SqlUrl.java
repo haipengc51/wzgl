@@ -78,9 +78,17 @@ public class SqlUrl {
      */
     public static final String IN_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB) VALUES (?, ?, ?, ?);";
     /**
+     * 执行设备维修操作 (设备自编码，操作时间，操作人，类别)
+     */
+    public static final String REPAIR_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB) VALUES (?, ?, ?, ?);";
+    /**
      * 查找设备出库表
      */
-    public static final String GetDeviceOut = "SELECT * FROM deviceout WHERE SBBH = ?";
+    public static final String GetDeviceOut = "SELECT * FROM devicestore WHERE SBBH = ? AND LB = 0";
+    /**
+     * 查找设备入库表
+     */
+    public static final String GetDeviceIN = "SELECT * FROM devicestore WHERE SBBH = ? AND LB = 1";
     /**
      * 根据盘库的需求查询数据库
      */
@@ -93,11 +101,24 @@ public class SqlUrl {
             "AND leibie.COOD = dv.LB " +
             "AND xinghao.COOD = dv.XH " +
             "AND guige.COOD = dv.GG";
-
-    public static final String START_EVENT = "START TRANSACTION;";
-    public static final String ROLLBACK = "ROLLBACK;";
     /**
      * 插入图片到服务器中（ID, 文件名称， 文件大小， 文件地址，文件类型，类别）
      */
     public static final String INSERT_IAMGE = "INSERT INTO devicedoc (SBBH, WJMC, WJDX, WJDZ, WDLX, LB) VALUES (?, ?, ?, ?, ?, ?)";
+    /**
+     * 查找上次插入数据所返回的ID
+     */
+    public static final String SELECT_INSERT_ID = "SELECT LAST_INSERT_ID() AS last_insert_id";
+    /**
+     * 插入设备报废信息
+     */
+    public static final String ADD_DEVICE_SCRAP = "INSERT INTO devicescrap (SBBH, BFZP, BFSJ, BFR) VALUES (?, ?, ?, ?)";
+    /**
+     * 查找报废设备
+     */
+    public static final String GET_SCRAP_DEVICE = "SELECT * FROM devicescrap WHERE SBBH = ?";
+    /**
+     * 更改设备状态
+     */
+    public static final String CHANGE_DEVICE_STATE = "UPDATE device SET SBZT = ? WHERE BH = ?";
 }

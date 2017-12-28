@@ -51,6 +51,8 @@
     <string name="no_data">没有找到数据</string>
     <string name="out_device_erro">此设备和申请的设备不匹配</string>
     <string name="device_already_out">此设备已经出库，请重新选择设备</string>
+    <string name="device_already_in">此设备已经入库，请重新选择设备</string>
+    <string name="device_already_scrap">此设备已经报废，请重新选择设备</string>
     <string name="choose_out_device">请选择要出库的设备</string>
     <string name="choose_in_device">请选择要入库的设备</string>
     <string name="choose_scrap_device">请选择要报废的设备</string>
@@ -74,6 +76,7 @@
     <string name="get_id_err">读卡失败</string>
     <string name="device_scrap">设备报废</string>
     <string name="repair_type">维修类型</string>
+    <string name="choose_repair_type">请选择维修类型</string>
     <string name="device_repair">设备维修</string>
     <string name="pan_ku">盘库</string>
     <string name="start">开始</string>
@@ -90,11 +93,14 @@
     <string name="click_again_finish">在此点击退出物资管理</string>
     <string name="input_jinghao">请输入井号</string>
     <string name="please_input_jinghao">请输入井号</string>
-    <string name="device_is_already_out">该设备已经出库，请重新选择设备</string>
     <string name="uploading_db">正在上传数据库</string>
     <string name="device_out_success">设备出库成功</string>
     <string name="device_in_success">设备入库成功</string>
     <string name="device_out_faild">设备出库失败</string>
     <string name="device_in_faild">设备入库失败</string>
+    <string name="device_repair_faild">设备维修失败</string>
+    <string name="device_repair_success">设备维修成功</string>
+    <string name="device_scrap_success">设备报废成功</string>
+    <string name="device_scrap_faild">设备报废失败</string>
     <string name="insert_erro">插入数据库错误</string>
 </resources>

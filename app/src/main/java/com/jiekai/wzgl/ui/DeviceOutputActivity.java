@@ -12,7 +12,7 @@ import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceEntity;
-import com.jiekai.wzgl.entity.DeviceOutEntity;
+import com.jiekai.wzgl.entity.DevicestoreEntity;
 import com.jiekai.wzgl.entity.LastInsertIdEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.FileSizeUtils;
@@ -181,11 +181,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void checkDevice() {
-        //TODO 匹配设备是否已经出库
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceOut)
                 .params(new String[]{deviceEntity.getBH()})
-                .clazz(DeviceOutEntity.class)
+                .clazz(DevicestoreEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -200,7 +199,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            alert(getResources().getString(R.string.device_already_out));
+                            alert(R.string.device_already_out);
                             isOutAlready = true;
                         } else {
                             isOutAlready = false;
@@ -216,7 +215,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
      */
     private void deviceOut() {
         if (isOutAlready) {
-            alert(R.string.device_is_already_out);
+            alert(R.string.device_already_out);
             return;
         }
         if (deviceEntity == null) {
@@ -297,6 +296,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     @Override
                     public void onError(String err) {
                         alert(err);
+                        deletImage();
                         dismissProgressDialog();
                     }
 
@@ -338,7 +338,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private void getInsertId() {
         DBManager.dbDeal(DBManager.EVENT_SELECT)
-                .sql("SELECT LAST_INSERT_ID() AS last_insert_id")
+                .sql(SqlUrl.SELECT_INSERT_ID)
                 .clazz(LastInsertIdEntity.class)
                 .execut(new DbCallBack() {
                     @Override
@@ -398,8 +398,32 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
                     @Override
                     public void onResponse(List result) {
-                        commit();
+                        changeDeviceState();
+                    }
+                });
+    }
+
+    private void changeDeviceState() {
+        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+                .sql(SqlUrl.CHANGE_DEVICE_STATE)
+                .params(new String[]{"1", deviceEntity.getBH()})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
                         dismissProgressDialog();
+                        rollback();
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
                     }
                 });
     }
@@ -435,11 +459,13 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     @Override
                     public void onError(String err) {
                         alert(R.string.device_out_faild);
+                        dismissProgressDialog();
                     }
 
                     @Override
                     public void onResponse(List result) {
                         alert(R.string.device_out_success);
+                        dismissProgressDialog();
                         finish();
                     }
                 });
