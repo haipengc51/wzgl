@@ -8,10 +8,10 @@ import com.jiekai.wzgl.entity.base.BaseEntity;
  */
 
 public class PankuDataNumEntity extends BaseEntity {
-    public String LB = "LB";  //设备类别
-    public String XH = "XH";  //设备型号
-    public String GG = "GG";   //设备规格
-    public String NUM = "NUM"; //数量
+    public String LB;  //设备类别
+    public String XH;  //设备型号
+    public String GG;   //设备规格
+    public long NUM; //数量
 
     public String getLB() {
         return LB;
@@ -37,11 +37,11 @@ public class PankuDataNumEntity extends BaseEntity {
         this.GG = GG;
     }
 
-    public String getNUM() {
+    public long getNUM() {
         return NUM;
     }
 
-    public void setNUM(String NUM) {
+    public void setNUM(long NUM) {
         this.NUM = NUM;
     }
 }

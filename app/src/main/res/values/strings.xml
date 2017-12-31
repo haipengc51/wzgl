@@ -84,8 +84,6 @@
     <string name="upload">上传</string>
     <string name="detail">详情</string>
     <string name="stop_pan_ku">盘库结束</string>
-    <string name="device_has_panku">该设备已经盘库</string>
-    <string name="this_device_panku_failed">该设备盘库失败</string>
     <string name="panku_detail">盘库详情</string>
     <string name="device_num">设备数量</string>
     <string name="cancle">取消</string>
@@ -106,4 +104,11 @@
     <string name="out_people">出库人</string>
     <string name="lingyongdanwei">领用单位</string>
     <string name="jinghao">井号</string>
+    <string name="update_db_failed">更新数据库失败</string>
+    <string name="device_has_panku">该设备已经盘库</string>
+    <string name="this_device_panku_failed">该设备盘库失败</string>
+    <string name="this_device_panku_success">该设备盘库成功</string>
+    <string name="uploading_panku_faild">上传盘库信息失败</string>
+    <string name="uploading_panku_success">上传盘库信息成功</string>
+    <string name="nfc_stop">已停止盘库</string>
 </resources>

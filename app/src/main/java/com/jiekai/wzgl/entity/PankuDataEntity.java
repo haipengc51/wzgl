@@ -12,7 +12,9 @@ public class PankuDataEntity extends BaseEntity {
     private String LB;
     private String XH;
     private String GG;
-    private String IDDZMBH1;
+    private String leibie;
+    private String xinghao;
+    private String guige;
 
     public String getBH() {
         return BH;
@@ -54,11 +56,27 @@ public class PankuDataEntity extends BaseEntity {
         this.GG = GG;
     }
 
-    public String getIDDZMBH1() {
-        return IDDZMBH1;
+    public String getLeibie() {
+        return leibie;
     }
 
-    public void setIDDZMBH1(String IDDZMBH1) {
-        this.IDDZMBH1 = IDDZMBH1;
+    public void setLeibie(String leibie) {
+        this.leibie = leibie;
+    }
+
+    public String getXinghao() {
+        return xinghao;
+    }
+
+    public void setXinghao(String xinghao) {
+        this.xinghao = xinghao;
+    }
+
+    public String getGuige() {
+        return guige;
+    }
+
+    public void setGuige(String guige) {
+        this.guige = guige;
     }
 }

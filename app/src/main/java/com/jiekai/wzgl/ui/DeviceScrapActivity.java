@@ -300,7 +300,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void insertScrap() {
-        DBManager.dbDeal(DBManager.INSERT)
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.ADD_DEVICE_SCRAP)
                 .params(new Object[]{currentDevice.getBH(), imagePath,
                         new java.sql.Date(new java.util.Date().getTime()), userData.getUSERID()})

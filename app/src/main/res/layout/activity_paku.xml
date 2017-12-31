@@ -31,7 +31,8 @@
             android:gravity="center"
             style="@style/button_style"
             android:layout_marginLeft="@dimen/marginTop20"
-            android:text="@string/finish"/>
+            android:text="@string/finish"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/data_upload"

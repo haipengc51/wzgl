@@ -14,6 +14,7 @@ import com.jiekai.wzgl.adapter.DeviceDetailAdapter;
 import com.jiekai.wzgl.adapter.DeviceDetailAdapterEntity;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
+import com.jiekai.wzgl.entity.DeviceDetailEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -115,9 +116,9 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             return;
         }
         DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{nfcString})
-                .clazz(DeviceEntity.class)
+                .sql(SqlUrl.GET_DEVICE_DETAIL)
+                .params(new String[]{nfcString, nfcString, nfcString})
+                .clazz(DeviceDetailEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -134,7 +135,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                     public void onResponse(List result) {
                         dismissProgressDialog();
                         if (result != null && result.size() != 0) {
-                            paresDeviceToShow((DeviceEntity) result.get(0));
+                            paresDeviceToShow((DeviceDetailEntity) result.get(0));
                             buttonLayout.setVisibility(View.GONE);
                             listview.setVisibility(View.VISIBLE);
                         } else {
@@ -149,17 +150,17 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
      *
      * @param deviceEntity
      */
-    private void paresDeviceToShow(DeviceEntity deviceEntity) {
+    private void paresDeviceToShow(DeviceDetailEntity deviceEntity) {
         dataList.clear();
         dataList.add(new DeviceDetailAdapterEntity("设备自编号", deviceEntity.getBH()));
 //        private String MC;      //设备名称
         dataList.add(new DeviceDetailAdapterEntity("设备名称", deviceEntity.getMC()));
 //        private String LB;      //设备类别
-        dataList.add(new DeviceDetailAdapterEntity("设备类别", deviceEntity.getLB()));
+        dataList.add(new DeviceDetailAdapterEntity("设备类别", deviceEntity.getLeibie()));
 //        private String XH;      //设备型号
-        dataList.add(new DeviceDetailAdapterEntity("设备型号", deviceEntity.getXH()));
+        dataList.add(new DeviceDetailAdapterEntity("设备型号", deviceEntity.getXinghao()));
 //        private String GG;      //设备规格
-        dataList.add(new DeviceDetailAdapterEntity("设备规格", deviceEntity.getGG()));
+        dataList.add(new DeviceDetailAdapterEntity("设备规格", deviceEntity.getGuige()));
 //        private String JLQDMC;      //物资记录清单名称
         dataList.add(new DeviceDetailAdapterEntity("物资记录清单名称", deviceEntity.getJLQDMC()));
 //        private String LZJLBH;      //物资流转记录编号
@@ -235,11 +236,25 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String QTFJ;      //其他附件
         dataList.add(new DeviceDetailAdapterEntity("其他附件", deviceEntity.getQTFJ()));
 //        private String SFPJ;      //是否配件
-        dataList.add(new DeviceDetailAdapterEntity("是否配件", deviceEntity.getSFPJ().equals("0") ? "是" : "否"));
+        dataList.add(new DeviceDetailAdapterEntity("是否配件", deviceEntity.getSFPJ().equals("1") ? "是" : "否"));
 //        private String SSSBBH;      //如果是配件，所属主设备编号
-        dataList.add(new DeviceDetailAdapterEntity("", deviceEntity.getSSSBBH()));
+//        dataList.add(new DeviceDetailAdapterEntity("", deviceEntity.getSSSBBH()));
 //        private String SBZT;      //设备状态
-        dataList.add(new DeviceDetailAdapterEntity("设备状态", deviceEntity.getSBZT()));
+        String sbzt = deviceEntity.getSBZT();
+        if ("0".equals(sbzt)) { //在库
+            sbzt = "在库";
+        } else if ("1".equals(sbzt)) { //出库
+            sbzt = "出库";
+        } else if ("2".equals(sbzt)) { //维修
+            sbzt = "维修";
+        } else if ("4".equals(sbzt)) { //报废
+            sbzt = "报废";
+        } else if ("5".equals(sbzt)) { //大修
+            sbzt = "大修";
+        } else if ("6".equals(sbzt)) { //返厂
+            sbzt = "返厂";
+        }
+        dataList.add(new DeviceDetailAdapterEntity("设备状态", sbzt));
 //        private Timestamp DJSJ;      //登记时间
         dataList.add(new DeviceDetailAdapterEntity("登记时间", TimeUtils.dateToStringYYYYmmdd(deviceEntity.getDJSJ())));
         if (detailAdapter != null) {

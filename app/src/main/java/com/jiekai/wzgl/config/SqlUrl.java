@@ -93,7 +93,7 @@ public class SqlUrl {
      * 根据盘库的需求查询数据库
      */
     public static final String GetPanKuDataByID = "SELECT " +
-            "dv.BH, dv.MC, leibie.TEXT AS LB,xinghao.TEXT AS XH,guige.TEXT AS GG" +
+            "dv.BH, dv.MC, dv.LB, dv.XH, dv.GG, leibie.TEXT AS leibie,xinghao.TEXT AS xinghao,guige.TEXT AS guige" +
             " FROM " +
             "devicesort AS leibie, devicesort AS xinghao, devicesort AS guige, device as dv" +
             " WHERE " +
@@ -131,4 +131,47 @@ public class SqlUrl {
             "FROM devicestore, device, userinfo WHERE " +
             "devicestore.CZSJ >=?  AND devicestore.CZSJ <=? AND devicestore.LB = 0 " +
             "AND device.BH = devicestore.SBBH AND userinfo.USERID = devicestore.CZR";
+    /**
+     * 获取设备详情
+     */
+    public static final String GET_DEVICE_DETAIL = "SELECT " +
+            "*, lb.TEXT AS leibie, xh.TEXT AS xinghao, gg.TEXT AS guige " +
+            "FROM device, devicesort AS lb, devicesort as xh, devicesort as gg " +
+            "WHERE (device.IDDZMBH1 = ? OR device.IDDZMBH2 = ? OR device.IDDZMBH3 = ?) " +
+            "AND lb.COOD = device.LB AND xh.COOD = device.XH AND gg.COOD = device.GG";
+    /**
+     * 查询数据库中上次是否有盘库的数据,返回上次盘库的全部数据
+     */
+    public static final String Get_Old_Panku = "SELECT user.USERNAME as CZR, devicepanku.*, tableibie.TEXT as leibie, " +
+            "tabxinghao.TEXT AS xinghao, tabguige.TEXT AS guige FROM devicepanku, userinfo as user, " +
+            "devicesort as tableibie, devicesort as tabxinghao, devicesort as tabguige " +
+            "WHERE devicepanku.SFQD = 0 AND user.USERID = devicepanku.CZR " +
+            "AND tableibie.COOD = devicepanku.LB AND tabxinghao.COOD = devicepanku.XH " +
+            "AND tabguige.COOD = devicepanku.GG";
+    /**
+     * 插入盘库信息
+     */
+    public static final String INSERT_PANKU = "INSERT INTO " +
+            "devicepanku (BH, MC, LB, XH, GG, CZR, CZSJ, SFQD) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    /**
+     * 删除上次用户盘库的信息
+     */
+    public static final String DELET_OLD_PANKU = "DELETE FROM devicepanku WHERE SFQD = ?";
+    /**
+     * 更新盘库信息
+     */
+    public static final String UPLOAD_PANKU_DATE = "UPDATE devicepanku SET devicepanku.SFQD = 1 WHERE SFQD = 0";
+    /**
+     * 获取盘库列表的所有分类信息，每个类别的个数
+     */
+    public static final String GET_PANKU_GROUP_LIST = "SELECT lb.TEXT as LB, xh.TEXT as XH, gg.TEXT as GG, COUNT(*) as NUM FROM " +
+            "devicesort AS lb, devicesort as xh, devicesort as gg, " +
+            "devicepanku WHERE devicepanku.SFQD = 0 AND lb.COOD = devicepanku.LB " +
+            "AND xh.COOD = devicepanku.XH AND gg.COOD = devicepanku.GG " +
+            "GROUP BY LB, XH, GG";
+    /**
+     * 获取该设备是否盘库
+     */
+    public static final String DEVICE_IS_PANKU = "SELECT * FROM devicepanku WHERE SFQD = 0 AND BH = ?";
 }

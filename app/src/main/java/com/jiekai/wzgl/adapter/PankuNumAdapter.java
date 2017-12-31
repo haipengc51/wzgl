@@ -37,7 +37,7 @@ public class PankuNumAdapter extends MyBaseAdapter {
         myViewHolder.deviceLeibie.setText(entity.getLB());
         myViewHolder.deviceXinghao.setText(entity.getXH());
         myViewHolder.deviceGuige.setText(entity.getGG());
-        myViewHolder.deviceNum.setText(entity.getNUM());
+        myViewHolder.deviceNum.setText(String.valueOf(entity.getNUM()));
         return null;
     }
 

@@ -10,8 +10,11 @@ import android.widget.TextView;
 import com.jiekai.wzgl.AppContext;
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.PankuNumAdapter;
+import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.PankuDataNumEntity;
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
+import com.jiekai.wzgl.utils.dbutils.DBManager;
+import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.localDbUtils.PanKuDataNumColumn;
 
 import java.util.ArrayList;
@@ -57,8 +60,8 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
             listView.addHeaderView(headerView);
             listView.setAdapter(adapter);
         }
-
-        getData();
+//        getData();
+        getIntenatData();
     }
 
     @Override
@@ -80,5 +83,35 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
         } else {
             alert(R.string.no_data);
         }
+    }
+
+    private void getIntenatData() {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GET_PANKU_GROUP_LIST)
+                .clazz(PankuDataNumEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_data));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            dataList.clear();
+                            dataList.addAll(result);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            alert(R.string.no_data);
+                        }
+                        dismissProgressDialog();
+                    }
+                });
     }
 }

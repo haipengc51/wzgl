@@ -1,8 +1,9 @@
 package com.jiekai.wzgl.ui;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +15,6 @@ import com.jiekai.wzgl.AppContext;
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.PankuDataListAdapter;
 import com.jiekai.wzgl.config.SqlUrl;
-import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.PankuDataEntity;
 import com.jiekai.wzgl.entity.PankuDataListEntity;
 import com.jiekai.wzgl.entity.PankuDataNumEntity;
@@ -25,11 +25,14 @@ import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.localDbUtils.PanKuDataListColumn;
 import com.jiekai.wzgl.utils.localDbUtils.PanKuDataNumColumn;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * Created by laowu on 2017/12/23.
@@ -58,6 +61,11 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     private PankuDataListAdapter pankuDataListAdapter;
     private List<PankuDataListEntity> pankuDataListDatas = new ArrayList<>();
 
+    private AlertDialog alertDialog;
+    private AlertDialog ifContinueDialog;
+
+    private int oldDataNum = 0;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_paku);
@@ -85,6 +93,48 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
             View headerView = LayoutInflater.from(mActivity).inflate(R.layout.adapter_panu_data_list, recyclerView, false);
             pankuDataListAdapter.addHeaderView(headerView);
         }
+        alertDialog = new AlertDialog.Builder(mActivity)
+                .setTitle("提示").create();
+        alertDialog.setMessage("您本次盘库的内容还没有上传，如果您继续退出下次进入可以继续本次盘库操作。");
+        alertDialog.setButton(BUTTON_POSITIVE, "上传数据", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+                startEnv();
+            }
+        });
+        alertDialog.setButton(BUTTON_NEGATIVE, "继续退出", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        ifContinueDialog = new AlertDialog.Builder(mActivity)
+                .setTitle("提示").create();
+        ifContinueDialog.setMessage("您上次盘库记录没有保存，是否继续上次盘库，还是清空盘库信息重新开始盘库？");
+        ifContinueDialog.setButton(BUTTON_POSITIVE, "重新盘库", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deletAllData();
+                alertDialog.dismiss();
+            }
+        });
+        ifContinueDialog.setButton(BUTTON_NEGATIVE, "继续上次盘库", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+        ifContinueDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                if (oldDataNum != 0) {
+                    pankuDataListAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        getPanKuOldData();
     }
 
     @Override
@@ -96,24 +146,65 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                finish();
+                closeUi();
                 break;
             case R.id.start:    //开始
-                nfcEnable = true;
-                alert(getResources().getString(R.string.please_nfc));
+                nfcEnable = !nfcEnable;
+                if (nfcEnable) {
+                    alert(getResources().getString(R.string.please_nfc));
+                    start.setText("暂停");
+                } else {
+                    alert(R.string.nfc_stop);
+                    start.setText("开始");
+                }
                 break;
             case R.id.finish:   //结束
                 nfcEnable = false;
-                alert(getResources().getString(R.string.stop_pan_ku));
                 clearLocalDB();
                 break;
             case R.id.data_upload:  //数据上传
-
+                startEnv();
                 break;
             case R.id.data_detail:  //数据详情（统计数据个数）
                 startActivity(new Intent(mActivity, PanKuNumActivity.class));
                 break;
         }
+    }
+
+    private void getPanKuOldData() {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.Get_Old_Panku)
+                .clazz(PankuDataEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert("获取上次盘库数据失败");
+                        finish();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            oldDataNum = result.size();
+                            ifContinueDialog.show();
+                            for (int i=0; i<result.size(); i++) {
+                                PankuDataEntity pankuDataEntity = (PankuDataEntity) result.get(i);
+                                PankuDataListEntity entity = new PankuDataListEntity();
+                                entity.setMC(pankuDataEntity.getMC());
+                                entity.setBH(pankuDataEntity.getBH());
+                                entity.setLB(pankuDataEntity.getLeibie());
+                                entity.setXH(pankuDataEntity.getXinghao());
+                                entity.setGG(pankuDataEntity.getGuige());
+                                pankuDataListDatas.add(entity);
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -142,12 +233,225 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
 
                     @Override
                     public void onResponse(List result) {
-                        dismissProgressDialog();
                         if (result != null && result.size() != 0) {
-                            addLocalSqlDB((PankuDataEntity) result.get(0));
+//                            addLocalSqlDB((PankuDataEntity) result.get(0));
+//                            addRomteSqlDB((PankuDataEntity) result.get(0));
+                            PankuDataEntity pankuDataEntity = (PankuDataEntity) result.get(0);
+                            checkIfPanku(pankuDataEntity.getBH(), pankuDataEntity);
                         } else {
                             alert(getResources().getString(R.string.no_data));
                         }
+                    }
+                });
+    }
+
+    private void checkIfPanku(String SBBH, final PankuDataEntity pankuDataEntity) {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.DEVICE_IS_PANKU)
+                .params(new String[]{SBBH})
+                .clazz(PankuDataEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            alert(R.string.device_has_panku);
+                            dismissProgressDialog();
+                        } else {
+                            addRomteSqlDB(pankuDataEntity);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * 删除所有的没有确定的数据(删除上次盘库但是没有确定的数据，从本次开始进行盘库)
+     */
+    private void deletAllData() {
+        DBManager.dbDeal(DBManager.DELET)
+                .sql(SqlUrl.DELET_OLD_PANKU)
+                .params(new String[]{"0"})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert("删除上次盘库数据失败");
+                        finish();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+
+                    }
+                });
+    }
+
+    /**
+     * 插入盘库的数据库中
+     * @param pankuDataEntity
+     */
+    private void addRomteSqlDB(final PankuDataEntity pankuDataEntity) {
+        if (pankuDataEntity == null || pankuDataEntity.getBH() == null) {
+            alert(R.string.update_db_failed);
+            dismissProgressDialog();
+            return;
+        }
+        DBManager.dbDeal(DBManager.INSERT)
+                .sql(SqlUrl.INSERT_PANKU)
+                .params(new Object[]{pankuDataEntity.getBH(), pankuDataEntity.getMC(),
+                        pankuDataEntity.getLB(), pankuDataEntity.getXH(), pankuDataEntity.getGG(),
+                        userData.getUSERID(), new Date(System.currentTimeMillis()), "0"})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(R.string.this_device_panku_failed);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.this_device_panku_success);
+                        dismissProgressDialog();
+                        PankuDataListEntity entity = new PankuDataListEntity();
+                        entity.setMC(pankuDataEntity.getMC());
+                        entity.setBH(pankuDataEntity.getBH());
+                        entity.setLB(pankuDataEntity.getLeibie());
+                        entity.setXH(pankuDataEntity.getXinghao());
+                        entity.setGG(pankuDataEntity.getGuige());
+                        pankuDataListAdapter.addItem(recyclerView, entity);
+                    }
+                });
+    }
+
+    /**
+     * 开启事务
+     */
+    private void startEnv() {
+        DBManager.dbDeal(DBManager.START_EVENT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.uploading_db));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        deletDate();
+                    }
+                });
+    }
+
+    private void deletDate() {
+        DBManager.dbDeal(DBManager.EVENT_DELET)
+                .sql(SqlUrl.DELET_OLD_PANKU)
+                .params(new String[]{"1"})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        rollback();
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        uploadDate();
+                    }
+                });
+    }
+
+    private void uploadDate() {
+        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+                .sql(SqlUrl.UPLOAD_PANKU_DATE)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        rollback();
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        commit();
+                    }
+                });
+    }
+
+    private void rollback() {
+        DBManager.dbDeal(DBManager.ROLLBACK)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.uploading_panku_faild);
+                    }
+                });
+    }
+
+    private void commit() {
+        DBManager.dbDeal(DBManager.COMMIT)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(R.string.uploading_panku_faild);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        alert(R.string.uploading_panku_success);
+                        dismissProgressDialog();
+                        finish();
                     }
                 });
     }
@@ -171,7 +475,6 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
             contentValues.put(PanKuDataListColumn.LB, pankuDataEntity.getLB());
             contentValues.put(PanKuDataListColumn.XH, pankuDataEntity.getXH());
             contentValues.put(PanKuDataListColumn.GG, pankuDataEntity.getGG());
-            contentValues.put(PanKuDataListColumn.IDDZMBH1, pankuDataEntity.getIDDZMBH1());
             long insertResult = AppContext.dbHelper.insertSql(PanKuDataListColumn.TABLE_NAME, contentValues);
             if (insertResult != -1) {   //插入数据库成功
                 boolean updataResult = updateLocalSqlDBNumber(pankuDataEntity);
@@ -182,7 +485,6 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                     entity.setLB(pankuDataEntity.getLB());
                     entity.setXH(pankuDataEntity.getXH());
                     entity.setGG(pankuDataEntity.getGG());
-                    entity.setIDDZMBH1(pankuDataEntity.getIDDZMBH1());
                     pankuDataListAdapter.addItem(recyclerView, entity);
                 } else {    //更新设备类型数量失败
                     String wheres = PanKuDataListColumn.BH + " = ?";
@@ -214,7 +516,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                 new String[]{pankuDataEntity.getLB(), pankuDataEntity.getXH(), pankuDataEntity.getGG()});
         if (result != null && result.size() != 0) { //设备中含有条数据，加一就好了
             ContentValues contentValues = new ContentValues();
-            int num = Integer.valueOf(result.get(0).getNUM()).intValue();
+            int num = (int) result.get(0).getNUM();
             contentValues.put(PanKuDataNumColumn.NUM, String.valueOf(num+1));
             String where = PanKuDataNumColumn.LB + " = ? AND " +
                     PanKuDataNumColumn.XH + " = ? AND " +
@@ -247,5 +549,18 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         String deletpankuNum = "DELETE FROM " + PanKuDataNumColumn.TABLE_NAME;
         AppContext.dbHelper.execSQL(deletpankuNum);
         pankuDataListAdapter.clearData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        closeUi();
+    }
+
+    private void closeUi() {
+        if (oldDataNum != 0) {
+            alertDialog.show();
+        } else {
+            finish();
+        }
     }
 }

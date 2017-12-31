@@ -154,11 +154,12 @@ public class DbDeal extends AsynInterface {
                 }
             }
             int result = preparedStatement.executeUpdate();
-            if (result > 0) {
-                asynCallBack.onSuccess(null);
-            } else {
-                asynCallBack.onError("数据库操作失败");
-            }
+            asynCallBack.onSuccess(null);
+//            if (result > 0) {
+//                asynCallBack.onSuccess(null);
+//            } else {
+//                asynCallBack.onError("数据库操作失败");
+//            }
             preparedStatement.close();
             if (!(dbType == DBManager.EVENT_INSERT ||
                     dbType == DBManager.EVENT_UPDATA ||
