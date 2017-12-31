@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -17,11 +18,13 @@ import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceDetailEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.TimeUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.zxing.CaptureActivity;
+import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +37,8 @@ import butterknife.ButterKnife;
  * 设备详细信息
  */
 
-public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClickListener {
+public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -77,6 +81,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
         if (detailAdapter == null) {
             detailAdapter = new DeviceDetailAdapter(mActivity, dataList);
             listview.setAdapter(detailAdapter);
+            listview.setOnItemClickListener(this);
         }
     }
 
@@ -269,5 +274,19 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             String code = data.getExtras().getString("result");
             getDeviceById(code);
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String[] imags = new String[]{"http://114.115.171.225/View/AppImage/bind/admin22-11-11-111514459536488.png",
+                "http://114.115.171.225/View/AppImage/bind/adminaa-bb-cc-021514436550425.png"};
+        List<LocalMedia> localMedias = new ArrayList<>();
+        LocalMedia localMedia = new LocalMedia();
+        localMedia.setPath(imags[0]);
+        localMedias.add(localMedia);
+        LocalMedia localMedia1 = new LocalMedia();
+        localMedia1.setPath(imags[1]);
+        localMedias.add(localMedia1);
+        PictureSelectUtils.previewPicture(mActivity, localMedias);
     }
 }
