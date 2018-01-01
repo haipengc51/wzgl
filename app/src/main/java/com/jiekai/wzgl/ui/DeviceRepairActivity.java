@@ -171,7 +171,7 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{id})
+                .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(new DbCallBack() {
                     @Override

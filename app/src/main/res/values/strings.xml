@@ -111,4 +111,6 @@
     <string name="uploading_panku_faild">上传盘库信息失败</string>
     <string name="uploading_panku_success">上传盘库信息成功</string>
     <string name="nfc_stop">已停止盘库</string>
+    <string name="input_lingyongdanwei">请输入领用单位</string>
+    <string name="loading_data_failed">加载数据失败</string>
 </resources>

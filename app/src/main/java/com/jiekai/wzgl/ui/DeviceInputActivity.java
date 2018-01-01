@@ -145,7 +145,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{id})
+                .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(new DbCallBack() {
                     @Override

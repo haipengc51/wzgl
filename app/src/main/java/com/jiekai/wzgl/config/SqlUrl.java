@@ -48,7 +48,7 @@ public class SqlUrl {
     /**
      * 根据电子码编号获取设备信息
      */
-    public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ?";
+    public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ? OR IDDZMBH2 = ? OR IDDZMBH3 = ?";
     /**
      * 往一个设备中添加配件
      */
@@ -72,7 +72,7 @@ public class SqlUrl {
     /**
      * 执行设备出库操作 (设备自编码，操作时间，操作人，类别， 井号)
      */
-    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH) VALUES (?, ?, ?, ?, ?);";
+    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH, LYDW) VALUES (?, ?, ?, ?, ?, ?);";
     /**
      * 执行设备入库操作 (设备自编码，操作时间，操作人，类别)
      */
@@ -97,7 +97,7 @@ public class SqlUrl {
             " FROM " +
             "devicesort AS leibie, devicesort AS xinghao, devicesort AS guige, device as dv" +
             " WHERE " +
-            "dv.IDDZMBH1 = ? " +
+            "dv.IDDZMBH1 = ? OR dv.IDDZMBH2 = ? OR dv.IDDZMBH3 = ?" +
             "AND leibie.COOD = dv.LB " +
             "AND xinghao.COOD = dv.XH " +
             "AND guige.COOD = dv.GG";
@@ -112,7 +112,7 @@ public class SqlUrl {
     /**
      * 插入设备报废信息
      */
-    public static final String ADD_DEVICE_SCRAP = "INSERT INTO devicescrap (SBBH, BFZP, BFSJ, BFR) VALUES (?, ?, ?, ?)";
+    public static final String ADD_DEVICE_SCRAP = "INSERT INTO devicescrap (SBBH, BFSJ, BFR) VALUES (?, ?, ?)";
     /**
      * 查找报废设备
      */
@@ -174,4 +174,8 @@ public class SqlUrl {
      * 获取该设备是否盘库
      */
     public static final String DEVICE_IS_PANKU = "SELECT * FROM devicepanku WHERE SFQD = 0 AND BH = ?";
+    /**
+     * 获取照片的地址
+     */
+    public static final String Get_Image_Path = "SELECT * FROM devicedoc WHERE SBBH = ? AND LB = ?";
 }

@@ -10,6 +10,8 @@ import com.jiekai.wzgl.entity.base.BaseEntity;
 public class DeviceDetailAdapterEntity extends BaseEntity {
     private String title;
     private String content;
+    private boolean isImage = false;    //是否含有图片附件
+    private String imageType;   //文件的类型
 
     public DeviceDetailAdapterEntity(String title, String content) {
         this.title = title;
@@ -30,5 +32,21 @@ public class DeviceDetailAdapterEntity extends BaseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isImage() {
+        return isImage;
+    }
+
+    public void setImage(boolean image) {
+        isImage = image;
+    }
+
+    public String getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(String imageType) {
+        this.imageType = imageType;
     }
 }

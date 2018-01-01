@@ -491,7 +491,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{idCard})
+                .params(new String[]{idCard, idCard, idCard})
                 .clazz(DeviceEntity.class)
                 .execut(new DbCallBack() {
                     @Override

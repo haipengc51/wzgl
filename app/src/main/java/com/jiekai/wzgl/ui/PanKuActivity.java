@@ -217,7 +217,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetPanKuDataByID)
-                .params(new String[]{id})
+                .params(new String[]{id, id, id})
                 .clazz(PankuDataEntity.class)
                 .execut(new DbCallBack() {
                     @Override

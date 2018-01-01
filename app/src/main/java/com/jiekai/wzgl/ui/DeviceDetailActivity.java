@@ -13,10 +13,12 @@ import android.widget.TextView;
 import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.adapter.DeviceDetailAdapter;
 import com.jiekai.wzgl.adapter.DeviceDetailAdapterEntity;
+import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.Constants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceDetailEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
+import com.jiekai.wzgl.entity.DevicedocEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -57,6 +59,8 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
     private DeviceDetailAdapter detailAdapter;
     private List<DeviceDetailAdapterEntity> dataList = new ArrayList<>();
     private AlertDialog alertDialog;
+
+    private DeviceDetailEntity currentDevice;
 
     @Override
     public void initView() {
@@ -156,6 +160,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
      * @param deviceEntity
      */
     private void paresDeviceToShow(DeviceDetailEntity deviceEntity) {
+        currentDevice = deviceEntity;
         dataList.clear();
         dataList.add(new DeviceDetailAdapterEntity("设备自编号", deviceEntity.getBH()));
 //        private String MC;      //设备名称
@@ -213,19 +218,28 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String JBR;      //经办人
         dataList.add(new DeviceDetailAdapterEntity("经办人", deviceEntity.getJBR()));
 //        private String YSJCBG;      //原始检测报告
-        dataList.add(new DeviceDetailAdapterEntity("原始检测报告", deviceEntity.getYSJCBG()));
+        DeviceDetailAdapterEntity ysjcbg = new DeviceDetailAdapterEntity("原始检测报告", "点击查看详情");
+        ysjcbg.setImage(true);
+        ysjcbg.setImageType(Config.doc_jcbg);
+        dataList.add(ysjcbg);
 //        private String AZJCXM;      //安装检查项目
         dataList.add(new DeviceDetailAdapterEntity("安装检查项目", deviceEntity.getAZJCXM()));
 //        private String FFDJ;      //防腐等级
         dataList.add(new DeviceDetailAdapterEntity("防腐等级", deviceEntity.getFFDJ()));
 //        private String CCHGZ;      //出厂合格证
-        dataList.add(new DeviceDetailAdapterEntity("出厂合格证", deviceEntity.getCCHGZ()));
+        DeviceDetailAdapterEntity cchgz = new DeviceDetailAdapterEntity("出厂合格证", "点击查看详情");
+        cchgz.setImage(true);
+        cchgz.setImageType(Config.doc_hgz);
+        dataList.add(cchgz);
 //        private String ZJFS;      //折旧方式
         dataList.add(new DeviceDetailAdapterEntity("折旧方式", deviceEntity.getZJFS()));
 //        private String SYSM;      //物资使用寿命
         dataList.add(new DeviceDetailAdapterEntity("物资使用寿命", deviceEntity.getSYSM()));
 //        private String WZMP;      //物资铭牌
-        dataList.add(new DeviceDetailAdapterEntity("物资铭牌", deviceEntity.getWZMP()));
+        DeviceDetailAdapterEntity wzmp = new DeviceDetailAdapterEntity("物资铭牌", "点击查看详情");
+        wzmp.setImage(true);
+        wzmp.setImageType(Config.doc_wzmp);
+        dataList.add(wzmp);
 //        private String WZYZ;      //物资原值
         dataList.add(new DeviceDetailAdapterEntity("物资原值", deviceEntity.getWZYZ()));
 //        private String WZJZ;      //物资净值
@@ -233,13 +247,25 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String WZCZ;      //物资残值
         dataList.add(new DeviceDetailAdapterEntity("物资残值", deviceEntity.getWZCZ()));
 //        private String JGTZ;      //结构图纸
-        dataList.add(new DeviceDetailAdapterEntity("结构图纸", deviceEntity.getJGTZ()));
+        DeviceDetailAdapterEntity jgtz = new DeviceDetailAdapterEntity("结构图纸", "点击查看详情");
+        jgtz.setImage(true);
+        jgtz.setImageType(Config.doc_jgtz);
+        dataList.add(jgtz);
 //        private String SMS;      //使用维护说明书
-        dataList.add(new DeviceDetailAdapterEntity("使用维护说明书", deviceEntity.getSMS()));
+        DeviceDetailAdapterEntity sms = new DeviceDetailAdapterEntity("使用维护说明书", "点击查看详情");
+        sms.setImage(true);
+        sms.setImageType(Config.doc_sywhsms);
+        dataList.add(sms);
 //        private String YSPJ;      //易损配件
-        dataList.add(new DeviceDetailAdapterEntity("易损配件", deviceEntity.getYSPJ()));
+        DeviceDetailAdapterEntity yspj = new DeviceDetailAdapterEntity("易损配件", "点击查看详情");
+        yspj.setImage(true);
+        yspj.setImageType(Config.doc_yspj);
+        dataList.add(yspj);
 //        private String QTFJ;      //其他附件
-        dataList.add(new DeviceDetailAdapterEntity("其他附件", deviceEntity.getQTFJ()));
+        DeviceDetailAdapterEntity qtfj = new DeviceDetailAdapterEntity("其他附件", "点击查看详情");
+        qtfj.setImage(true);
+        qtfj.setImageType(Config.doc_qtfj);
+        dataList.add(qtfj);
 //        private String SFPJ;      //是否配件
         dataList.add(new DeviceDetailAdapterEntity("是否配件", deviceEntity.getSFPJ().equals("1") ? "是" : "否"));
 //        private String SSSBBH;      //如果是配件，所属主设备编号
@@ -278,15 +304,44 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String[] imags = new String[]{"http://114.115.171.225/View/AppImage/bind/admin22-11-11-111514459536488.png",
-                "http://114.115.171.225/View/AppImage/bind/adminaa-bb-cc-021514436550425.png"};
-        List<LocalMedia> localMedias = new ArrayList<>();
-        LocalMedia localMedia = new LocalMedia();
-        localMedia.setPath(imags[0]);
-        localMedias.add(localMedia);
-        LocalMedia localMedia1 = new LocalMedia();
-        localMedia1.setPath(imags[1]);
-        localMedias.add(localMedia1);
-        PictureSelectUtils.previewPicture(mActivity, localMedias);
+        DeviceDetailAdapterEntity deviceDetailAdapterEntity = (DeviceDetailAdapterEntity) parent.getItemAtPosition(position);
+        if (deviceDetailAdapterEntity.isImage()) {
+            getImageData(deviceDetailAdapterEntity.getImageType());
+        }
+    }
+
+    private void getImageData(String dataLB) {
+        final List<LocalMedia> localMedias = new ArrayList<>();
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.Get_Image_Path)
+                .params(new String[]{currentDevice.getBH(), dataLB})
+                .clazz(DevicedocEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_data));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(R.string.loading_data_failed);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            for (int i=0; i<result.size(); i++) {
+                                LocalMedia localMedia = new LocalMedia();
+                                localMedia.setPath(Config.WEB_HOLDE + ((DevicedocEntity) result.get(0)).getWJDZ());
+                                localMedias.add(localMedia);
+                            }
+                            PictureSelectUtils.previewPicture(mActivity, localMedias);
+                        } else {
+                            alert(R.string.no_data);
+                        }
+                        dismissProgressDialog();
+                    }
+                });
     }
 }

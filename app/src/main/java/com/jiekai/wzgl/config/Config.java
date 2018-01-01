@@ -16,6 +16,7 @@ public class Config {
     public static final int FTP_PORT = 21;                      //FTP端口号
     public static final String FTP_USER_NAME = "FtpTest";      //FTP用户名
     public static final String FTP_PASSWORD = "haipengc51~";
+    public static final String WEB_HOLDE = "http://114.115.171.225";
     public static final String FTP_PATH_HANDLER = "/View/AppImage";     //FTP上传图片的基础目录地址
     public static final String BINDIMAGE_PATH = "/bind/";    //设备绑定所上传图片的地址
     public static final String OUTIMAGE_PATH = "/out/";
@@ -29,4 +30,13 @@ public class Config {
     public static final String doc_sbwx= "sbwx";    //设备维修的类型
     public static final String doc_sbdx= "sbdx";    //设备大修的类型
     public static final String doc_sbfc= "sbfc";    //设备返厂的类型
+    public static final String doc_sbbf= "sbbf";    //设备报废的类型
+    public static final String doc_jcbg= "jcbg";    //检测报告
+    public static final String doc_hgz= "hgz";    //合格证
+    public static final String doc_wzmp= "wzmp";    //物资铭牌
+    public static final String doc_jgtz= "jgtz";    //结构图纸
+    public static final String doc_sywhsms= "sywhsms";    //使用维护说明书
+    public static final String doc_yspj= "yspj";    //易损配件
+    public static final String doc_qtfj= "qtfj";    //其他附件
+
 }

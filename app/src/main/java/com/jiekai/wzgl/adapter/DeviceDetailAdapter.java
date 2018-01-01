@@ -1,6 +1,8 @@
 package com.jiekai.wzgl.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -36,6 +38,11 @@ public class DeviceDetailAdapter extends MyBaseAdapter {
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
         String title = entity.getTitle();
         String content = entity.getContent();
+        if (content.equals("点击查看详情")) {
+            myViewHolder.content.setTextColor(context.getResources().getColor(R.color.main_color));
+        } else {
+            myViewHolder.content.setTextColor(context.getResources().getColor(R.color.text_content_color));
+        }
         myViewHolder.title.setText(title == null ? "" : title);
         myViewHolder.content.setText(content == null ? "" : content);
         return null;

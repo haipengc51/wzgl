@@ -126,6 +126,21 @@
             android:textSize="@dimen/content_text_size"
             android:textColor="@color/text_content_color"/>
 
+        <EditText
+            android:id="@+id/input_lingyongdanwei"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_height"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/marginTop10"
+            android:background="@drawable/input_bg"
+            android:paddingLeft="@dimen/marginTop10"
+            android:paddingRight="@dimen/marginTop10"
+            android:layout_marginLeft="@dimen/marginTop20"
+            android:layout_marginRight="@dimen/marginTop20"
+            android:hint="@string/input_lingyongdanwei"
+            android:textSize="@dimen/content_text_size"
+            android:textColor="@color/text_content_color"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

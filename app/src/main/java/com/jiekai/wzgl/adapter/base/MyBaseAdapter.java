@@ -13,7 +13,7 @@ import java.util.List;
  */
 
 public abstract class MyBaseAdapter extends BaseAdapter {
-    private Context context;
+    public Context context;
     public List dataList;
     public LayoutInflater mInflater;
 

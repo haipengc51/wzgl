@@ -15,6 +15,7 @@ import com.jiekai.wzgl.entity.DeviceEntity;
 import com.jiekai.wzgl.entity.DevicescrapEntity;
 import com.jiekai.wzgl.entity.DevicestoreEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
+import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
 import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
@@ -68,8 +69,11 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     private AlertDialog alertDialog;
     private DeviceEntity currentDevice;
 
-    private String romoteImageName;
-    private String imagePath;   //图片的远程地址 /out/123.jpg
+    private String imagePath;       //图片的远程地址 /out/123.jpg
+    private String imageType;       //图片的类型     .jpg
+    private String romoteImageName;     //图片远程服务器的名称 123.jpg
+    private String localPath;   //图片本地的地址
+
     private boolean isScrap = false;
 
     @Override
@@ -148,7 +152,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{id})
+                .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(new DbCallBack() {
                     @Override
@@ -226,9 +230,9 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void uploadImage() {
-        final String localPath = choosePictures.get(0).getCompressPath();
-        final String fileType = localPath.substring(localPath.lastIndexOf("."));
-        romoteImageName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis() + fileType;
+        localPath = choosePictures.get(0).getCompressPath();
+        imageType = localPath.substring(localPath.lastIndexOf("."));
+        romoteImageName = userData.getUSERID() + currentDevice.getBH().toString() + System.currentTimeMillis() + imageType;
         FtpManager.getInstance().uploadFile(localPath,
                 Config.SCRAP_PATH, romoteImageName, new FtpCallBack() {
                     @Override
@@ -302,18 +306,53 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     private void insertScrap() {
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.ADD_DEVICE_SCRAP)
-                .params(new Object[]{currentDevice.getBH(), imagePath,
+                .params(new Object[]{currentDevice.getBH(),
                         new java.sql.Date(new java.util.Date().getTime()), userData.getUSERID()})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
-                        showProgressDialog(getResources().getString(R.string.uploading_db));
                     }
 
                     @Override
                     public void onError(String err) {
                         dismissProgressDialog();
                         alert(err);
+                        deletImage();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        insertImagePath();
+                    }
+                });
+    }
+
+    /**
+     * 图片路径插入到数据库中
+     * SBBH就是上次插入的id
+     */
+    private void insertImagePath() {
+        String fileSize = FileSizeUtils.getAutoFileOrFilesSize(localPath);
+        if (StringUtils.isEmpty(fileSize)) {
+            rollback();
+            deletImage();
+            dismissProgressDialog();
+            return;
+        }
+        DBManager.dbDeal(DBManager.EVENT_INSERT)
+                .sql(SqlUrl.INSERT_IAMGE)
+                .params(new String[]{currentDevice.getBH(), romoteImageName, fileSize, imagePath, imageType, Config.doc_sbbf})
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        rollback();
                         deletImage();
                     }
 

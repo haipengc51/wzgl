@@ -2,6 +2,7 @@ package com.jiekai.wzgl.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,10 +28,12 @@ import com.jiekai.wzgl.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2017/12/16.
@@ -63,6 +66,8 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     TextView enter;
     @BindView(R.id.cancle)
     TextView cancle;
+    @BindView(R.id.input_lingyongdanwei)
+    EditText inputLingyongdanwei;
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
@@ -151,7 +156,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         }
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceByID)
-                .params(new String[]{id})
+                .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(new DbCallBack() {
                     @Override
@@ -228,6 +233,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         }
         if (StringUtils.isEmpty(inputJinghao.getText().toString())) {
             alert(R.string.please_input_jinghao);
+            return;
+        }
+        if (StringUtils.isEmpty(inputLingyongdanwei.getText().toString())) {
+            alert(R.string.input_lingyongdanwei);
             return;
         }
         updataImage();
@@ -313,8 +322,8 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     private void insertOutDevice() {
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.OUT_DEVICE)
-                .params(new Object[]{deviceEntity.getBH(), new java.sql.Date(new java.util.Date().getTime()),
-                        userData.getUSERID(), "0", inputJinghao.getText().toString()})
+                .params(new Object[]{deviceEntity.getBH(), new Date(new java.util.Date().getTime()),
+                        userData.getUSERID(), "0", inputJinghao.getText().toString(), inputLingyongdanwei.getText().toString()})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -357,7 +366,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            insertImagePath(String.valueOf(((LastInsertIdEntity)result.get(0)).getLast_insert_id()));
+                            insertImagePath(String.valueOf(((LastInsertIdEntity) result.get(0)).getLast_insert_id()));
                         } else {
                             alert(R.string.insert_erro);
                             dismissProgressDialog();
@@ -377,6 +386,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         if (StringUtils.isEmpty(fileSize)) {
             rollback();
             deletImage();
+            dismissProgressDialog();
             return;
         }
         DBManager.dbDeal(DBManager.EVENT_INSERT)
@@ -490,5 +500,12 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(DeviceOutputActivity.this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
