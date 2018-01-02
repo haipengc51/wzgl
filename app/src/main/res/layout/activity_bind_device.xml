@@ -89,7 +89,7 @@
                         android:drawablePadding="5dp"
                         android:ellipsize="end"
                         android:gravity="center_vertical"
-                        android:hint="@string/device_ic_id"
+                        android:hint="@string/device_ic_id_one"
                         android:lines="1"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"

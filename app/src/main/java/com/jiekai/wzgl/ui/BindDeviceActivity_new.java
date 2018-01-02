@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,14 +17,12 @@ import com.jiekai.wzgl.config.Config;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.DeviceBHEntity;
 import com.jiekai.wzgl.entity.DeviceEntity;
-import com.jiekai.wzgl.entity.DeviceMCEntity;
 import com.jiekai.wzgl.entity.DevicesortEntity;
 import com.jiekai.wzgl.entity.PartListEntity;
 import com.jiekai.wzgl.test.NFCBaseActivity;
 import com.jiekai.wzgl.ui.popup.CodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceCodePopup;
 import com.jiekai.wzgl.ui.popup.DeviceNamePopup;
-import com.jiekai.wzgl.ui.popup.DeviceTypePopup;
 import com.jiekai.wzgl.utils.CommonUtils;
 import com.jiekai.wzgl.utils.FileSizeUtils;
 import com.jiekai.wzgl.utils.GlidUtils;
@@ -34,11 +30,8 @@ import com.jiekai.wzgl.utils.PictureSelectUtils;
 import com.jiekai.wzgl.utils.StringUtils;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
 import com.jiekai.wzgl.utils.dbutils.DbCallBack;
-import com.jiekai.wzgl.utils.dbutils.DbDeal;
 import com.jiekai.wzgl.utils.ftputils.FtpCallBack;
 import com.jiekai.wzgl.utils.ftputils.FtpManager;
-import com.jiekai.wzgl.utils.treeutils.Node;
-import com.jiekai.wzgl.utils.treeutils.TreeListViewAdapter;
 import com.jiekai.wzgl.utils.zxing.encoding.EncodingUtils;
 import com.jiekai.wzgl.weight.MyListView;
 import com.luck.picture.lib.PictureSelector;
@@ -48,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by laowu on 2017/12/7.
@@ -58,8 +50,10 @@ import butterknife.ButterKnife;
 
 public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener, DeviceCodePopup.OnDeviceCodeClick {
-    private static final int READ_DEVICE_NFC = 0;
-    private static final int READ_PART_NFC = 1;
+    private static final int READ_DEVICE_NFC_ONE = 0;
+    private static final int READ_DEVICE_NFC_TWO = 1;
+    private static final int READ_DEVICE_NFC_THREE = 2;
+    private static final int READ_PART_NFC = 3;
     private static final int CHOOSE_PICHTURE = 0;
     @BindView(R.id.back)
     ImageView back;
@@ -75,16 +69,24 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     TextView deviceGuige;
     @BindView(R.id.device_id)
     TextView deviceId;
-    @BindView(R.id.device_card)
-    TextView deviceCard;
-    @BindView(R.id.read_device_nfc)
-    TextView readDeviceNfc;
-    @BindView(R.id.create_code)
-    TextView createCode;
     @BindView(R.id.device_picture)
     ImageView devicePicture;
     @BindView(R.id.choose_picture)
     TextView choosePicture;
+    @BindView(R.id.device_card_one)
+    TextView deviceCardOne;
+    @BindView(R.id.read_device_nfc_one)
+    TextView readDeviceNfcOne;
+    @BindView(R.id.device_card_two)
+    TextView deviceCardTwo;
+    @BindView(R.id.read_device_nfc_two)
+    TextView readDeviceNfcTwo;
+    @BindView(R.id.device_card_three)
+    TextView deviceCardThree;
+    @BindView(R.id.read_device_nfc_three)
+    TextView readDeviceNfcThree;
+    @BindView(R.id.create_code)
+    TextView createCode;
     @BindView(R.id.part_name)
     TextView partName;
     @BindView(R.id.part_id)
@@ -126,6 +128,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     private DevicesortEntity currentXinghao;
     private DevicesortEntity currentGuige;
 
+    private boolean thisIDHasBind = false;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_bind_device_new);
@@ -143,7 +147,9 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         deviceXinghao.setOnClickListener(this);
         deviceGuige.setOnClickListener(this);
         deviceId.setOnClickListener(this);
-        readDeviceNfc.setOnClickListener(this);
+        readDeviceNfcOne.setOnClickListener(this);
+        readDeviceNfcTwo.setOnClickListener(this);
+        readDeviceNfcThree.setOnClickListener(this);
         readPartNfc.setOnClickListener(this);
         choosePicture.setOnClickListener(this);
         devicePicture.setOnClickListener(this);
@@ -203,7 +209,22 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 break;
             case R.id.read_device_nfc:
                 //TODO 检查一下NFC是否启动
-                readNfcType = READ_DEVICE_NFC;
+                readNfcType = READ_DEVICE_NFC_ONE;
+                nfcEnable = true;
+                alertDialog.show();
+                break;
+            case R.id.read_device_nfc_one:
+                readNfcType = READ_DEVICE_NFC_ONE;
+                nfcEnable = true;
+                alertDialog.show();
+                break;
+            case R.id.read_device_nfc_two:
+                readNfcType = READ_DEVICE_NFC_TWO;
+                nfcEnable = true;
+                alertDialog.show();
+                break;
+            case R.id.read_device_nfc_three:
+                readNfcType = READ_DEVICE_NFC_THREE;
                 nfcEnable = true;
                 alertDialog.show();
                 break;
@@ -238,7 +259,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 bindDevice();
                 break;
             case R.id.create_code:
-                createCode(deviceCard.getText().toString());
+//                createCode(deviceCard.getText().toString());
                 break;
         }
     }
@@ -253,18 +274,20 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         if (alertDialog != null) {
             alertDialog.dismiss();
         }
-        if (readNfcType == READ_DEVICE_NFC) {
-            deviceCard.setText(nfcString);
-            nfcEnable = false;
-            //TODO 如果上面的类型什么的没有选择，直接刷卡，此卡已经绑定设备的话，需要查询设备信息显示的上面
-            if (currentDeviceCode == null) {
-
-            }
+        if (readNfcType == READ_DEVICE_NFC_ONE) {
+//            deviceCardOne.setText(nfcString);
+            checkIDCardBind(readNfcType, nfcString);
+        } else if (readNfcType == READ_DEVICE_NFC_TWO) {
+//            deviceCardTwo.setText(nfcString);
+            checkIDCardBind(readNfcType, nfcString);
+        } else if (readNfcType == READ_DEVICE_NFC_THREE) {
+//            deviceCardThree.setText(nfcString);
+            checkIDCardBind(readNfcType, nfcString);
         } else if (readNfcType == READ_PART_NFC) {
             partCard.setText(nfcString);
-            nfcEnable = false;
-            findDeviceByID(nfcString);
+            findPartByID(nfcString);
         }
+        nfcEnable = false;
     }
 
     private DeviceNamePopup.OnDeviceNameClick leibieClick = new DeviceNamePopup.OnDeviceNameClick() {
@@ -452,7 +475,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                     @Override
                     public void onResponse(List result) {
                         dismissProgressDialog();
-                        if (result == null || result.size() == 0){
+                        if (result == null || result.size() == 0) {
                             alert(getResources().getString(R.string.no_data));
                             return;
                         }
@@ -476,8 +499,56 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     public void OnDeviceCodeClick(String deviceCode) {
         currentDeviceCode = deviceCode;
         if (!StringUtils.isEmpty(currentDeviceCode)) {
-            findPartsByDeviceID(currentDeviceCode);
+            findDeviceByID(currentDeviceCode);
         }
+    }
+
+    /**
+     * 根据配件的id卡号，发现配件的名称和自编号
+     *
+     * @param BH
+     */
+    private void findDeviceByID(String BH) {
+        if (StringUtils.isEmpty(BH)) {
+            return;
+        }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceByBH)
+                .params(new String[]{BH})
+                .clazz(DeviceEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_device));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                        findPartsByDeviceID(currentDeviceCode);
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            DeviceEntity item = (DeviceEntity) result.get(0);
+                            if (!StringUtils.isEmpty(item.getIDDZMBH1())) {
+                                deviceCardOne.setText(item.getIDDZMBH1());
+                            }
+                            if (!StringUtils.isEmpty(item.getIDDZMBH2())) {
+                                deviceCardTwo.setText(item.getIDDZMBH2());
+                            }
+                            if (!StringUtils.isEmpty(item.getIDDZMBH3())) {
+                                deviceCardThree.setText(item.getIDDZMBH3());
+                            }
+                        } else {
+                            alert(getResources().getString(R.string.no_data));
+                        }
+                        dismissProgressDialog();
+                        findPartsByDeviceID(currentDeviceCode);
+                    }
+                });
     }
 
     /**
@@ -485,7 +556,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      *
      * @param idCard
      */
-    private void findDeviceByID(String idCard) {
+    private void findPartByID(String idCard) {
         if (StringUtils.isEmpty(idCard)) {
             return;
         }
@@ -511,7 +582,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                             DeviceEntity item = (DeviceEntity) result.get(0);
                             partName.setText(item.getMC());
                             partId.setText(item.getBH());
-                        }  else {
+                        } else {
                             alert(getResources().getString(R.string.no_data));
                         }
                         dismissProgressDialog();
@@ -588,13 +659,15 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      * 提交绑定设备
      */
     private void bindDevice() {
-        String deviceCardID = deviceCard.getText().toString();
+        String deviceCardIDOne = deviceCardOne.getText().toString();
+        String deviceCardIDTwo = deviceCardTwo.getText().toString();
+        String deviceCardIDThree = deviceCardThree.getText().toString();
         String deviceBH = deviceId.getText().toString();
         if (StringUtils.isEmpty(deviceBH)) {
             alert(getResources().getString(R.string.please_first_get_device));
             return;
         }
-        if (StringUtils.isEmpty(deviceCardID)) {
+        if (StringUtils.isEmpty(deviceCardIDOne) && StringUtils.isEmpty(deviceCardIDTwo) && StringUtils.isEmpty(deviceCardIDThree)) {
             alert(getResources().getString(R.string.please_first_get_device_card));
             return;
         }
@@ -602,6 +675,10 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
             alert(getResources().getString(R.string.please_choose_image));
             return;
         }
+//        if (thisIDHasBind) {
+//            alert(R.string.this_id_has_bind);
+//            return;
+//        }
         String fileType = null;
         try {
             fileType = choosePictures.get(0).getCompressPath().substring(choosePictures.get(0).getCompressPath().lastIndexOf("."));
@@ -614,7 +691,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         }
         DBManager.dbDeal(DBManager.UPDATA)
                 .sql(SqlUrl.BIND_DEVICE)
-                .params(new String[]{deviceCardID, deviceBH})
+                .params(new String[]{deviceCardIDOne, deviceCardIDTwo, deviceCardIDThree, deviceBH})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -689,6 +766,46 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                         dismissProgressDialog();
                         alert(getResources().getString(R.string.device_bind_success));
                         finish();
+                    }
+                });
+    }
+
+    /**
+     * 查询此标签的ID是否已经绑定其它设备
+     * @param id
+     */
+    private void checkIDCardBind(int nfcType, final String id) {
+        if (StringUtils.isEmpty(id)) {
+            return;
+        }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceByID)
+                .params(new String[]{id, id, id})
+                .clazz(DeviceEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            alert(R.string.this_id_has_bind);
+                            thisIDHasBind = true;
+                        } else {
+                            thisIDHasBind = false;
+                            if (readNfcType == READ_DEVICE_NFC_ONE) {
+                                deviceCardOne.setText(id);
+                            } else if (readNfcType == READ_DEVICE_NFC_TWO) {
+                                deviceCardTwo.setText(id);
+                            } else if (readNfcType == READ_DEVICE_NFC_THREE) {
+                                deviceCardThree.setText(id);
+                            }
+                        }
                     }
                 });
     }

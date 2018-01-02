@@ -11,6 +11,9 @@
     <string name="device_bind">绑定设备</string>
     <string name="take_picture">拍照</string>
     <string name="read_card">读卡</string>
+    <string name="one_read_card">标签一读卡</string>
+    <string name="two_read_card">标签二读卡</string>
+    <string name="three_read_card">标签三读卡</string>
     <string name="create_code">生成二维码</string>
     <string name="ic_code">ic卡号</string>
     <string name="add">添加</string>
@@ -27,7 +30,9 @@
     <string name="part_name">配件名称</string>
     <string name="part_id">配件自编码</string>
     <string name="part_ic_id">配件标签ID</string>
-    <string name="device_ic_id">设备标签ID</string>
+    <string name="device_ic_id_one">设备标签ID一</string>
+    <string name="device_ic_id_two">设备标签ID二</string>
+    <string name="device_ic_id_three">设备标签ID三</string>
     <string name="adding_depart">正在添加配件</string>
     <string name="please_first_get_part_bh">请先扫描卡片，获取配件信息</string>
     <string name="please_first_get_device_card">请扫描设备ID卡，获取ID号</string>
@@ -113,4 +118,5 @@
     <string name="nfc_stop">已停止盘库</string>
     <string name="input_lingyongdanwei">请输入领用单位</string>
     <string name="loading_data_failed">加载数据失败</string>
+    <string name="this_id_has_bind">该标签已经绑定了其它设备</string>
 </resources>

@@ -15,4 +15,5 @@
     <dimen name="marginTop30">30dp</dimen>
     <dimen name="marginTop40">40dp</dimen>
     <dimen name="marginTop50">50dp</dimen>
+    <dimen name="marginTop5">5dp</dimen>
 </resources>

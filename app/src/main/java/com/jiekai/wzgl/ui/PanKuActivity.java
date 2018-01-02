@@ -64,7 +64,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     private AlertDialog alertDialog;
     private AlertDialog ifContinueDialog;
 
-    private int oldDataNum = 0;
+    private List oldData = new ArrayList();
 
     @Override
     public void initView() {
@@ -106,6 +106,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         alertDialog.setButton(BUTTON_NEGATIVE, "继续退出", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                oldData = null;
                 finish();
             }
         });
@@ -123,13 +124,23 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         ifContinueDialog.setButton(BUTTON_NEGATIVE, "继续上次盘库", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                for (int i=0; i<oldData.size(); i++) {
+                    PankuDataEntity pankuDataEntity = (PankuDataEntity) oldData.get(i);
+                    PankuDataListEntity entity = new PankuDataListEntity();
+                    entity.setMC(pankuDataEntity.getMC());
+                    entity.setBH(pankuDataEntity.getBH());
+                    entity.setLB(pankuDataEntity.getLeibie());
+                    entity.setXH(pankuDataEntity.getXinghao());
+                    entity.setGG(pankuDataEntity.getGuige());
+                    pankuDataListDatas.add(entity);
+                }
                 alertDialog.dismiss();
             }
         });
         ifContinueDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                if (oldDataNum != 0) {
+                if (oldData != null && oldData.size() != 0) {
                     pankuDataListAdapter.notifyDataSetChanged();
                 }
             }
@@ -190,18 +201,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            oldDataNum = result.size();
+                            oldData = result;
                             ifContinueDialog.show();
-                            for (int i=0; i<result.size(); i++) {
-                                PankuDataEntity pankuDataEntity = (PankuDataEntity) result.get(i);
-                                PankuDataListEntity entity = new PankuDataListEntity();
-                                entity.setMC(pankuDataEntity.getMC());
-                                entity.setBH(pankuDataEntity.getBH());
-                                entity.setLB(pankuDataEntity.getLeibie());
-                                entity.setXH(pankuDataEntity.getXinghao());
-                                entity.setGG(pankuDataEntity.getGuige());
-                                pankuDataListDatas.add(entity);
-                            }
                         }
                     }
                 });
@@ -557,7 +558,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void closeUi() {
-        if (oldDataNum != 0) {
+        if (oldData != null && oldData.size() != 0) {
             alertDialog.show();
         } else {
             finish();

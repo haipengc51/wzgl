@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="@dimen/title_height">
+              android:layout_height="wrap_content"
+    android:gravity="center_vertical">
 
     <TextView
         android:id="@+id/num"
         android:layout_width="0dp"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/title_height"
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:text="@string/serial_num"
@@ -17,7 +19,8 @@
     <TextView
         android:id="@+id/part_name"
         android:layout_width="0dp"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/title_height"
         android:layout_weight="2"
         android:gravity="center_vertical"
         android:text="@string/part_name"
@@ -27,7 +30,8 @@
     <TextView
         android:id="@+id/part_card_id"
         android:layout_width="0dp"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/title_height"
         android:layout_weight="2"
         android:gravity="center_vertical"
         android:text="@string/part_ic_id"
@@ -37,7 +41,8 @@
     <TextView
         android:id="@+id/part_id"
         android:layout_width="0dp"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/title_height"
         android:layout_weight="2"
         android:gravity="center_vertical"
         android:text="@string/part_id"

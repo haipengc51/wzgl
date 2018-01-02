@@ -50,17 +50,21 @@ public class SqlUrl {
      */
     public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ? OR IDDZMBH2 = ? OR IDDZMBH3 = ?";
     /**
+     * 根据自编码获取设备信息
+     */
+    public static final String GetDeviceByBH = "SELECT * FROM device where BH = ?";
+    /**
      * 往一个设备中添加配件
      */
     public static final String AddDepart = "UPDATE device SET SFPJ = ? , SSSBBH = ? WHERE BH = ?";
     /**
      * 根据设备id查询其配件的列表
      */
-    public static final String GetPartListByDeviceId = "SELECT BH, MC, IDDZMBH1 FROM device WHERE SFPJ = \"1\" AND SSSBBH = ?";
+    public static final String GetPartListByDeviceId = "SELECT BH, MC, IDDZMBH1 FROM device WHERE SFPJ = 1 AND SSSBBH = ?";
     /**
      * 绑定设备
      */
-    public static final String BIND_DEVICE = "UPDATE device SET IDDZMBH1 = ? WHERE BH = ?";
+    public static final String BIND_DEVICE = "UPDATE device SET IDDZMBH1 = ?, IDDZMBH2 = ?, IDDZMBH3 = ? WHERE BH = ?";
     /**
      * 插入设备文档表（绑定图片）
      */
@@ -97,7 +101,7 @@ public class SqlUrl {
             " FROM " +
             "devicesort AS leibie, devicesort AS xinghao, devicesort AS guige, device as dv" +
             " WHERE " +
-            "dv.IDDZMBH1 = ? OR dv.IDDZMBH2 = ? OR dv.IDDZMBH3 = ?" +
+            "(dv.IDDZMBH1 = ? OR dv.IDDZMBH2 = ? OR dv.IDDZMBH3 = ?)" +
             "AND leibie.COOD = dv.LB " +
             "AND xinghao.COOD = dv.XH " +
             "AND guige.COOD = dv.GG";
