@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.jiekai.wzgl.weight.ClickDrawableEdit
+            <com.jiekai.wzglkg.weight.ClickDrawableEdit
                 android:id="@+id/input_username"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_height"
@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.jiekai.wzgl.weight.ClickDrawableEdit
+            <com.jiekai.wzglkg.weight.ClickDrawableEdit
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_height"
