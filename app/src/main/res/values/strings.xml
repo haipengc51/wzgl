@@ -120,4 +120,5 @@
     <string name="loading_data_failed">加载数据失败</string>
     <string name="this_id_has_bind">该标签已经绑定了其它设备</string>
     <string name="no_permission">没有库管权限，请使用库管账号登录</string>
+    <string name="zhang_hao_jing_yong">该账号已被禁用</string>
 </resources>

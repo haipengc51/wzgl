@@ -119,7 +119,13 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            checkUserPermission((UserInfoEntity) result.get(0));
+                            UserInfoEntity entity = (UserInfoEntity) result.get(0);
+                            if ("1".equals(entity.getENABLE())) {
+                                checkUserPermission(entity);
+                            } else {
+                                alert(R.string.zhang_hao_jing_yong);
+                                dismissProgressDialog();
+                            }
                         } else {
                             alert("用户名或密码错误");
                             dismissProgressDialog();

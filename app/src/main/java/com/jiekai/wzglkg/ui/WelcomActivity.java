@@ -78,7 +78,11 @@ public class WelcomActivity extends MyBaseActivity {
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            checkUserPermission((UserInfoEntity) result.get(0));
+                            UserInfoEntity entity = (UserInfoEntity) result.get(0);
+                            if ("1".equals(entity.getENABLE())) {
+                                checkUserPermission(entity);
+                            } else {
+                            }
                         }
                     }
                 });
