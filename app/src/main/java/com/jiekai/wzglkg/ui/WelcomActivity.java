@@ -9,6 +9,7 @@ import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.config.ShareConstants;
 import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.UserInfoEntity;
+import com.jiekai.wzglkg.entity.UserRoleEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.JSONHelper;
 import com.jiekai.wzglkg.utils.StringUtils;
@@ -77,9 +78,54 @@ public class WelcomActivity extends MyBaseActivity {
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            userInfoEntity = (UserInfoEntity) result.get(0);
-                            myLogin = true;
-                            changeUi();
+                            checkUserPermission((UserInfoEntity) result.get(0));
+                        }
+                    }
+                });
+    }
+
+    private void checkUserPermission(final UserInfoEntity userInfoEntity1) {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.LoginRule)
+                .params(new String[]{userInfoEntity1.getUSERID()})
+                .clazz(UserRoleEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            boolean isOne = false;
+                            boolean isTwo = false;
+                            boolean isThree = false;
+                            for (int i=0; i<result.size(); i++) {
+                                String role = ((UserRoleEntity) result.get(i)).getROLEID();
+                                if ("003".equals(role)) {
+                                    isOne = true;
+                                }
+                                if ("004".equals(role)) {
+                                    isTwo = true;
+                                }
+                                if ("006".equals(role)) {
+                                    isThree = true;
+                                }
+                                if (isOne && isTwo && isThree) {
+                                    break;
+                                }
+                            }
+                            if (isOne && isTwo && isThree) {
+                                userInfoEntity = userInfoEntity1;
+                                myLogin = true;
+                                changeUi();
+                            } else {
+                            }
+                        } else {
                         }
                     }
                 });

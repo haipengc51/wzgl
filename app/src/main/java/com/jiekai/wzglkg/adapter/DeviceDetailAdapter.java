@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.base.MyBaseAdapter;
+import com.jiekai.wzglkg.config.Config;
+import com.jiekai.wzglkg.config.Constants;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class DeviceDetailAdapter extends MyBaseAdapter {
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
         String title = entity.getTitle();
         String content = entity.getContent();
-        if (content.equals("点击查看详情")) {
+        if (Constants.detail_fujian.equals(content)) {
             myViewHolder.content.setTextColor(context.getResources().getColor(R.color.main_color));
         } else {
             myViewHolder.content.setTextColor(context.getResources().getColor(R.color.text_content_color));

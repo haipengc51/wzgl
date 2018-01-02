@@ -215,7 +215,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String JBR;      //经办人
         dataList.add(new DeviceDetailAdapterEntity("经办人", deviceEntity.getJBR()));
 //        private String YSJCBG;      //原始检测报告
-        DeviceDetailAdapterEntity ysjcbg = new DeviceDetailAdapterEntity("原始检测报告", "点击查看详情");
+        DeviceDetailAdapterEntity ysjcbg = new DeviceDetailAdapterEntity("原始检测报告", Constants.detail_fujian);
         ysjcbg.setImage(true);
         ysjcbg.setImageType(Config.doc_jcbg);
         dataList.add(ysjcbg);
@@ -224,7 +224,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String FFDJ;      //防腐等级
         dataList.add(new DeviceDetailAdapterEntity("防腐等级", deviceEntity.getFFDJ()));
 //        private String CCHGZ;      //出厂合格证
-        DeviceDetailAdapterEntity cchgz = new DeviceDetailAdapterEntity("出厂合格证", "点击查看详情");
+        DeviceDetailAdapterEntity cchgz = new DeviceDetailAdapterEntity("出厂合格证", Constants.detail_fujian);
         cchgz.setImage(true);
         cchgz.setImageType(Config.doc_hgz);
         dataList.add(cchgz);
@@ -233,7 +233,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String SYSM;      //物资使用寿命
         dataList.add(new DeviceDetailAdapterEntity("物资使用寿命", deviceEntity.getSYSM()));
 //        private String WZMP;      //物资铭牌
-        DeviceDetailAdapterEntity wzmp = new DeviceDetailAdapterEntity("物资铭牌", "点击查看详情");
+        DeviceDetailAdapterEntity wzmp = new DeviceDetailAdapterEntity("物资铭牌", Constants.detail_fujian);
         wzmp.setImage(true);
         wzmp.setImageType(Config.doc_wzmp);
         dataList.add(wzmp);
@@ -244,22 +244,22 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
 //        private String WZCZ;      //物资残值
         dataList.add(new DeviceDetailAdapterEntity("物资残值", deviceEntity.getWZCZ()));
 //        private String JGTZ;      //结构图纸
-        DeviceDetailAdapterEntity jgtz = new DeviceDetailAdapterEntity("结构图纸", "点击查看详情");
+        DeviceDetailAdapterEntity jgtz = new DeviceDetailAdapterEntity("结构图纸", Constants.detail_fujian);
         jgtz.setImage(true);
         jgtz.setImageType(Config.doc_jgtz);
         dataList.add(jgtz);
 //        private String SMS;      //使用维护说明书
-        DeviceDetailAdapterEntity sms = new DeviceDetailAdapterEntity("使用维护说明书", "点击查看详情");
+        DeviceDetailAdapterEntity sms = new DeviceDetailAdapterEntity("使用维护说明书", Constants.detail_fujian);
         sms.setImage(true);
         sms.setImageType(Config.doc_sywhsms);
         dataList.add(sms);
 //        private String YSPJ;      //易损配件
-        DeviceDetailAdapterEntity yspj = new DeviceDetailAdapterEntity("易损配件", "点击查看详情");
+        DeviceDetailAdapterEntity yspj = new DeviceDetailAdapterEntity("易损配件", Constants.detail_fujian);
         yspj.setImage(true);
         yspj.setImageType(Config.doc_yspj);
         dataList.add(yspj);
 //        private String QTFJ;      //其他附件
-        DeviceDetailAdapterEntity qtfj = new DeviceDetailAdapterEntity("其他附件", "点击查看详情");
+        DeviceDetailAdapterEntity qtfj = new DeviceDetailAdapterEntity("其他附件", Constants.detail_fujian);
         qtfj.setImage(true);
         qtfj.setImageType(Config.doc_qtfj);
         dataList.add(qtfj);
