@@ -223,7 +223,7 @@
 
             </LinearLayout>
 
-            <com.jiekai.wzgl.weight.MyListView
+            <com.jiekai.wzglkg.weight.MyListView
                 android:id="@+id/part_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

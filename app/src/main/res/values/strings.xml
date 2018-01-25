@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">物资管理</string>
+    <string name="app_name">物资管理-库管</string>
     <string name="sweep_string">将二维码/条码放入框内，即可自动扫描</string>
     <string name="jiekai">东营杰开智能科技有限公司</string>
     <string name="please_input_username">请输入用户名</string>
@@ -119,6 +119,6 @@
     <string name="input_lingyongdanwei">请输入领用单位</string>
     <string name="loading_data_failed">加载数据失败</string>
     <string name="this_id_has_bind">该标签已经绑定了其它设备</string>
-    <string name="zhang_hao_jing_yong">该账号已被禁用</string>
     <string name="no_permission">没有库管权限，请使用库管账号登录</string>
+    <string name="zhang_hao_jing_yong">该账号已被禁用</string>
 </resources>
