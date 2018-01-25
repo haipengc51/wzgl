@@ -54,6 +54,10 @@ public class SqlUrl {
      */
     public static final String GetDeviceByID = "SELECT * FROM device where IDDZMBH1 = ? OR IDDZMBH2 = ? OR IDDZMBH3 = ?";
     /**
+     * 根据二维码获取设备信息
+     */
+    public static final String GetDeviceBySAOMA = "SELECT * FROM device where EWMBH = ?";
+    /**
      * 根据自编码获取设备信息
      */
     public static final String GetDeviceByBH = "SELECT * FROM device where BH = ?";
@@ -140,12 +144,20 @@ public class SqlUrl {
             "devicestore.CZSJ >=?  AND devicestore.CZSJ <=? AND devicestore.LB = 0 " +
             "AND device.BH = devicestore.SBBH AND userinfo.USERID = devicestore.CZR";
     /**
-     * 获取设备详情
+     * 获取设备详情，根据id卡卡号
      */
     public static final String GET_DEVICE_DETAIL = "SELECT " +
             "*, lb.TEXT AS leibie, xh.TEXT AS xinghao, gg.TEXT AS guige " +
             "FROM device, devicesort AS lb, devicesort as xh, devicesort as gg " +
             "WHERE (device.IDDZMBH1 = ? OR device.IDDZMBH2 = ? OR device.IDDZMBH3 = ?) " +
+            "AND lb.COOD = device.LB AND xh.COOD = device.XH AND gg.COOD = device.GG";
+    /**
+     * 获取设备详情，根据二维码
+     */
+    public static final String GET_DEVICE_DETAIL_BY_SAOMA = "SELECT " +
+            "*, lb.TEXT AS leibie, xh.TEXT AS xinghao, gg.TEXT AS guige " +
+            "FROM device, devicesort AS lb, devicesort as xh, devicesort as gg " +
+            "WHERE (device.EWMBH = ?) " +
             "AND lb.COOD = device.LB AND xh.COOD = device.XH AND gg.COOD = device.GG";
     /**
      * 查询数据库中上次是否有盘库的数据,返回上次盘库的全部数据

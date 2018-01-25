@@ -1,4 +1,4 @@
-package com.jiekai.wzgl.ui;
+package com.jiekai.wzglkg.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiekai.wzglkg.R;
-import com.jiekai.wzglkg.config.Config;
 import com.jiekai.wzglkg.config.ShareConstants;
 import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.UserInfoEntity;
@@ -17,8 +16,8 @@ import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.InputPasswordUtils;
 import com.jiekai.wzglkg.utils.JSONHelper;
 import com.jiekai.wzglkg.utils.StringUtils;
-import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
+import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
 import com.jiekai.wzglkg.weight.ClickDrawableEdit;
 
 import java.util.List;
@@ -165,7 +164,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                                 if ("004".equals(role)) {
                                     isTwo = true;
                                 }
-                                if ("006".equals(role)) {
+                                if ("005".equals(role)) {
                                     isThree = true;
                                 }
                                 if (isOne && isTwo && isThree) {

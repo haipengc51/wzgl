@@ -196,6 +196,45 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
                 });
     }
 
+    /**
+     * 通过二维码获取设备信息
+     * @param id
+     */
+    private void getDeviceDataBySAOMA(String id) {
+        if (StringUtils.isEmpty(id)) {
+            return;
+        }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GetDeviceBySAOMA)
+                .params(new String[]{id})
+                .clazz(DeviceEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_device));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        if (result != null && result.size() != 0) {
+                            currentDevice = (DeviceEntity) result.get(0);
+                            deviceName.setText(currentDevice.getMC());
+                            deviceId.setText(currentDevice.getBH());
+                        } else {
+                            alert(getResources().getString(R.string.no_data));
+                        }
+                    }
+                });
+    }
+
+
     private void deviceRepair() {
         if (currentDevice == null) {
             alert(getResources().getString(R.string.choose_repair_device));
@@ -506,7 +545,7 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
             }
         } else if (requestCode == Constants.SCAN && resultCode == RESULT_OK) {  //扫码回到
             String code = data.getExtras().getString("result");
-            getDeviceDataById(code);
+            getDeviceDataBySAOMA(code);
         }
     }
 

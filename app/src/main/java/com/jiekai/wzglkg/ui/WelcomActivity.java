@@ -1,4 +1,4 @@
-package com.jiekai.wzgl.ui;
+package com.jiekai.wzglkg.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -116,7 +116,7 @@ public class WelcomActivity extends MyBaseActivity {
                                 if ("004".equals(role)) {
                                     isTwo = true;
                                 }
-                                if ("006".equals(role)) {
+                                if ("005".equals(role)) {
                                     isThree = true;
                                 }
                                 if (isOne && isTwo && isThree) {

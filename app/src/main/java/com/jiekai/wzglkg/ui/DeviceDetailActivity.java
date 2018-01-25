@@ -152,6 +152,46 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
     }
 
     /**
+     * 通过二维码获取设备信息
+     *
+     * @param nfcString
+     */
+    private void getDeviceBySAOMA(String nfcString) {
+        if (StringUtils.isEmpty(nfcString)) {
+            alert(getResources().getString(R.string.get_id_err));
+            return;
+        }
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.GET_DEVICE_DETAIL_BY_SAOMA)
+                .params(new String[]{nfcString})
+                .clazz(DeviceDetailEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.loading_device));
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        dismissProgressDialog();
+                        if (result != null && result.size() != 0) {
+                            paresDeviceToShow((DeviceDetailEntity) result.get(0));
+                            buttonLayout.setVisibility(View.GONE);
+                            listview.setVisibility(View.VISIBLE);
+                        } else {
+                            alert(getResources().getString(R.string.no_data));
+                        }
+                    }
+                });
+    }
+
+    /**
      * 把deviceEntity的数据转换成listView结构去显示
      *
      * @param deviceEntity
@@ -295,7 +335,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.SCAN && resultCode == RESULT_OK) {
             String code = data.getExtras().getString("result");
-            getDeviceById(code);
+            getDeviceBySAOMA(code);
         }
     }
 
