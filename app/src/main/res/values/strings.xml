@@ -122,4 +122,5 @@
     <string name="no_permission">没有库管权限，请使用库管账号登录</string>
     <string name="zhang_hao_jing_yong">该账号已被禁用</string>
     <string name="ungree_permission">拒绝摄像头权限，该功能无法使用</string>
+    <string name="input_beizhu">请输入备注</string>
 </resources>

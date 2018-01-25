@@ -84,15 +84,15 @@ public class SqlUrl {
     /**
      * 执行设备出库操作 (设备自编码，操作时间，操作人，类别， 井号)
      */
-    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH, LYDW) VALUES (?, ?, ?, ?, ?, ?);";
+    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH, LYDW, BZ) VALUES (?, ?, ?, ?, ?, ?, ?);";
     /**
      * 执行设备入库操作 (设备自编码，操作时间，操作人，类别)
      */
-    public static final String IN_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB) VALUES (?, ?, ?, ?);";
+    public static final String IN_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, BZ) VALUES (?, ?, ?, ?, ?);";
     /**
      * 执行设备维修操作 (设备自编码，操作时间，操作人，类别)
      */
-    public static final String REPAIR_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB) VALUES (?, ?, ?, ?);";
+    public static final String REPAIR_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, BZ) VALUES (?, ?, ?, ?, ?);";
     /**
      * 查找设备出库表
      */
@@ -124,7 +124,7 @@ public class SqlUrl {
     /**
      * 插入设备报废信息
      */
-    public static final String ADD_DEVICE_SCRAP = "INSERT INTO devicescrap (SBBH, BFSJ, BFR) VALUES (?, ?, ?)";
+    public static final String ADD_DEVICE_SCRAP = "INSERT INTO devicescrap (SBBH, BFSJ, BFR, BZ) VALUES (?, ?, ?, ?)";
     /**
      * 查找报废设备
      */

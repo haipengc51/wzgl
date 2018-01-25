@@ -3,6 +3,7 @@ package com.jiekai.wzglkg.ui;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.jiekai.wzglkg.entity.DeviceEntity;
 import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.entity.LastInsertIdEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
+import com.jiekai.wzglkg.utils.CommonUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
 import com.jiekai.wzglkg.utils.GlidUtils;
 import com.jiekai.wzglkg.utils.PictureSelectUtils;
@@ -26,6 +28,7 @@ import com.jiekai.wzglkg.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +62,8 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
     TextView enter;
     @BindView(R.id.cancle)
     TextView cancle;
+    @BindView(R.id.beizhu)
+    EditText beizhu;
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
@@ -137,6 +142,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
     /**
      * 通过ID卡号获取设备信息
+     *
      * @param id
      */
     private void getDeviceDataById(String id) {
@@ -176,6 +182,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
     /**
      * 通过二维码获取设备信息
+     *
      * @param id
      */
     private void getDeviceDataBySAOMA(String id) {
@@ -338,8 +345,8 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
     private void insertInDevice() {
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.IN_DEVICE)
-                .params(new Object[]{currentDevice.getBH(), new java.sql.Date(new java.util.Date().getTime()),
-                        userData.getUSERID(), "1"})
+                .params(new Object[]{currentDevice.getBH(), new Date(new java.util.Date().getTime()),
+                        userData.getUSERID(), "1", CommonUtils.getDataIfNull(beizhu.getText().toString())})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -382,7 +389,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            insertImagePath(String.valueOf(((LastInsertIdEntity)result.get(0)).getLast_insert_id()));
+                            insertImagePath(String.valueOf(((LastInsertIdEntity) result.get(0)).getLast_insert_id()));
                         } else {
                             alert(R.string.insert_erro);
                             dismissProgressDialog();

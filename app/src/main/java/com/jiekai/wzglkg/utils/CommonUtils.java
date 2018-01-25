@@ -62,4 +62,13 @@ public class CommonUtils {
         float desity = context.getResources().getDisplayMetrics().density;
         return (int) (px / desity + 0.5f) - 15;
     }
+
+    /**
+     * 检查字符串是否为null，如果为null的时候返回"",防止崩溃
+     * @param data
+     * @return
+     */
+    public static String getDataIfNull(String data) {
+        return StringUtils.isEmpty(data) ? "" : data;
+    }
 }

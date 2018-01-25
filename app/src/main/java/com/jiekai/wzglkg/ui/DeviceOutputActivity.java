@@ -2,7 +2,6 @@ package com.jiekai.wzglkg.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import com.jiekai.wzglkg.entity.DeviceEntity;
 import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.entity.LastInsertIdEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
+import com.jiekai.wzglkg.utils.CommonUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
 import com.jiekai.wzglkg.utils.GlidUtils;
 import com.jiekai.wzglkg.utils.PictureSelectUtils;
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2017/12/16.
@@ -68,6 +67,8 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     TextView cancle;
     @BindView(R.id.input_lingyongdanwei)
     EditText inputLingyongdanwei;
+    @BindView(R.id.beizhu)
+    EditText beizhu;
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
@@ -363,7 +364,8 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.OUT_DEVICE)
                 .params(new Object[]{deviceEntity.getBH(), new Date(new java.util.Date().getTime()),
-                        userData.getUSERID(), "0", inputJinghao.getText().toString(), inputLingyongdanwei.getText().toString()})
+                        userData.getUSERID(), "0", inputJinghao.getText().toString(),
+                        inputLingyongdanwei.getText().toString(), CommonUtils.getDataIfNull(beizhu.getText().toString())})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -540,12 +542,5 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(DeviceOutputActivity.this);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }
