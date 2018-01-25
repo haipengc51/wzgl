@@ -46,6 +46,20 @@ public class DBManager {
     }
 
     /**
+     * 新建一个DbDeal
+     * @param dbType
+     * @return
+     */
+    public static DbDeal NewDbDeal(int dbType) {
+        DbDeal dbDeal = new DbDeal();
+        dbDeal.type(dbType);
+        dbDeal.sql(null);
+        dbDeal.params(null);
+        dbDeal.clazz(null);
+        return dbDeal;
+    }
+
+    /**
      * 创建单例, 并初始化
      */
     public static DBManager getInstance() {

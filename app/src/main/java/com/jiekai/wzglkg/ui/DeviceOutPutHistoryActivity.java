@@ -1,7 +1,9 @@
 package com.jiekai.wzglkg.ui;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -9,8 +11,9 @@ import android.widget.TextView;
 
 import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.DeviceOutputHistoryAdapter;
+import com.jiekai.wzglkg.config.IntentFlag;
 import com.jiekai.wzglkg.config.SqlUrl;
-import com.jiekai.wzglkg.entity.DeviceOutHistoryEntity;
+import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.TimePickerDialog;
@@ -29,7 +32,8 @@ import butterknife.BindView;
  * 数据来源还有数据显示的东西有多少？先写界面吧
  */
 
-public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.OnClickListener {
+public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.OnClickListener,
+        AdapterView.OnItemClickListener {
     @BindView(R.id.back)
     ImageView back;
     @BindView(R.id.title)
@@ -48,7 +52,7 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     private TimePickerDialog startDataDialog;
     private TimePickerDialog endDataDialog;
     private DeviceOutputHistoryAdapter historyAdapter;
-    private List<DeviceOutHistoryEntity> dataList = new ArrayList<>();
+    private List<DevicestoreEntity> dataList = new ArrayList<>();
 
     private String startTiem;
     private String endTime;
@@ -77,6 +81,7 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
             View headerView = LayoutInflater.from(mActivity).inflate(R.layout.adapter_device_output_history_list, null);
             listview.addHeaderView(headerView);
             listview.setAdapter(historyAdapter);
+            listview.setOnItemClickListener(this);
         }
     }
 
@@ -98,6 +103,16 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
         }
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        DevicestoreEntity item = (DevicestoreEntity) parent.getItemAtPosition(position);
+        if (item != null) {
+            Intent intent = new Intent(mActivity, RecordDeviceOutDetailActivity.class);
+            intent.putExtra(IntentFlag.DATA, item);
+            startActivity(intent);
+        }
+    }
+
     /**
      * 获取出库历史
      */
@@ -115,7 +130,7 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GET_OUT_HISTORY)
                 .params(new Object[]{ Date.valueOf(startTiem), Date.valueOf(endTime)})
-                .clazz(DeviceOutHistoryEntity.class)
+                .clazz(DevicestoreEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {

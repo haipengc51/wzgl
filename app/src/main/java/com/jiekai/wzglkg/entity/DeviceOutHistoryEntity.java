@@ -3,6 +3,7 @@ package com.jiekai.wzglkg.entity;
 import com.jiekai.wzglkg.entity.base.BaseEntity;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by laowu on 2017/12/28.
@@ -10,11 +11,19 @@ import java.sql.Date;
 
 public class DeviceOutHistoryEntity extends BaseEntity {
     private String MC;  //设备名称
+    private int ID;
     private String SBBH;    //设备编号
-    private Date CZSJ;  //操作时间
+    private Date CZSJ;    //操作时间
+    private String CZR;     //操作人
+    private String LB;      //类别
     private String JH;      //井号
-    private String LYDW;        //领用单位
-    private String USERNAME;    //操作人
+    private String BZ;      //备注
+    private String LYDW;    //领用单位
+    private String SHYJ;    //审核意见
+    private Timestamp SHSJ;    //审核时间
+    private String SHR;     //审核人
+    private String SHBZ;    //审核备注
+    private String czrname;     //操作人的姓名
 
     public String getMC() {
         return MC;
@@ -22,6 +31,14 @@ public class DeviceOutHistoryEntity extends BaseEntity {
 
     public void setMC(String MC) {
         this.MC = MC;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getSBBH() {
@@ -40,12 +57,36 @@ public class DeviceOutHistoryEntity extends BaseEntity {
         this.CZSJ = CZSJ;
     }
 
+    public String getCZR() {
+        return CZR;
+    }
+
+    public void setCZR(String CZR) {
+        this.CZR = CZR;
+    }
+
+    public String getLB() {
+        return LB;
+    }
+
+    public void setLB(String LB) {
+        this.LB = LB;
+    }
+
     public String getJH() {
         return JH;
     }
 
     public void setJH(String JH) {
         this.JH = JH;
+    }
+
+    public String getBZ() {
+        return BZ;
+    }
+
+    public void setBZ(String BZ) {
+        this.BZ = BZ;
     }
 
     public String getLYDW() {
@@ -56,11 +97,43 @@ public class DeviceOutHistoryEntity extends BaseEntity {
         this.LYDW = LYDW;
     }
 
-    public String getUSERNAME() {
-        return USERNAME;
+    public String getSHYJ() {
+        return SHYJ;
     }
 
-    public void setUSERNAME(String USERNAME) {
-        this.USERNAME = USERNAME;
+    public void setSHYJ(String SHYJ) {
+        this.SHYJ = SHYJ;
+    }
+
+    public Timestamp getSHSJ() {
+        return SHSJ;
+    }
+
+    public void setSHSJ(Timestamp SHSJ) {
+        this.SHSJ = SHSJ;
+    }
+
+    public String getSHR() {
+        return SHR;
+    }
+
+    public void setSHR(String SHR) {
+        this.SHR = SHR;
+    }
+
+    public String getSHBZ() {
+        return SHBZ;
+    }
+
+    public void setSHBZ(String SHBZ) {
+        this.SHBZ = SHBZ;
+    }
+
+    public String getCzrname() {
+        return czrname;
+    }
+
+    public void setCzrname(String czrname) {
+        this.czrname = czrname;
     }
 }

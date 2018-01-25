@@ -123,4 +123,17 @@
     <string name="zhang_hao_jing_yong">该账号已被禁用</string>
     <string name="ungree_permission">拒绝摄像头权限，该功能无法使用</string>
     <string name="input_beizhu">请输入备注</string>
+    <string name="record_type">记录种类</string>
+    <string name="operator_people">操作人</string>
+    <string name="operator_time">操作时间</string>
+    <string name="check_jieguo">审核结果</string>
+    <string name="check_people">审核人</string>
+    <string name="check_time">审核时间</string>
+    <string name="jinghao_">井号:</string>
+    <string name="operator_remark">操作备注</string>
+    <string name="check_remark">审核备注</string>
+    <string name="check_result">审核意见</string>
+    <string name="record_out">出库记录</string>
+    <string name="get_image_fail">获取图片失败</string>
+    <string name="duihao">对号</string>
 </resources>

@@ -31,6 +31,18 @@ public class TimeUtils {
         if (data == null) {
             return null;
         }
-        return new SimpleDateFormat("yyyy-mm-dd").format(data);
+        return new SimpleDateFormat("yyyy-MM-dd").format(data);
+    }
+
+    /**
+     * data转换成String
+     * @param data
+     * @return
+     */
+    public static String dateToStringYYYYmmddHHMMSS(Date data) {
+        if (data == null) {
+            return null;
+        }
+        return new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(data);
     }
 }

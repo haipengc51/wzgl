@@ -7,8 +7,9 @@ import android.widget.TextView;
 
 import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.base.MyBaseAdapter;
-import com.jiekai.wzglkg.entity.DeviceOutHistoryEntity;
-import com.jiekai.wzglkg.utils.StringUtils;
+import com.jiekai.wzglkg.entity.DevicestoreEntity;
+import com.jiekai.wzglkg.utils.CommonUtils;
+import com.jiekai.wzglkg.utils.TimeUtils;
 
 import java.util.List;
 
@@ -34,14 +35,14 @@ public class DeviceOutputHistoryAdapter extends MyBaseAdapter {
 
     @Override
     public View buildData(int position, View cellView, BusinessHolder viewHolder) {
-        DeviceOutHistoryEntity item = (DeviceOutHistoryEntity) dataList.get(position);
+        DevicestoreEntity item = (DevicestoreEntity) dataList.get(position);
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
-        myViewHolder.deviceName.setText(item.getMC());
-        myViewHolder.deviceId.setText(item.getSBBH());
-        myViewHolder.outPeople.setText(item.getUSERNAME());
-        myViewHolder.outTime.setText(String.valueOf(item.getCZSJ()));
-        myViewHolder.lingyongdanwei.setText(StringUtils.isEmpty(item.getLYDW()) ? "": item.getLYDW());
-        myViewHolder.jinghao.setText(item.getJH());
+//        myViewHolder.deviceName.setText(CommonUtils.getDataIfNull(item.getMC()));
+        myViewHolder.deviceId.setText(CommonUtils.getDataIfNull(item.getSBBH()));
+        myViewHolder.outPeople.setText(CommonUtils.getDataIfNull(item.getCzrname()));
+        myViewHolder.outTime.setText(TimeUtils.dateToStringYYYYmmdd(item.getCZSJ()));
+        myViewHolder.lingyongdanwei.setText(CommonUtils.getDataIfNull(item.getLYDW()));
+        myViewHolder.jinghao.setText(CommonUtils.getDataIfNull(item.getJH()));
         return null;
     }
 

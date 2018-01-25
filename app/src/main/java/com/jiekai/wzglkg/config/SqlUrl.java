@@ -137,9 +137,9 @@ public class SqlUrl {
      * 根据时间段 获取设备出库历史
      */
     public static final String GET_OUT_HISTORY = "SELECT " +
-            "device.MC, " +
-            "devicestore.SBBH, devicestore.CZSJ, devicestore.JH, devicestore.LYDW, " +
-            "userinfo.USERNAME " +
+//            "device.MC, " +
+            "devicestore.*, " +
+            "userinfo.USERNAME AS czrname " +
             "FROM devicestore, device, userinfo WHERE " +
             "devicestore.CZSJ >=?  AND devicestore.CZSJ <=? AND devicestore.LB = 0 " +
             "AND device.BH = devicestore.SBBH AND userinfo.USERID = devicestore.CZR";
@@ -198,4 +198,8 @@ public class SqlUrl {
      * 获取照片的地址
      */
     public static final String Get_Image_Path = "SELECT * FROM devicedoc WHERE SBBH = ? AND LB = ?";
+    /**
+     * 通过用户id获取用户的名字
+     */
+    public static final String GET_NAME_BY_ID = "SELECT userinfo.USERNAME as name FROM userinfo WHERE USERID = ?";
 }
