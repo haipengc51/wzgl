@@ -58,11 +58,8 @@
             android:gravity="center">
 
             <TextView
-                style="@style/button_style"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/little_button_style"
                 android:layout_gravity="center"
-                android:background="@drawable/login_button_shape"
                 android:text="@string/search"/>
 
         </LinearLayout>

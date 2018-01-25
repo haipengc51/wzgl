@@ -37,6 +37,19 @@
         <item name="android:textSize">@dimen/content_text_size</item>
     </style>
 
+    <style name="little_button_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">@dimen/item_height</item>
+        <item name="android:background">@drawable/login_button_shape</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/content_text_size</item>
+    </style>
+
     <style name="fade_in_popup">
         <item name="android:windowEnterAnimation">@anim/fade_in</item>
         <item name="android:windowExitAnimation">@anim/fade_out</item>

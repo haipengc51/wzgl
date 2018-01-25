@@ -10,6 +10,10 @@ public class SqlUrl {
      */
     public static final String LoginSql = "SELECT * FROM userinfo where USERID = ? AND PASSWORD = ?";
     /**
+     * 获取登录用户的权限
+     */
+    public static final String LoginRule = "SELECT * FROM userrole WHERE USERID = ?";
+    /**
      * 获取设备类型
      */
     public static final String GetDeviceType = "SELECT * FROM devicesort";

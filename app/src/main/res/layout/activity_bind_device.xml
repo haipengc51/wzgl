@@ -98,17 +98,13 @@
 
                     <TextView
                         android:id="@+id/read_device_nfc"
-                        style="@style/button_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/little_button_style"
                         android:layout_marginTop="@dimen/marginTop10"
                         android:text="@string/read_card" />
 
                     <TextView
                         android:id="@+id/create_code"
-                        style="@style/button_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/little_button_style"
                         android:layout_marginTop="@dimen/marginTop10"
                         android:text="@string/create_code"
                         android:visibility="gone"/>
@@ -131,10 +127,7 @@
 
                     <TextView
                         android:id="@+id/choose_picture"
-                        style="@style/button_style"
-                        android:background="@drawable/login_button_shape"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/little_button_style"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="@dimen/marginTop10"
                         android:text="@string/take_picture" />
@@ -216,17 +209,13 @@
 
                     <TextView
                         android:id="@+id/read_part_nfc"
-                        style="@style/button_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/little_button_style"
                         android:layout_marginTop="@dimen/marginTop10"
                         android:text="@string/read_card" />
 
                     <TextView
                         android:id="@+id/add_part_button"
-                        style="@style/button_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/little_button_style"
                         android:layout_marginTop="@dimen/marginTop10"
                         android:text="@string/add" />
 
@@ -251,9 +240,7 @@
 
                 <TextView
                     android:id="@+id/cancle"
-                    style="@style/button_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/little_button_style"
                     android:layout_alignParentLeft="true"
                     android:layout_marginTop="@dimen/marginTop10"
                     android:layout_marginLeft="@dimen/marginTop10"
@@ -261,9 +248,7 @@
 
                 <TextView
                     android:id="@+id/bind_button"
-                    style="@style/button_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/little_button_style"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="@dimen/marginTop10"
                     android:layout_marginRight="@dimen/marginTop10"

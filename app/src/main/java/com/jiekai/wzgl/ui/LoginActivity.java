@@ -11,12 +11,13 @@ import com.jiekai.wzgl.R;
 import com.jiekai.wzgl.config.ShareConstants;
 import com.jiekai.wzgl.config.SqlUrl;
 import com.jiekai.wzgl.entity.UserInfoEntity;
+import com.jiekai.wzgl.entity.UserRoleEntity;
 import com.jiekai.wzgl.ui.base.MyBaseActivity;
 import com.jiekai.wzgl.utils.InputPasswordUtils;
 import com.jiekai.wzgl.utils.JSONHelper;
 import com.jiekai.wzgl.utils.StringUtils;
-import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.utils.dbutils.DBManager;
+import com.jiekai.wzgl.utils.dbutils.DbCallBack;
 import com.jiekai.wzgl.weight.ClickDrawableEdit;
 
 import java.util.List;
@@ -117,12 +118,69 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                     @Override
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
-                            saveLoginData((UserInfoEntity) result.get(0));
-                            Intent intent = new Intent(LoginActivity.this, KeeperMainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            UserInfoEntity entity = (UserInfoEntity) result.get(0);
+                            if ("1".equals(entity.getENABLE())) {
+                                checkUserPermission(entity);
+                            } else {
+                                alert(R.string.zhang_hao_jing_yong);
+                                dismissProgressDialog();
+                            }
                         } else {
                             alert("用户名或密码错误");
+                            dismissProgressDialog();
+                        }
+                    }
+                });
+    }
+
+    private void checkUserPermission(final UserInfoEntity userInfoEntity) {
+        DBManager.dbDeal(DBManager.SELECT)
+                .sql(SqlUrl.LoginRule)
+                .params(new String[]{userInfoEntity.getUSERID()})
+                .clazz(UserRoleEntity.class)
+                .execut(new DbCallBack() {
+                    @Override
+                    public void onDbStart() {
+
+                    }
+
+                    @Override
+                    public void onError(String err) {
+                        alert(err);
+                        dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onResponse(List result) {
+                        if (result != null && result.size() != 0) {
+                            boolean isOne = false;
+                            boolean isTwo = false;
+                            boolean isThree = false;
+                            for (int i=0; i<result.size(); i++) {
+                                String role = ((UserRoleEntity) result.get(i)).getROLEID();
+                                if ("003".equals(role)) {
+                                    isOne = true;
+                                }
+                                if ("004".equals(role)) {
+                                    isTwo = true;
+                                }
+                                if ("005".equals(role)) {
+                                    isThree = true;
+                                }
+                                if (isOne && isTwo && isThree) {
+                                    break;
+                                }
+                            }
+                            if (isOne && isTwo && isThree) {
+                                saveLoginData(userInfoEntity);
+                                Intent intent = new Intent(LoginActivity.this, KeeperMainActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                alert(R.string.no_permission);
+                            }
+                        } else {
+                            alert(R.string.no_permission);
                         }
                         dismissProgressDialog();
                     }
