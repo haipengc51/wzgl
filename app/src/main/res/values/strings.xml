@@ -121,4 +121,5 @@
     <string name="this_id_has_bind">该标签已经绑定了其它设备</string>
     <string name="no_permission">没有库管权限，请使用库管账号登录</string>
     <string name="zhang_hao_jing_yong">该账号已被禁用</string>
+    <string name="ungree_permission">拒绝摄像头权限，该功能无法使用</string>
 </resources>
