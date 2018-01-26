@@ -138,7 +138,7 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
                 }
                 break;
             case R.id.choose_picture:
-                PictureSelectUtils.choosePicture(mActivity, Constants.REQUEST_PICTURE);
+                PictureSelectUtils.choosePicture(PictureSelector.create(this), Constants.REQUEST_PICTURE);
                 break;
             case R.id.repair_type:
                 repairTypePop.showCenter(v);

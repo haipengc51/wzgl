@@ -234,7 +234,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 alertDialog.show();
                 break;
             case R.id.choose_picture:
-                PictureSelectUtils.choosePicture(BindDeviceActivity_new.this, CHOOSE_PICHTURE);
+                PictureSelectUtils.choosePicture(PictureSelector.create(BindDeviceActivity_new.this), CHOOSE_PICHTURE);
                 break;
             case R.id.device_picture:
                 if (choosePictures != null && choosePictures.size() != 0) {

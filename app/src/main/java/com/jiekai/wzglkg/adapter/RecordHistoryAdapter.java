@@ -9,6 +9,7 @@ import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.base.MyBaseAdapter;
 import com.jiekai.wzglkg.config.Config;
 import com.jiekai.wzglkg.entity.DeviceUnCheckEntity;
+import com.jiekai.wzglkg.entity.DevicestoreEntity;
 
 import java.util.List;
 
@@ -40,48 +41,23 @@ public class RecordHistoryAdapter extends MyBaseAdapter {
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
         DeviceUnCheckEntity item = (DeviceUnCheckEntity) dataList.get(position);
         switch (item.getType()) {
-            case Config.TYPE_JL:    //记录
+            case Config.TYPE_STOR:    //入库，出库，维修
             {
-                DevicelogEntity devicelogEntity = (DevicelogEntity) item.getData();
-                myViewHolder.recordType.setText(getDataIfNull(devicelogEntity.getJLZLMC()));
-                myViewHolder.deviceId.setText(getDataIfNull(devicelogEntity.getSBBH()));
-                myViewHolder.duihao.setText(getDataIfNull(devicelogEntity.getDH()));
-                myViewHolder.jinghao.setText(getDataIfNull(devicelogEntity.getJH()));
-                String shyj = devicelogEntity.getSHYJ();
-                if ("1".equals(shyj)) {
-                    myViewHolder.checkResult.setText("通过");
-                } else if ("0".equals(shyj)) {
-                    myViewHolder.checkResult.setText("未通过");
-                } else {
-                    myViewHolder.checkResult.setText("待审核");
+                DevicestoreEntity devicestoreEntity = (DevicestoreEntity) item.getData();
+                if (Config.LB_OUT.equals(devicestoreEntity.getLB())) {
+                    myViewHolder.recordType.setText(context.getResources().getString(R.string.device_output));
+                } else if (Config.LB_IN.equals(devicestoreEntity.getLB())) {
+                    myViewHolder.recordType.setText(context.getResources().getString(R.string.device_input));
+                } else if (Config.LB_WEIXIU.equals(devicestoreEntity.getLB())) {
+                    myViewHolder.recordType.setText(context.getResources().getString(R.string.device_weixiu));
+                } else if (Config.LB_DAXIU.equals(devicestoreEntity.getLB())) {
+                    myViewHolder.recordType.setText(context.getResources().getString(R.string.device_daxiu));
+                } else if (Config.LB_FANCHANG.equals(devicestoreEntity.getLB())) {
+                    myViewHolder.recordType.setText(context.getResources().getString(R.string.device_fanchang));
                 }
-            }
-                break;
-            case Config.TYPE_MOVE:      //转场
-            {
-                DevicemoveEntity devicemoveEntity = (DevicemoveEntity) item.getData();
-                myViewHolder.recordType.setText(getDataIfNull(item.getJLZL()));
-                myViewHolder.deviceId.setText(getDataIfNull(devicemoveEntity.getSBBH()));
-                myViewHolder.duihao.setText(getDataIfNull(devicemoveEntity.getDH()));
-                myViewHolder.jinghao.setText(getDataIfNull(devicemoveEntity.getJH()));
-                String shyj = devicemoveEntity.getSHYJ();
-                if ("1".equals(shyj)) {
-                    myViewHolder.checkResult.setText("通过");
-                } else if ("0".equals(shyj)) {
-                    myViewHolder.checkResult.setText("未通过");
-                } else {
-                    myViewHolder.checkResult.setText("待审核");
-                }
-            }
-                break;
-            case Config.TYPE_INSPECTION:        //巡检
-            {
-                DeviceInspectionEntity devicemoveEntity = (DeviceInspectionEntity) item.getData();
-                myViewHolder.recordType.setText(getDataIfNull(item.getJLZL()));
-                myViewHolder.deviceId.setText(getDataIfNull(devicemoveEntity.getSBBH()));
-//                myViewHolder.duihao.setText(getDataIfNull(devicemoveEntity.getDH()));
-//                myViewHolder.jinghao.setText(getDataIfNull(devicemoveEntity.getJH()));
-                String shyj = devicemoveEntity.getSHYJ();
+                myViewHolder.deviceId.setText(getDataIfNull(devicestoreEntity.getSBBH()));
+                myViewHolder.jinghao.setText(getDataIfNull(devicestoreEntity.getJH()));
+                String shyj = devicestoreEntity.getSHYJ();
                 if ("1".equals(shyj)) {
                     myViewHolder.checkResult.setText("通过");
                 } else if ("0".equals(shyj)) {

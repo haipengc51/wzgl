@@ -136,7 +136,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 }
                 break;
             case R.id.choose_picture:   //选择图片
-                PictureSelectUtils.choosePicture(mActivity, Constants.REQUEST_PICTURE);
+                PictureSelectUtils.choosePicture(PictureSelector.create(this), Constants.REQUEST_PICTURE);
                 break;
             case R.id.enter:    //确定
                 deviceScrap();

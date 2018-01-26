@@ -72,6 +72,18 @@
         <activity android:name=".ui.RecordDeviceOutDetailActivity"
             android:label="@string/record_out"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.RecordHistoryActivity"
+            android:label="@string/record_failed_detail"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeviceOutDetailActivity"
+            android:label="@string/record_failed_detail"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeviceInDetailActivity"
+            android:label="@string/record_failed_detail"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeviceRepairDetailActivity"
+            android:label="@string/record_failed_detail"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -127,7 +127,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                 startActivityForResult(new Intent(mActivity, CaptureActivity.class), Constants.SCAN);
                 break;
             case R.id.choose_picture:   //选择图片
-                PictureSelectUtils.choosePicture(mActivity, Constants.REQUEST_PICTURE);
+                PictureSelectUtils.choosePicture(PictureSelector.create(mActivity), Constants.REQUEST_PICTURE);
                 break;
             case R.id.input_image:      //点击图片
                 if (choosePictures != null && choosePictures.size() != 0) {

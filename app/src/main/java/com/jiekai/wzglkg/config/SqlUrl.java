@@ -117,6 +117,7 @@ public class SqlUrl {
      * 插入图片到服务器中（ID, 文件名称， 文件大小， 文件地址，文件类型，类别）
      */
     public static final String INSERT_IAMGE = "INSERT INTO devicedoc (SBBH, WJMC, WJDX, WJDZ, WDLX, LB) VALUES (?, ?, ?, ?, ?, ?)";
+    public static final String UPDATE_IMAGE = "UPDATE devicedoc SET WJMC = ?, WJDX = ?, WJDZ = ?, WDLX = ? WHERE SBBH = ? AND LB = ?";
     /**
      * 查找上次插入数据所返回的ID
      */
@@ -202,4 +203,13 @@ public class SqlUrl {
      * 通过用户id获取用户的名字
      */
     public static final String GET_NAME_BY_ID = "SELECT userinfo.USERNAME as name FROM userinfo WHERE USERID = ?";
+    /**
+     * 检查设备出库，入库，维修未通过的审核结果（列举所有没有通过审核的和没有审核的结果）
+     */
+    public static final String GET_STORE_CHECK_LIST = "SELECT * FROM devicestore WHERE CZR = ? AND SHYJ = \"0\"";
+    /**
+     * 更新入库，出库，维修，大修，返厂记录
+     */
+    public static final String UPDATE_DEVICE_STOR = "UPDATE devicestore SET CZSJ = ?, CZR =?, LB = ?, JH = ?, BZ = ?, LYDW = ?, " +
+            " SHYJ = \"\", SHR = \"\", SHSJ = NULL, SHBZ = \"\" WHERE ID = ?";
 }

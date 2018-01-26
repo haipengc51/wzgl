@@ -39,4 +39,14 @@ public class Config {
     public static final String doc_yspj= "yspj";    //易损配件
     public static final String doc_qtfj= "qtfj";    //其他附件
 
+    public static final int TYPE_JL = 1;      //审核失败种类为记录种类
+    public static final int TYPE_MOVE = 2;      //审核失败种类为转库
+    public static final int TYPE_INSPECTION = 3;      //审核失败种类为巡检
+    public static final int TYPE_STOR = 4;      //审核失败种类为入库，出库，维修
+
+    public static final String LB_OUT = "0";
+    public static final String LB_IN = "1";
+    public static final String LB_WEIXIU = "3";
+    public static final String LB_DAXIU = "4";
+    public static final String LB_FANCHANG = "5";
 }

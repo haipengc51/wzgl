@@ -10,8 +10,14 @@ import android.widget.TextView;
 
 import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.RecordHistoryAdapter;
+import com.jiekai.wzglkg.config.Config;
+import com.jiekai.wzglkg.config.IntentFlag;
+import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.DeviceUnCheckEntity;
+import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
+import com.jiekai.wzglkg.utils.dbutils.DBManager;
+import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +45,6 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
     private View headerView;
     private RecordHistoryAdapter adapter;
     private List<DeviceUnCheckEntity> dataList = new ArrayList<>();
-    private int selectNum;
 
     @Override
     public void initView() {
@@ -78,21 +83,24 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DeviceUnCheckEntity entity = (DeviceUnCheckEntity) parent.getItemAtPosition(position);
         if (entity != null) {
-            switch (entity.getType()) {
-                case Config.TYPE_JL:
-                    Intent intent = new Intent(mActivity, RecordHistoryDetailActivity.class);
-                    intent.putExtra(IntentFlag.DATA, (DevicelogEntity) entity.getData());
+            DevicestoreEntity item = (DevicestoreEntity) entity.getData();
+            switch (item.getLB()) {
+                case Config.LB_IN:
+                    Intent intent = new Intent(mActivity, DeviceInDetailActivity.class);
+                    intent.putExtra(IntentFlag.DATA, item);
                     startActivityForResult(intent, CHENGE_SUCCESS);
                     break;
-                case Config.TYPE_MOVE:
-                    Intent intent_move = new Intent(mActivity, MoveHistoryDetailActivity.class);
-                    intent_move.putExtra(IntentFlag.DATA, (DevicemoveEntity) entity.getData());
-                    startActivityForResult(intent_move, CHENGE_SUCCESS);
+                case Config.LB_OUT:
+                    Intent intentOut = new Intent(mActivity, DeviceOutDetailActivity.class);
+                    intentOut.putExtra(IntentFlag.DATA, item);
+                    startActivityForResult(intentOut, CHENGE_SUCCESS);
                     break;
-                case Config.TYPE_INSPECTION:    //巡检
-                    Intent inspection = new Intent(mActivity, InspectionHistoryDetailActivity.class);
-                    inspection.putExtra(IntentFlag.DATA, (DeviceInspectionEntity) entity.getData());
-                    startActivityForResult(inspection, CHENGE_SUCCESS);
+                case Config.LB_WEIXIU:
+                case Config.LB_DAXIU:
+                case Config.LB_FANCHANG:
+                    Intent intentRepair = new Intent(mActivity, DeviceRepairDetailActivity.class);
+                    intentRepair.putExtra(IntentFlag.DATA, item);
+                    startActivityForResult(intentRepair, CHENGE_SUCCESS);
                     break;
             }
         }
@@ -104,15 +112,14 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
         } else {
             dataList = new ArrayList<>();
         }
-        selectNum = 0;
         if (adapter != null) {
             adapter.notifyDataSetChanged();
             setHeaderViewVisible(View.GONE);
         }
         DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_RECORD_CHECK_LIST)
+                .sql(SqlUrl.GET_STORE_CHECK_LIST)
                 .params(new String[]{userData.getUSERID()})
-                .clazz(DevicelogEntity.class)
+                .clazz(DevicestoreEntity.class)
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -129,104 +136,22 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
                     public void onResponse(List result) {
                         if (result != null && result.size() != 0) {
                             for (int i=0; i<result.size(); i++) {
-                                DevicelogEntity devicelogEntity = (DevicelogEntity) result.get(i);
+                                DevicestoreEntity devicestoreEntity = (DevicestoreEntity) result.get(i);
                                 DeviceUnCheckEntity deviceUnCheckEntity = new DeviceUnCheckEntity();
-                                deviceUnCheckEntity.setType(Config.TYPE_JL);
-                                deviceUnCheckEntity.setID(devicelogEntity.getSBBH());
-                                deviceUnCheckEntity.setJLZL(devicelogEntity.getJLZLMC());
-                                deviceUnCheckEntity.setYJ(devicelogEntity.getSHYJ());
-                                deviceUnCheckEntity.setData(devicelogEntity);
+                                deviceUnCheckEntity.setType(Config.TYPE_STOR);
+                                deviceUnCheckEntity.setID(devicestoreEntity.getSBBH());
+                                deviceUnCheckEntity.setYJ(devicestoreEntity.getSHYJ());
+                                deviceUnCheckEntity.setData(devicestoreEntity);
                                 dataList.add(deviceUnCheckEntity);
                             }
                             adapter.notifyDataSetChanged();
                             setHeaderViewVisible(View.VISIBLE);
+                        } else {
+                            alert(R.string.your_all_check_pass);
                         }
-                        allSelectFinish();
-                    }
-                });
-        DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_MOVE_CHECK_LIST)
-                .params(new String[]{userData.getUSERID()})
-                .clazz(DevicemoveEntity.class)
-                .execut(new DbCallBack() {
-                    @Override
-                    public void onDbStart() {
-
-                    }
-
-                    @Override
-                    public void onError(String err) {
-                        alert(err);
                         dismissProgressDialog();
                     }
-
-                    @Override
-                    public void onResponse(List result) {
-                        if (result != null && result.size() != 0) {
-                            for (int i=0; i<result.size(); i++) {
-                                DevicemoveEntity devicemoveEntity = (DevicemoveEntity) result.get(i);
-                                DeviceUnCheckEntity deviceUnCheckEntity = new DeviceUnCheckEntity();
-                                deviceUnCheckEntity.setType(Config.TYPE_MOVE);
-                                deviceUnCheckEntity.setID(devicemoveEntity.getSBBH());
-                                deviceUnCheckEntity.setJLZL(getResources().getString(R.string.device_move));
-                                deviceUnCheckEntity.setYJ(devicemoveEntity.getSHYJ());
-                                deviceUnCheckEntity.setData(devicemoveEntity);
-                                dataList.add(deviceUnCheckEntity);
-                            }
-                            adapter.notifyDataSetChanged();
-                            setHeaderViewVisible(View.VISIBLE);
-                        }
-                        allSelectFinish();
-                    }
                 });
-        DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_INSPECTION_CHECK_LIST)
-                .params(new String[]{userData.getUSERID()})
-                .clazz(DeviceInspectionEntity.class)
-                .execut(new DbCallBack() {
-                    @Override
-                    public void onDbStart() {
-
-                    }
-
-                    @Override
-                    public void onError(String err) {
-                        alert(err);
-                        dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onResponse(List result) {
-                        if (result != null && result.size() != 0) {
-                            for (int i=0; i<result.size(); i++) {
-                                DeviceInspectionEntity devicemoveEntity = (DeviceInspectionEntity) result.get(i);
-                                DeviceUnCheckEntity deviceUnCheckEntity = new DeviceUnCheckEntity();
-                                deviceUnCheckEntity.setType(Config.TYPE_INSPECTION);
-                                deviceUnCheckEntity.setID(devicemoveEntity.getSBBH());
-                                deviceUnCheckEntity.setJLZL(getResources().getString(R.string.device_inspection));
-                                deviceUnCheckEntity.setYJ(devicemoveEntity.getSHYJ());
-                                deviceUnCheckEntity.setData(devicemoveEntity);
-                                dataList.add(deviceUnCheckEntity);
-                            }
-                            adapter.notifyDataSetChanged();
-                            setHeaderViewVisible(View.VISIBLE);
-                        }
-                        allSelectFinish();
-                    }
-                });
-    }
-
-    private void allSelectFinish() {
-        selectNum++;
-        if (selectNum >= 3) {
-            if (adapter != null ){
-                if (adapter.dataList == null || adapter.dataList.size() == 0) {
-                    alert(R.string.your_all_check_pass);
-                    setHeaderViewVisible(View.GONE);
-                }
-            }
-            dismissProgressDialog();
-        }
     }
 
     private void setHeaderViewVisible(int visible) {

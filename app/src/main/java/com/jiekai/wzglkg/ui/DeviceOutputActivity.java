@@ -124,7 +124,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                 finish();
                 break;
             case R.id.choose_picture:
-                PictureSelectUtils.choosePicture(mActivity, Constants.REQUEST_PICTURE);
+                PictureSelectUtils.choosePicture(PictureSelector.create(this), Constants.REQUEST_PICTURE);
                 break;
             case R.id.out_image:
                 if (choosePictures != null && choosePictures.size() != 0)

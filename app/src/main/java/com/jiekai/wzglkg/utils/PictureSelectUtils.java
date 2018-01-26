@@ -30,11 +30,10 @@ public class PictureSelectUtils {
 
     /**
      * 打开图片选择工具
-     * @param activity
      * @param RequestCode
      */
-    public static void choosePicture(Activity activity, int RequestCode) {
-        PictureSelector.create(activity)
+    public static void choosePicture(PictureSelector pictureSelector, int RequestCode) {
+        pictureSelector
                 .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 //                .theme()//主题样式(不设置为默认样式) 也可参考demo values/styles下 例如：R.style.picture.white.style
 //                .maxSelectNum()// 最大图片选择数量 int

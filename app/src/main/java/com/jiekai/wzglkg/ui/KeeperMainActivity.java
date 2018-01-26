@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.jiekai.wzglkg.AppContext;
 import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.adapter.KeeperAdapter;
 import com.jiekai.wzglkg.entity.KeeperEntity;
@@ -48,6 +49,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_scrap), DeviceScrapActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.device_repair), DeviceRepairActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.pan_ku), PanKuActivity.class));
+        dataList.add(new KeeperEntity(getResources().getString(R.string.record_check_result), RecordHistoryActivity.class));
         dataList.add(new KeeperEntity(getResources().getString(R.string.logout), LogOutActivity.class));
     }
 
@@ -58,6 +60,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
             gridView.setAdapter(adapter);
             gridView.setOnItemClickListener(this);
         }
+        AppContext.getUnCheckedData(this, userData.getUSERID());
     }
 
     @Override

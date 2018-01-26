@@ -18,6 +18,6 @@ public class GlidUtils {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.error(R.drawable.ic_image_err);
         requestOptions.placeholder(R.drawable.ic_image_err);
-        Glide.with(activity).load(url).into(imageView);
+        Glide.with(activity).setDefaultRequestOptions(requestOptions).load(url).into(imageView);
     }
 }
