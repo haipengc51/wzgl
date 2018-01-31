@@ -83,7 +83,7 @@
     <string name="repair_type">维修类型</string>
     <string name="choose_repair_type">请选择维修类型</string>
     <string name="device_repair">设备维修</string>
-    <string name="pan_ku">盘库</string>
+    <string name="pan_ku">　盘库　</string>
     <string name="start">开始</string>
     <string name="finish">结束</string>
     <string name="upload">上传</string>
@@ -136,7 +136,7 @@
     <string name="record_out">出库记录</string>
     <string name="get_image_fail">获取图片失败</string>
     <string name="duihao">对号</string>
-    <string name="record_check_result">记录审核结果</string>
+    <string name="record_check_result">记录审核</string>
     <string name="your_all_check_pass">您所有的审核都通过了申请</string>
     <string name="device_inspection">设备巡检</string>
     <string name="device_move">设备转场</string>

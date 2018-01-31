@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
  * Activity的基类
  */
 
-public abstract class MyBaseActivity extends AppCompatActivity {
+public abstract class MyBaseActivity extends Activity {
     public abstract void initView();
     public abstract void initData();
     public abstract void initOperation();
