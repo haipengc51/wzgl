@@ -1,6 +1,7 @@
 package com.jiekai.wzglkg.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2018/1/5.
@@ -64,6 +66,10 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
     TextView checkRemark;
     @BindView(R.id.recommit)
     TextView recommit;
+    @BindView(R.id.lyr)
+    EditText lyr;
+    @BindView(R.id.lyrdh)
+    EditText lyrdh;
 
     private DevicestoreEntity currentDatas;
 
@@ -97,6 +103,8 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
             deviceId.setText(CommonUtils.getDataIfNull(currentDatas.getSBBH()));
             jinghao.setText(CommonUtils.getDataIfNull(currentDatas.getJH()));
             lydw.setText(CommonUtils.getDataIfNull(currentDatas.getLYDW()));
+            lyr.setText(CommonUtils.getDataIfNull(currentDatas.getLYR()));
+            lyrdh.setText(CommonUtils.getDataIfNull(currentDatas.getLYRDH()));
             beizhu.setText(CommonUtils.getDataIfNull(currentDatas.getBZ()));
             checkRemark.setText(CommonUtils.getDataIfNull(currentDatas.getSHBZ()));
             showCommitImage(currentDatas.getID());
@@ -446,5 +454,12 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(mActivity);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

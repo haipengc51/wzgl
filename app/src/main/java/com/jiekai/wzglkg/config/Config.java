@@ -38,6 +38,7 @@ public class Config {
     public static final String doc_sywhsms= "sywhsms";    //使用维护说明书
     public static final String doc_yspj= "yspj";    //易损配件
     public static final String doc_qtfj= "qtfj";    //其他附件
+    public static final String doc_bzwd = "bzwd";   //设备标准文档
 
     public static final int TYPE_JL = 1;      //审核失败种类为记录种类
     public static final int TYPE_MOVE = 2;      //审核失败种类为转库

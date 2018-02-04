@@ -84,7 +84,7 @@ public class SqlUrl {
     /**
      * 执行设备出库操作 (设备自编码，操作时间，操作人，类别， 井号)
      */
-    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH, LYDW, BZ) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    public static final String OUT_DEVICE = "INSERT INTO devicestore (SBBH, CZSJ, CZR, LB, JH, LYDW, LYR, LYRDH, BZ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
     /**
      * 执行设备入库操作 (设备自编码，操作时间，操作人，类别)
      */
@@ -160,6 +160,10 @@ public class SqlUrl {
             "FROM device, devicesort AS lb, devicesort as xh, devicesort as gg " +
             "WHERE (device.EWMBH = ?) " +
             "AND lb.COOD = device.LB AND xh.COOD = device.XH AND gg.COOD = device.GG";
+    /**
+     * 获取设备标准文档
+     */
+    public static final String GET_DEVICE_STANDER_FILE = "";
     /**
      * 查询数据库中上次是否有盘库的数据,返回上次盘库的全部数据
      */

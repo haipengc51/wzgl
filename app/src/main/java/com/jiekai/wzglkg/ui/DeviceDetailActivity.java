@@ -325,6 +325,10 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
         dataList.add(new DeviceDetailAdapterEntity("设备状态", sbzt));
 //        private Timestamp DJSJ;      //登记时间
         dataList.add(new DeviceDetailAdapterEntity("登记时间", TimeUtils.dateToStringYYYYmmdd(deviceEntity.getDJSJ())));
+        DeviceDetailAdapterEntity bzwd = new DeviceDetailAdapterEntity(getResources().getString(R.string.device_bzwd), Constants.detail_fujian);
+        bzwd.setImage(true);
+        bzwd.setImageType(Config.doc_bzwd);
+        dataList.add(bzwd);
         if (detailAdapter != null) {
             detailAdapter.notifyDataSetChanged();
         }
@@ -342,16 +346,22 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         DeviceDetailAdapterEntity deviceDetailAdapterEntity = (DeviceDetailAdapterEntity) parent.getItemAtPosition(position);
-        if (deviceDetailAdapterEntity.isImage()) {
-            getImageData(deviceDetailAdapterEntity.getImageType());
+        if (getResources().getString(R.string.device_bzwd).equals(deviceDetailAdapterEntity.getTitle()) && deviceDetailAdapterEntity.isImage()) {
+            getImageData(currentDevice.getGG(), deviceDetailAdapterEntity.getImageType());
+        } else if (deviceDetailAdapterEntity.isImage()) {
+            getImageData(currentDevice.getBH(), deviceDetailAdapterEntity.getImageType());
         }
     }
 
-    private void getImageData(String dataLB) {
+    private void getImageData(String sbbh, String dataLB) {
+        if (StringUtils.isEmpty(sbbh) || StringUtils.isEmpty(dataLB)) {
+            alert(R.string.params_empty);
+            return;
+        }
         final List<LocalMedia> localMedias = new ArrayList<>();
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.Get_Image_Path)
-                .params(new String[]{currentDevice.getBH(), dataLB})
+                .params(new String[]{sbbh, dataLB})
                 .clazz(DevicedocEntity.class)
                 .execut(new DbCallBack() {
                     @Override

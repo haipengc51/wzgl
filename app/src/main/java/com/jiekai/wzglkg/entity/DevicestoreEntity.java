@@ -19,6 +19,8 @@ public class DevicestoreEntity extends BaseEntity {
     private String JH;      //井号
     private String BZ;      //备注
     private String LYDW;    //领用单位
+    private String LYR;     //领用人
+    private String LYRDH;   //领用人电话
     private String SHYJ;    //审核意见
     private Timestamp SHSJ;    //审核时间
     private String SHR;     //审核人
@@ -87,6 +89,22 @@ public class DevicestoreEntity extends BaseEntity {
 
     public void setLYDW(String LYDW) {
         this.LYDW = LYDW;
+    }
+
+    public String getLYR() {
+        return LYR;
+    }
+
+    public void setLYR(String LYR) {
+        this.LYR = LYR;
+    }
+
+    public String getLYRDH() {
+        return LYRDH;
+    }
+
+    public void setLYRDH(String LYRDH) {
+        this.LYRDH = LYRDH;
     }
 
     public String getSHYJ() {

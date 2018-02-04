@@ -1,5 +1,6 @@
 package com.jiekai.wzglkg.ui;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2018/1/15.
@@ -63,6 +65,10 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     TextView checkRemark;
     @BindView(R.id.operator_remark)
     TextView operatorRemark;
+    @BindView(R.id.lyr)
+    TextView lyr;
+    @BindView(R.id.lyrdh)
+    TextView lyrdh;
 
     private DevicestoreEntity currentData;
     private List<LocalMedia> choosePictures = new ArrayList<>();
@@ -91,6 +97,8 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
             operatorTime.setText(TimeUtils.dateToStringYYYYmmdd(currentData.getCZSJ()));
             jinghao.setText(CommonUtils.getDataIfNull(currentData.getJH()));
             lydw.setText(CommonUtils.getDataIfNull(currentData.getLYDW()));
+            lyr.setText(CommonUtils.getDataIfNull(currentData.getLYR()));
+            lyrdh.setText(CommonUtils.getDataIfNull(currentData.getLYRDH()));
             operatorRemark.setText(CommonUtils.getDataIfNull(currentData.getBZ()));
             if (currentData.getSHSJ() != null) {
                 checkTime.setText(TimeUtils.dateToStringYYYYmmddHHMMSS(currentData.getSHSJ()));
@@ -193,5 +201,12 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(mActivity);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

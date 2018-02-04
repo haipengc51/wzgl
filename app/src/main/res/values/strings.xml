@@ -154,4 +154,13 @@
     <string name="commit_in_success">提交入库成功</string>
     <string name="commit_repair_faild">提交维修失败</string>
     <string name="commit_repair_success">提交维修成功</string>
+    <string name="please_input_phone">请输入电话号码</string>
+    <string name="please_input_lingyongren">请输入领用人</string>
+    <string name="please_input_lingyongren_phone">请输入领用人电话</string>
+    <string name="device_bzwd">标准文档</string>
+    <string name="lingyongren">领用人</string>
+    <string name="lingyongdianhua">领用电话</string>
+    <string name="lingyongrendianhua">领用人电话</string>
+    <string name="lingyongren_">领用人:</string>
+    <string name="lingyongrendianhua_">领用人电话:</string>
 </resources>

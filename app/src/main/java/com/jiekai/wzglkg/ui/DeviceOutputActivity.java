@@ -2,6 +2,7 @@ package com.jiekai.wzglkg.ui;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by LaoWu on 2017/12/16.
@@ -69,6 +71,10 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     EditText inputLingyongdanwei;
     @BindView(R.id.beizhu)
     EditText beizhu;
+    @BindView(R.id.input_lingyongren)
+    EditText inputLingyongren;
+    @BindView(R.id.input_lingyongren_phone)
+    EditText inputLingyongrenPhone;
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private AlertDialog alertDialog;
@@ -280,6 +286,14 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
             alert(R.string.input_lingyongdanwei);
             return;
         }
+        if (StringUtils.isEmpty(inputLingyongren.getText().toString())) {
+            alert(R.string.please_input_lingyongren);
+            return;
+        }
+        if (StringUtils.isEmpty(inputLingyongrenPhone.getText().toString())) {
+            alert(R.string.please_input_lingyongren_phone);
+            return;
+        }
         updataImage();
     }
 
@@ -365,7 +379,8 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.OUT_DEVICE)
                 .params(new Object[]{deviceEntity.getBH(), new Date(new java.util.Date().getTime()),
                         userData.getUSERID(), "0", inputJinghao.getText().toString(),
-                        inputLingyongdanwei.getText().toString(), CommonUtils.getDataIfNull(beizhu.getText().toString())})
+                        inputLingyongdanwei.getText().toString(), inputLingyongren.getText().toString(),
+                        inputLingyongrenPhone.getText().toString(), CommonUtils.getDataIfNull(beizhu.getText().toString())})
                 .execut(new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -542,5 +557,12 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(DeviceOutputActivity.this);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

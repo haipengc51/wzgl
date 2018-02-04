@@ -1,5 +1,7 @@
 package com.jiekai.wzglkg.utils.ftputils;
 
+import android.util.Log;
+
 import com.jiekai.wzglkg.utils.LogUtils;
 
 import org.apache.commons.net.ftp.FTP;
@@ -74,12 +76,12 @@ public class FTPUtils {
             }
             return true;
         } catch (SocketException e) {
-            // TODO Auto-generated catch block
+            Log.i("liu", "失败1");
             e.printStackTrace();
             LogUtils.e(e.getMessage());
             return false;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            Log.i("liu", "失败2");
             e.printStackTrace();
             LogUtils.e(e.getMessage());
             return false;
@@ -140,16 +142,18 @@ public class FTPUtils {
                 return "上传的文件不存在";
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            Log.i("liu", "失败3");
             e.printStackTrace();
             try {
                 ftpClient.logout();
                 ftpClient.disconnect();
             } catch (IOException e1) {
                 e1.printStackTrace();
+                Log.i("liu", "失败4");
                 try {
                     ftpClient.disconnect();
                 } catch (IOException e2) {
+                    Log.i("liu", "失败5");
                     e2.printStackTrace();
                 }
             }
@@ -219,7 +223,7 @@ public class FTPUtils {
             ftpClient.disconnect();
             return  deleted;
         } catch (IOException e) {
-            // TODO Auto-generated catch block
+            Log.i("liu", "失败8");
             e.printStackTrace();
             return false;
         }
