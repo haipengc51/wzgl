@@ -13,7 +13,6 @@ import com.jiekai.wzglkg.config.Config;
 import com.jiekai.wzglkg.config.Constants;
 import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.DeviceEntity;
-import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.entity.LastInsertIdEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
 import com.jiekai.wzglkg.utils.CommonUtils;
@@ -233,31 +232,31 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void checkDevice() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceOut)
-                .params(new String[]{deviceEntity.getBH()})
-                .clazz(DevicestoreEntity.class)
-                .execut(new DbCallBack() {
-                    @Override
-                    public void onDbStart() {
-
-                    }
-
-                    @Override
-                    public void onError(String err) {
-
-                    }
-
-                    @Override
-                    public void onResponse(List result) {
-                        if (result != null && result.size() != 0) {
-                            alert(R.string.device_already_out);
-                            isOutAlready = true;
-                        } else {
-                            isOutAlready = false;
-                        }
-                    }
-                });
+//        DBManager.dbDeal(DBManager.SELECT)
+//                .sql(SqlUrl.GetDeviceOut)
+//                .params(new String[]{deviceEntity.getBH()})
+//                .clazz(DevicestoreEntity.class)
+//                .execut(new DbCallBack() {
+//                    @Override
+//                    public void onDbStart() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(String err) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onResponse(List result) {
+//                        if (result != null && result.size() != 0) {
+//                            alert(R.string.device_already_out);
+//                            isOutAlready = true;
+//                        } else {
+//                            isOutAlready = false;
+//                        }
+//                    }
+//                });
     }
 
     /**
