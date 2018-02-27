@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.jiekai.wzglkg.ui.popup.CodePopup;
 import com.jiekai.wzglkg.ui.popup.DeviceCodePopup;
 import com.jiekai.wzglkg.ui.popup.DeviceNamePopup;
 import com.jiekai.wzglkg.utils.CommonUtils;
+import com.jiekai.wzglkg.utils.EditTextUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
 import com.jiekai.wzglkg.utils.GlidUtils;
 import com.jiekai.wzglkg.utils.PictureSelectUtils;
@@ -74,11 +76,11 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     @BindView(R.id.choose_picture)
     TextView choosePicture;
     @BindView(R.id.device_card_one)
-    TextView deviceCardOne;
+    EditText deviceCardOne;
     @BindView(R.id.read_device_nfc_one)
     TextView readDeviceNfcOne;
     @BindView(R.id.device_card_two)
-    TextView deviceCardTwo;
+    EditText deviceCardTwo;
     @BindView(R.id.read_device_nfc_two)
     TextView readDeviceNfcTwo;
     @BindView(R.id.device_card_three)
@@ -157,6 +159,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         cancle.setOnClickListener(this);
         bindButton.setOnClickListener(this);
         createCode.setOnClickListener(this);
+
+        EditTextUtils.setEditSoftKeywordShow(this, deviceCardOne, false);
 
         init();
     }
