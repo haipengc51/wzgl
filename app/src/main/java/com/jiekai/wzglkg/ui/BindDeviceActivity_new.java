@@ -76,11 +76,11 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     @BindView(R.id.choose_picture)
     TextView choosePicture;
     @BindView(R.id.device_card_one)
-    EditText deviceCardOne;
+    TextView deviceCardOne;
     @BindView(R.id.read_device_nfc_one)
     TextView readDeviceNfcOne;
     @BindView(R.id.device_card_two)
-    EditText deviceCardTwo;
+    TextView deviceCardTwo;
     @BindView(R.id.read_device_nfc_two)
     TextView readDeviceNfcTwo;
     @BindView(R.id.device_card_three)
@@ -160,7 +160,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         bindButton.setOnClickListener(this);
         createCode.setOnClickListener(this);
 
-        EditTextUtils.setEditSoftKeywordShow(this, deviceCardOne, false);
+//        EditTextUtils.setEditSoftKeywordShow(this, deviceCardOne, false);
 
         init();
     }
