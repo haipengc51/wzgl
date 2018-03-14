@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/title_height"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/marginTop10"
+        android:layout_marginRight="@dimen/marginTop10"
+        android:text="@string/update_dialog"
+        android:textSize="@dimen/title_text_size"
+        android:textColor="@color/black"/>
+
+    <View
+        style="@style/line_d5"/>
+
+    <TextView
+        android:id="@+id/content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/marginTop10"
+        android:text="@string/update_dialog"
+        android:textSize="@dimen/content_text_size"
+        android:textColor="@color/text_content_color"/>
+
+    <View
+        style="@style/line_d5"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_height"
+        android:layout_marginLeft="@dimen/marginTop10"
+        android:layout_marginRight="@dimen/marginTop10"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/enter"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/enter"
+            android:textSize="@dimen/content_text_size"
+            android:textColor="@color/black"/>
+
+        <View
+            style="@style/vertile_line_d5"/>
+
+        <TextView
+            android:id="@+id/cancle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/cancle"
+            android:textSize="@dimen/content_text_size"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+</LinearLayout>

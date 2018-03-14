@@ -7,4 +7,5 @@ package com.jiekai.wzglkg.config;
 
 public class ShareConstants {
     public static final String USERINFO = "userInfo";
+    public static final String UPDATE_LOADING = "update_loading";
 }

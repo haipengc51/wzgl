@@ -216,4 +216,9 @@ public class SqlUrl {
      */
     public static final String UPDATE_DEVICE_STOR = "UPDATE devicestore SET CZSJ = ?, CZR =?, LB = ?, JH = ?, BZ = ?, LYDW = ?, " +
             " SHYJ = \"\", SHR = \"\", SHSJ = NULL, SHBZ = \"\" WHERE ID = ?";
+
+    /**
+     * 获取远程服务器的版本号信息
+     */
+    public static final String GET_UPDATE_VERSION = "SELECT * FROM appmanager WHERE LB = \"KG\"";
 }

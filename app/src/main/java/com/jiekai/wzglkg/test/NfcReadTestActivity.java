@@ -110,6 +110,11 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
                     }
 
                     @Override
+                    public void ftpProgress(long allSize, long currentSize, int process) {
+
+                    }
+
+                    @Override
                     public void ftpSuccess(String remotePath) {
                         Toast.makeText(NfcReadTestActivity.this, remotePath, Toast.LENGTH_SHORT).show();
                     }

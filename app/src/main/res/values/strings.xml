@@ -163,4 +163,8 @@
     <string name="lingyongrendianhua">领用人电话</string>
     <string name="lingyongren_">领用人:</string>
     <string name="lingyongrendianhua_">领用人电话:</string>
+    <string name="update_dialog">更新提醒</string>
+    <string name="loading_update">正在下载更新</string>
+    <string name="currentsize">已下载：%1s MB</string>
+    <string name="allsize">总大小：%1s MB</string>
 </resources>

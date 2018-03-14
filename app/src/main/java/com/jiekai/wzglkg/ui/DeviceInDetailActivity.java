@@ -164,6 +164,11 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
                     }
 
                     @Override
+                    public void ftpProgress(long allSize, long currentSize, int process) {
+
+                    }
+
+                    @Override
                     public void ftpSuccess(String remotePath) {
                         dismissProgressDialog();
                         imagePath = Config.FTP_PATH_HANDLER + remotePath;
@@ -189,6 +194,11 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
         FtpManager.getInstance().deletFile(path, new FtpCallBack() {
             @Override
             public void ftpStart() {
+
+            }
+
+            @Override
+            public void ftpProgress(long allSize, long currentSize, int process) {
 
             }
 
@@ -333,6 +343,11 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
                         FtpManager.getInstance().deletFile(filePath, new FtpCallBack() {
                             @Override
                             public void ftpStart() {
+
+                            }
+
+                            @Override
+                            public void ftpProgress(long allSize, long currentSize, int process) {
 
                             }
 

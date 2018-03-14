@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import com.jiekai.wzglkg.ui.popup.CodePopup;
 import com.jiekai.wzglkg.ui.popup.DeviceCodePopup;
 import com.jiekai.wzglkg.ui.popup.DeviceNamePopup;
 import com.jiekai.wzglkg.utils.CommonUtils;
-import com.jiekai.wzglkg.utils.EditTextUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
 import com.jiekai.wzglkg.utils.GlidUtils;
 import com.jiekai.wzglkg.utils.PictureSelectUtils;
@@ -728,6 +726,11 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                     @Override
                     public void ftpStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_image));
+                    }
+
+                    @Override
+                    public void ftpProgress(long allSize, long currentSize, int process) {
+
                     }
 
                     @Override

@@ -74,6 +74,18 @@ public class FtpManager {
         });
     }
 
+    /**
+     * 下载文件
+     */
+    public void downloadFile(final String localFilePath, final String remoteFilePath, final String remoteFileName, final FtpCallBack ftpCallBack) {
+        mExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mFtpUtils.downLoadFile(localFilePath, remoteFilePath, remoteFileName, plantFrom, ftpCallBack);
+            }
+        });
+    }
+
     public void initFTP(final String FtpUrl, final int FtpPort, final String FtpUserName, final String FtpPassword) {
         mExecutor.execute(new Runnable() {
             @Override

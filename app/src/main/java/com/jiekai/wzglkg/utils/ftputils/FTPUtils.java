@@ -3,6 +3,7 @@ package com.jiekai.wzglkg.utils.ftputils;
 import android.util.Log;
 
 import com.jiekai.wzglkg.utils.LogUtils;
+import com.jiekai.wzglkg.utils.dbutils.PlantFrom;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -13,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
 
@@ -163,42 +165,76 @@ public class FTPUtils {
 
     /**
      * 下载文件
-     * @param FilePath  要存放的文件的路径
-     * @param FileName   远程FTP服务器上的那个文件的名字
+     * @param localFilePath  要存放的文件的路径
+     * @param remoteFilePath   远程FTP服务器上的那个文件的路径
+     * @param remoteFileName   远程FTP服务器上的那个文件的名字
      * @return   true为成功，false为失败
      */
-    public boolean downLoadFile(String FilePath, String FileName) {
+    public String downLoadFile(String localFilePath, String remoteFilePath, String remoteFileName, PlantFrom plantFrom, FtpCallBack ftpCallBack) {
+        doStart(plantFrom, ftpCallBack);
         if (!ftpClient.isConnected()) {
             if (!initFTPSetting(FTPUrl,  FTPPort,  UserName,  UserPassword)) {
-                return false;
+                doFail(plantFrom, ftpCallBack, "连接服务器失败");
+                return "连接服务器失败";
             }
         }
         try {
-            // 转到指定下载目录
-            ftpClient.changeWorkingDirectory("/data");
-            // 列出该目录下所有文件
+            //判断远程服务器的文件名是否存在
+            if (!ftpClient.changeWorkingDirectory(remoteFilePath)){
+                doFail(plantFrom, ftpCallBack, "服务器中没有此文件");
+                return "服务器中没有此文件";
+            }
+            //判断本地服务器的文件名是否存在
+            File localPath = new File(localFilePath);
+            if (!localPath.exists()) {
+                localPath.mkdirs();
+            }
+            //下载文件
             FTPFile[] files = ftpClient.listFiles();
-            // 遍历所有文件，找到指定的文件
             for (FTPFile file : files) {
-                if (file.getName().equals(FileName)) {
-                    //根据绝对路径初始化文件
-                    File localFile = new File(FilePath);
-                    // 输出流
+                if (file.getName().equals(remoteFileName)) {
+                    File localFile = new File(localFilePath + remoteFileName);
+                    if (!localFile.exists()) {
+                        localFile.createNewFile();
+                    }
+                    long allSize = file.getSize();
                     OutputStream outputStream = new FileOutputStream(localFile);
-                    // 下载文件
-                    ftpClient.retrieveFile(file.getName(), outputStream);
-                    //关闭流
+                    ftpClient.enterLocalPassiveMode();
+                    ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
+                    InputStream inputStream = ftpClient.retrieveFileStream(new String(file.getName()));
+
+                    byte[] bytes = new byte[1024];
+                    long step = allSize / 100;
+                    long localSize = 0;
+                    int onceReadSize;
+                    while ((onceReadSize = inputStream.read(bytes)) != -1) {
+                        outputStream.write(bytes, 0, onceReadSize);
+                        localSize += onceReadSize;
+                        if (localSize >= 4020000) {
+                            Log.i("liu", "dada");
+                        }
+                        int process = (int) (localSize / step);
+                        if (process % 3 == 0){
+                            doProgress(plantFrom, ftpCallBack, allSize, localSize, process);
+                        }
+                    }
+                    inputStream.close();
+                    outputStream.flush();
                     outputStream.close();
+                    ftpClient.completePendingCommand();
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                    doSuccess(plantFrom, ftpCallBack, SUCCESS + DIVITION + localFilePath + remoteFileName);
+                    return SUCCESS + DIVITION + localFilePath + remoteFileName;
                 }
             }
-            //退出登陆FTP，关闭ftpCLient的连接
-            ftpClient.logout();
-            ftpClient.disconnect();
+            doFail(plantFrom, ftpCallBack, "服务器中没有此文件");
+            return "服务器中没有此文件";
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
+            doFail(plantFrom, ftpCallBack, e.getMessage());
+            return e.getMessage();
         }
-        return true;
     }
 
     /**
@@ -223,9 +259,48 @@ public class FTPUtils {
             ftpClient.disconnect();
             return  deleted;
         } catch (IOException e) {
-            Log.i("liu", "失败8");
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void doStart(PlantFrom plantFrom, final FtpCallBack ftpCallBack) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                ftpCallBack.ftpStart();
+            }
+        });
+    }
+
+    private void doProgress(PlantFrom plantFrom, final FtpCallBack ftpCallBack, final long allSize, final long currentSize, final int process) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                ftpCallBack.ftpProgress(allSize, currentSize, process);
+            }
+        });
+    }
+
+    private void doSuccess(PlantFrom plantFrom, final FtpCallBack ftpCallBack, final String result) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                String filePath = "";
+                if (result.indexOf(DIVITION) != 0 && result.indexOf(DIVITION) != -1) {
+                    filePath = result.substring(result.indexOf(DIVITION)+ DIVITION.length());
+                }
+                ftpCallBack.ftpSuccess(filePath);
+            }
+        });
+    }
+
+    private void doFail(PlantFrom plantFrom, final FtpCallBack ftpCallBack, final String result) {
+        plantFrom.execut(new Runnable() {
+            @Override
+            public void run() {
+                ftpCallBack.ftpFaild(result);
+            }
+        });
     }
 }
