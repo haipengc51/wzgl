@@ -1,6 +1,8 @@
 package com.jiekai.wzglkg.ui.update;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,7 +62,7 @@ public class UpdateManager implements HaveUpdateInterface {
                 isAlreadayLoaddingApk = true;
                 haveUpdateDialog = UpdateHaveUpdateDialog.newInstance(false, false, "您已经下载完毕了更新文件，可以直接更新！");
                 haveUpdateDialog.setUpdateInterface(this);
-                haveUpdateDialog.show(activity.getFragmentManager(), "have_update");
+                showDialogFragment(haveUpdateDialog, "have_update");
                 return;
             } else {
                 clearLoadingHistroyData();
@@ -72,7 +74,7 @@ public class UpdateManager implements HaveUpdateInterface {
                     isAlreadayLoaddingApk = false;
                     haveUpdateDialog = UpdateHaveUpdateDialog.newInstance(false, false, updateData.getINFO());
                     haveUpdateDialog.setUpdateInterface(this);
-                    haveUpdateDialog.show(activity.getFragmentManager(), "have_update");
+            showDialogFragment(haveUpdateDialog, "have_update");
         }
     }
 
@@ -129,7 +131,7 @@ public class UpdateManager implements HaveUpdateInterface {
             @Override
             public void ftpStart() {
                 loadingDialog = UpdateLoadingDialog.newInstance(false, false);
-                loadingDialog.show(activity.getFragmentManager(), "loading_dialog");
+                showDialogFragment(loadingDialog, "loading_dialog");
             }
 
             @Override
@@ -195,6 +197,17 @@ public class UpdateManager implements HaveUpdateInterface {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.commit();
+    }
+
+    private void showDialogFragment(DialogFragment dialogFragment, String tag) {
+        android.app.FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+        Fragment old = activity.getFragmentManager().findFragmentByTag(tag);
+        if (old != null) {
+            fragmentTransaction.remove(old);
+        }
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.add(dialogFragment, tag);
+        fragmentTransaction.commitAllowingStateLoss();
     }
 
     private long getFileSize(String filePath) {

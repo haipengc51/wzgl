@@ -56,7 +56,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            mHandler.sendEmptyMessageDelayed(HANDLER_CHENGE_UPDATE, 3000 * 1);
+            mHandler.sendEmptyMessageDelayed(HANDLER_CHENGE_UPDATE, 1000 * 2);
         }
     }
 
