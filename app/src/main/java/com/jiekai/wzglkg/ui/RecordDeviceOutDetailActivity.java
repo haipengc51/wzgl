@@ -143,7 +143,7 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new Object[]{id, Config.doc_sbck})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -176,7 +176,7 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
                 .sql(SqlUrl.GET_NAME_BY_ID)
                 .params(new String[]{currentData.getSHR()})
                 .clazz(UserNameEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

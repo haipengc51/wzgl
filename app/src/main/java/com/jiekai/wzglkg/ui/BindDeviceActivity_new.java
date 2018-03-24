@@ -327,7 +327,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetAllLeiBie)
                 .clazz(DevicesortEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_leixing));
@@ -366,7 +366,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetXingHaoByLeiBie)
                 .params(new String[]{leibie})
                 .clazz(DevicesortEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_leixing));
@@ -409,7 +409,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetGuiGeByXingHao)
                 .params(new String[]{xinghao})
                 .clazz(DevicesortEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_leixing));
@@ -462,7 +462,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetBHByLeiBieXinghaoGuige)
                 .params(new String[]{leibie, xinghao, guige})
                 .clazz(DeviceBHEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loding_device_bh));
@@ -518,7 +518,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetDeviceByBH)
                 .params(new String[]{BH})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -566,7 +566,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{idCard, idCard, idCard})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -603,7 +603,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         DBManager.dbDeal(DBManager.UPDATA)
                 .sql(SqlUrl.AddDepart)
                 .params(new String[]{sspj, sssbbh, partID})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.adding_depart));
@@ -634,7 +634,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetPartListByDeviceId)
                 .params(new String[]{deviceId})
                 .clazz(PartListEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -694,7 +694,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         DBManager.dbDeal(DBManager.UPDATA)
                 .sql(SqlUrl.BIND_DEVICE)
                 .params(new String[]{deviceCardIDOne, deviceCardIDTwo, deviceCardIDThree, deviceBH})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.bindding_device));
@@ -756,7 +756,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         DBManager.dbDeal(DBManager.INSERT)
                 .sql(SqlUrl.SaveDoc)
                 .params(new String[]{deviceId.getText().toString(), wjmc, wjdx, wjdz, wjlx, Config.SBBD})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -789,7 +789,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                     }

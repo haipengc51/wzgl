@@ -186,7 +186,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.Get_Old_Panku)
                 .clazz(PankuDataEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -220,7 +220,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                 .sql(SqlUrl.GetPanKuDataByID)
                 .params(new String[]{id, id, id})
                 .clazz(PankuDataEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -251,7 +251,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                 .sql(SqlUrl.DEVICE_IS_PANKU)
                 .params(new String[]{SBBH})
                 .clazz(PankuDataEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -282,7 +282,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         DBManager.dbDeal(DBManager.DELET)
                 .sql(SqlUrl.DELET_OLD_PANKU)
                 .params(new String[]{"0"})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -316,7 +316,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                 .params(new Object[]{pankuDataEntity.getBH(), pankuDataEntity.getMC(),
                         pankuDataEntity.getLB(), pankuDataEntity.getXH(), pankuDataEntity.getGG(),
                         userData.getUSERID(), new Date(System.currentTimeMillis()), "0"})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -348,7 +348,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
      */
     private void startEnv() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -371,7 +371,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         DBManager.dbDeal(DBManager.EVENT_DELET)
                 .sql(SqlUrl.DELET_OLD_PANKU)
                 .params(new String[]{"1"})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -394,7 +394,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     private void uploadDate() {
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.UPLOAD_PANKU_DATE)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -416,7 +416,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -436,7 +436,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

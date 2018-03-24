@@ -72,7 +72,7 @@ public class DeviceTypePopup extends BasePopup{
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetDeviceType)
                 .clazz(DeviceTypeEntity.class)
-                .execut(new DbCallBack() {
+                .execut(context, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(context.getResources().getString(R.string.loding_device_type));

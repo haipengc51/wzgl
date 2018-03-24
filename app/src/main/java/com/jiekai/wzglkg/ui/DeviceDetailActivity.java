@@ -125,7 +125,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.GET_DEVICE_DETAIL)
                 .params(new String[]{nfcString, nfcString, nfcString})
                 .clazz(DeviceDetailEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -165,7 +165,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.GET_DEVICE_DETAIL_BY_SAOMA)
                 .params(new String[]{nfcString})
                 .clazz(DeviceDetailEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -363,7 +363,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new String[]{sbbh, dataLB})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_data));

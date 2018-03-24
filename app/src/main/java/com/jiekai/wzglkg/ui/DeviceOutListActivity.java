@@ -77,7 +77,7 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GetShenHeList)
                 .clazz(DeviceapplyEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_data));

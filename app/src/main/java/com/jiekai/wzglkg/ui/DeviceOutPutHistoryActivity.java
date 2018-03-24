@@ -131,7 +131,7 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
                 .sql(SqlUrl.GET_OUT_HISTORY)
                 .params(new Object[]{ Date.valueOf(startTiem), Date.valueOf(endTime)})
                 .clazz(DevicestoreEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_data));

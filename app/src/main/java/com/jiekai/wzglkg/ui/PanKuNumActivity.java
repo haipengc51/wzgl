@@ -87,7 +87,7 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GET_PANKU_GROUP_LIST)
                 .clazz(PankuDataNumEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_data));

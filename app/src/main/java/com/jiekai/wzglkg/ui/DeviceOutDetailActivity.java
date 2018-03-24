@@ -227,7 +227,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
      */
     private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -256,7 +256,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
                 .params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_OUT,
                         jinghao.getText().toString(), CommonUtils.getDataIfNull(beizhu.getText().toString()),
                         lydw.getText().toString(), currentDatas.getID()})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -299,7 +299,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.UPDATE_IMAGE)
                 .params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbck})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -328,7 +328,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new String[]{String.valueOf(currentDatas.getID()), Config.doc_sbck})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -375,7 +375,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -395,7 +395,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -426,7 +426,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new Object[]{id, Config.doc_sbck})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

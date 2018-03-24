@@ -66,7 +66,7 @@ public class WelcomActivity extends MyBaseActivity {
                 .sql(SqlUrl.LoginSql)
                 .params(new String[]{username, password})
                 .clazz(UserInfoEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                     }
@@ -93,7 +93,7 @@ public class WelcomActivity extends MyBaseActivity {
                 .sql(SqlUrl.LoginRule)
                 .params(new String[]{userInfoEntity1.getUSERID()})
                 .clazz(UserRoleEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                     }

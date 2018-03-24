@@ -152,7 +152,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -192,7 +192,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.GetDeviceBySAOMA)
                 .params(new String[]{id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -327,7 +327,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
      */
     private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -356,7 +356,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.IN_DEVICE)
                 .params(new Object[]{currentDevice.getBH(), new Date(new java.util.Date().getTime()),
                         userData.getUSERID(), "1", CommonUtils.getDataIfNull(beizhu.getText().toString())})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -381,7 +381,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
         DBManager.dbDeal(DBManager.EVENT_SELECT)
                 .sql(SqlUrl.SELECT_INSERT_ID)
                 .clazz(LastInsertIdEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -423,7 +423,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
                 .params(new String[]{SBBH, romoteImageName, fileSize, imagePath, imageType, Config.doc_sbrk})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -448,7 +448,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.CHANGE_DEVICE_STATE)
                 .params(new String[]{"0", currentDevice.getBH()})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -471,7 +471,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -491,7 +491,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

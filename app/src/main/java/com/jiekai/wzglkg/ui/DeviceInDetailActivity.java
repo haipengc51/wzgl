@@ -21,6 +21,7 @@ import com.jiekai.wzglkg.utils.PictureSelectUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.ftputils.FtpCallBack;
 import com.jiekai.wzglkg.utils.ftputils.FtpManager;
 import com.luck.picture.lib.PictureSelector;
@@ -66,6 +67,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
     TextView recommit;
 
     private DevicestoreEntity currentDatas;
+    private DbDeal dbDeal = null;
 
     private List<LocalMedia> choosePictures = new ArrayList<>();
     private String imagePath;       //图片的远程地址 /out/123.jpg
@@ -218,37 +220,40 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
      * 开启数据库事务
      */
     private void startEvent() {
-        DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
-                    @Override
-                    public void onDbStart() {
-                        showProgressDialog(getResources().getString(R.string.uploading_db));
-                    }
+        dbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+        dbDeal.execut(mContext, new DbCallBack() {
+            @Override
+            public void onDbStart() {
+                showProgressDialog(getResources().getString(R.string.uploading_db));
+            }
 
-                    @Override
-                    public void onError(String err) {
-                        alert(err);
-                        deletImage();
-                        dismissProgressDialog();
-                    }
+            @Override
+            public void onError(String err) {
+                alert(err);
+                deletImage();
+                dismissProgressDialog();
+            }
 
-                    @Override
-                    public void onResponse(List result) {
-                        insertRecord();
-                    }
-                });
+            @Override
+            public void onResponse(List result) {
+                insertRecord();
+            }
+        });
     }
 
     /**
      * 插入记录的数据库
      */
     private void insertRecord() {
-        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+        if (dbDeal == null) {
+            return;
+        }
+        dbDeal.type(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.UPDATE_DEVICE_STOR)
                 .params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_IN,
                         "", CommonUtils.getDataIfNull(beizhu.getText().toString()),
                         "", currentDatas.getID()})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -291,7 +296,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.UPDATE_IMAGE)
                 .params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbrk})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -320,7 +325,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new String[]{String.valueOf(currentDatas.getID()), Config.doc_sbrk})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -367,7 +372,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -387,7 +392,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -418,7 +423,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
                 .sql(SqlUrl.Get_Image_Path)
                 .params(new Object[]{id, Config.doc_sbrk})
                 .clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

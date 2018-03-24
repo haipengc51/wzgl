@@ -157,7 +157,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -198,7 +198,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.GetDeviceBySAOMA)
                 .params(new String[]{id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -234,7 +234,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 .sql(SqlUrl.GET_SCRAP_DEVICE)
                 .params(new String[]{currentDevice.getBH()})
                 .clazz(DevicescrapEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -337,7 +337,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
      */
     private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -363,7 +363,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 .params(new Object[]{currentDevice.getBH(),
                         new Date(new java.util.Date().getTime()), userData.getUSERID(),
                         CommonUtils.getDataIfNull(beizhu.getText().toString())})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                     }
@@ -397,7 +397,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
                 .params(new String[]{currentDevice.getBH(), romoteImageName, fileSize, imagePath, imageType, Config.doc_sbbf})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -422,7 +422,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.CHANGE_DEVICE_STATE)
                 .params(new String[]{"4", currentDevice.getBH()})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -445,7 +445,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -467,7 +467,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

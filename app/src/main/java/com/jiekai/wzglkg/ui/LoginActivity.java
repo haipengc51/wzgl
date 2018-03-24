@@ -103,7 +103,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                 .sql(SqlUrl.LoginSql)
                 .params(new String[]{username, password})
                 .clazz(UserInfoEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loging));
@@ -138,7 +138,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                 .sql(SqlUrl.LoginRule)
                 .params(new String[]{userInfoEntity.getUSERID()})
                 .clazz(UserRoleEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

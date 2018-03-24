@@ -164,7 +164,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -204,7 +204,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                 .sql(SqlUrl.GetDeviceBySAOMA)
                 .params(new String[]{id})
                 .clazz(DeviceEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_device));
@@ -360,7 +360,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
      */
     private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -390,7 +390,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
                         userData.getUSERID(), "0", inputJinghao.getText().toString(),
                         inputLingyongdanwei.getText().toString(), inputLingyongren.getText().toString(),
                         inputLingyongrenPhone.getText().toString(), CommonUtils.getDataIfNull(beizhu.getText().toString())})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -415,7 +415,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         DBManager.dbDeal(DBManager.EVENT_SELECT)
                 .sql(SqlUrl.SELECT_INSERT_ID)
                 .clazz(LastInsertIdEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -458,7 +458,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         DBManager.dbDeal(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
                 .params(new String[]{SBBH, romoteImageName, fileSize, imagePath, imageType, Config.doc_sbck})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -483,7 +483,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
         DBManager.dbDeal(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.CHANGE_DEVICE_STATE)
                 .params(new String[]{"1", deviceEntity.getBH()})
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -506,7 +506,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -526,7 +526,7 @@ public class DeviceOutputActivity extends NFCBaseActivity implements View.OnClic
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

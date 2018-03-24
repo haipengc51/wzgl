@@ -120,7 +120,7 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
                 .sql(SqlUrl.GET_STORE_CHECK_LIST)
                 .params(new String[]{userData.getUSERID()})
                 .clazz(DevicestoreEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.loading_data));

@@ -37,7 +37,7 @@ public class DBManager {
     }
 
     public static DbDeal dbDeal(int dbType) {
-        DbDeal dbDeal = DbDeal.getInstance();
+        DbDeal dbDeal = new DbDeal();
         dbDeal.type(dbType);
         dbDeal.sql(null);
         dbDeal.params(null);
@@ -49,7 +49,6 @@ public class DBManager {
      * 新建一个DbDeal
      * @param dbType
      * @return
-     */
     public static DbDeal NewDbDeal(int dbType) {
         DbDeal dbDeal = new DbDeal();
         dbDeal.type(dbType);
@@ -58,6 +57,7 @@ public class DBManager {
         dbDeal.clazz(null);
         return dbDeal;
     }
+     */
 
     /**
      * 创建单例, 并初始化

@@ -81,11 +81,11 @@ public class UpdateManager implements HaveUpdateInterface {
     /**
      * 获取远程版本号
      */
-    public void getRemoteVersion() {
+    public void getRemoteVersion(Context context) {
         DBManager.dbDeal(DBManager.SELECT)
                 .sql(SqlUrl.GET_UPDATE_VERSION)
                 .clazz(UpdateEntity.class)
-                .execut(new DbCallBack() {
+                .execut(context, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 

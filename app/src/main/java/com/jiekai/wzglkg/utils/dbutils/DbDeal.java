@@ -1,7 +1,11 @@
 package com.jiekai.wzglkg.utils.dbutils;
 
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.jiekai.wzglkg.config.Config;
+import com.jiekai.wzglkg.utils.NetWorkUtils;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -20,6 +24,7 @@ import java.util.concurrent.Executor;
 public class DbDeal extends AsynInterface {
     private static DbDeal mDbDeal = null;
     private Connection connection = null;
+    private PreparedStatement preparedStatement;
     private Executor executor;
     private String sql;
     private Object[] params;
@@ -53,7 +58,11 @@ public class DbDeal extends AsynInterface {
         return this;
     }
 
-    public void execut(DbCallBack dbCallBack) {
+    public void execut(Context context, DbCallBack dbCallBack) {
+        if (!NetWorkUtils.isNetworkConnected(context)) {
+            Toast.makeText(context, "没有网络连接，请打开网络连接", Toast.LENGTH_SHORT).show();
+            return;
+        }
         DBManager.getInstance().execute(DbDeal.this, dbCallBack);
     }
 
@@ -110,7 +119,7 @@ public class DbDeal extends AsynInterface {
                     return;
                 }
             }
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             if (params != null && params.length != 0) {
                 for (int i = 0; i < params.length; i++) {
                     preparedStatement.setObject(i + 1, params[i]);
@@ -154,7 +163,7 @@ public class DbDeal extends AsynInterface {
                         return;
                     }
                 }
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement = connection.prepareStatement(sql);
             if (params != null && params.length != 0) {
                 for (int i = 0; i < params.length; i++) {
                     preparedStatement.setObject(i + 1, params[i]);
@@ -215,7 +224,7 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("数据库连接失败");
                 return;
             }
-            PreparedStatement preparedStatement = connection.prepareStatement("COMMIT;");
+            preparedStatement = connection.prepareStatement("COMMIT;");
             int resultSet = preparedStatement.executeUpdate();
             connection.setAutoCommit(true);
             preparedStatement.close();
@@ -238,7 +247,7 @@ public class DbDeal extends AsynInterface {
                 asynCallBack.onError("数据库连接失败");
                 return;
             }
-            PreparedStatement preparedStatement = connection.prepareStatement("ROLLBACK;");
+            preparedStatement = connection.prepareStatement("ROLLBACK;");
             int resultSet = preparedStatement.executeUpdate();
             connection.setAutoCommit(true);
             preparedStatement.close();
@@ -252,6 +261,19 @@ public class DbDeal extends AsynInterface {
             }
             e.printStackTrace();
             asynCallBack.onError(e.getMessage());
+        }
+    }
+
+    /**
+     * 取消网络请求
+     */
+    private void cancleDbDeal() {
+        try {
+            if (!preparedStatement.isClosed()) {
+                preparedStatement.cancel();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

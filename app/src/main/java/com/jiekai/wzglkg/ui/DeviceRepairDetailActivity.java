@@ -226,7 +226,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
      */
     private void startEvent() {
         DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -266,7 +266,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
                     "", currentDatas.getID()});
         }
 
-        dbDeal.execut(new DbCallBack() {
+        dbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -315,7 +315,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
         } else if (Config.LB_FANCHANG.equals(currentDatas.getLB())) {
             dbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbfc});
         }
-        dbDeal.execut(new DbCallBack() {
+        dbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -338,7 +338,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
 
     private void rollback() {
         DBManager.dbDeal(DBManager.ROLLBACK)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -358,7 +358,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
 
     private void commit() {
         DBManager.dbDeal(DBManager.COMMIT)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -395,7 +395,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
             dbDeal.params(new Object[]{id, Config.doc_sbfc});
         }
         dbDeal.clazz(DevicedocEntity.class)
-                .execut(new DbCallBack() {
+                .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
