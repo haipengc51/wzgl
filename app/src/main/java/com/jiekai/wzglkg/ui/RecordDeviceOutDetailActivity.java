@@ -20,6 +20,7 @@ import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.TimeUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     private DevicestoreEntity currentData;
     private List<LocalMedia> choosePictures = new ArrayList<>();
 
+    private DbDeal imageDbDeal = null;
+    private DbDeal nameDbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_record_device_out_detail);
@@ -121,6 +125,18 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+        if (imageDbDeal != null) {
+            imageDbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+        if (nameDbDeal != null) {
+            nameDbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -139,8 +155,8 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
             alert(R.string.get_image_fail);
             return;
         }
-        DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.Get_Image_Path)
+        imageDbDeal = DBManager.dbDeal(DBManager.SELECT);
+                imageDbDeal.sql(SqlUrl.Get_Image_Path)
                 .params(new Object[]{id, Config.doc_sbck})
                 .clazz(DevicedocEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -172,8 +188,8 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
         if (StringUtils.isEmpty(currentData.getSHR())) {
             return;
         }
-        DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_NAME_BY_ID)
+        nameDbDeal = DBManager.dbDeal(DBManager.SELECT);
+                nameDbDeal.sql(SqlUrl.GET_NAME_BY_ID)
                 .params(new String[]{currentData.getSHR()})
                 .clazz(UserNameEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -201,12 +217,5 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     protected void onDestroy() {
         super.onDestroy();
         PictureSelectUtils.clearPictureSelectorCache(mActivity);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

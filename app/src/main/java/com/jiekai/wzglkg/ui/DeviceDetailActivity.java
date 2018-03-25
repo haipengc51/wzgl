@@ -23,6 +23,7 @@ import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.TimeUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.zxing.CaptureActivity;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -58,6 +59,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
     private AlertDialog alertDialog;
 
     private DeviceDetailEntity currentDevice;
+    private DbDeal dbDeal = null;
 
     @Override
     public void initView() {
@@ -83,6 +85,14 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             detailAdapter = new DeviceDetailAdapter(mActivity, dataList);
             listview.setAdapter(detailAdapter);
             listview.setOnItemClickListener(this);
+        }
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
         }
     }
 
@@ -121,8 +131,8 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             alert(getResources().getString(R.string.get_id_err));
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_DEVICE_DETAIL)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_DEVICE_DETAIL)
                 .params(new String[]{nfcString, nfcString, nfcString})
                 .clazz(DeviceDetailEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -161,8 +171,8 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             alert(getResources().getString(R.string.get_id_err));
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_DEVICE_DETAIL_BY_SAOMA)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_DEVICE_DETAIL_BY_SAOMA)
                 .params(new String[]{nfcString})
                 .clazz(DeviceDetailEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -359,8 +369,8 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
             return;
         }
         final List<LocalMedia> localMedias = new ArrayList<>();
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.Get_Image_Path)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.Get_Image_Path)
                 .params(new String[]{sbbh, dataLB})
                 .clazz(DevicedocEntity.class)
                 .execut(mContext, new DbCallBack() {

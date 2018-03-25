@@ -30,6 +30,7 @@ import com.jiekai.wzglkg.utils.PictureSelectUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.ftputils.FtpCallBack;
 import com.jiekai.wzglkg.utils.ftputils.FtpManager;
 import com.jiekai.wzglkg.utils.zxing.encoding.EncodingUtils;
@@ -129,6 +130,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     private DevicesortEntity currentGuige;
 
     private boolean thisIDHasBind = false;
+    private DbDeal dbDeal = null;
 
     @Override
     public void initView() {
@@ -161,6 +163,14 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
 //        EditTextUtils.setEditSoftKeywordShow(this, deviceCardOne, false);
 
         init();
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
     }
 
     private void init() {
@@ -324,8 +334,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     };
 
     private void getLeiBie() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetAllLeiBie)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetAllLeiBie)
                 .clazz(DevicesortEntity.class)
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -362,8 +372,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
             alert(getResources().getString(R.string.params_empty));
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetXingHaoByLeiBie)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+               dbDeal .sql(SqlUrl.GetXingHaoByLeiBie)
                 .params(new String[]{leibie})
                 .clazz(DevicesortEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -405,8 +415,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
             alert(getResources().getString(R.string.params_empty));
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetGuiGeByXingHao)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetGuiGeByXingHao)
                 .params(new String[]{xinghao})
                 .clazz(DevicesortEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -458,8 +468,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         partListDatas.clear();
         partListAdapter.setDataList(partListDatas);
         partListHeaderView.setVisibility(View.GONE);
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetBHByLeiBieXinghaoGuige)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetBHByLeiBieXinghaoGuige)
                 .params(new String[]{leibie, xinghao, guige})
                 .clazz(DeviceBHEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -514,8 +524,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         if (StringUtils.isEmpty(BH)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByBH)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceByBH)
                 .params(new String[]{BH})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -562,8 +572,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         if (StringUtils.isEmpty(idCard)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByID)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{idCard, idCard, idCard})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -600,8 +610,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      * @param partID 配件的自编号
      */
     private void addDepart(String sspj, String sssbbh, String partID) {
-        DBManager.dbDeal(DBManager.UPDATA)
-                .sql(SqlUrl.AddDepart)
+        dbDeal = DBManager.dbDeal(DBManager.UPDATA);
+                dbDeal.sql(SqlUrl.AddDepart)
                 .params(new String[]{sspj, sssbbh, partID})
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -630,8 +640,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      * @param deviceId
      */
     private void findPartsByDeviceID(String deviceId) {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetPartListByDeviceId)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetPartListByDeviceId)
                 .params(new String[]{deviceId})
                 .clazz(PartListEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -691,8 +701,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
             alert(getResources().getString(R.string.please_choose_true_iamge));
             return;
         }
-        DBManager.dbDeal(DBManager.UPDATA)
-                .sql(SqlUrl.BIND_DEVICE)
+        dbDeal = DBManager.dbDeal(DBManager.UPDATA);
+                dbDeal.sql(SqlUrl.BIND_DEVICE)
                 .params(new String[]{deviceCardIDOne, deviceCardIDTwo, deviceCardIDThree, deviceBH})
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -753,8 +763,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      * 把上传的图片地址存到自己的服务器上面
      */
     private void saveImagePathToRemoteDB(String wjmc, String wjdx, String wjdz, String wjlx) {
-        DBManager.dbDeal(DBManager.INSERT)
-                .sql(SqlUrl.SaveDoc)
+        dbDeal = DBManager.dbDeal(DBManager.INSERT);
+                dbDeal.sql(SqlUrl.SaveDoc)
                 .params(new String[]{deviceId.getText().toString(), wjmc, wjdx, wjdz, wjlx, Config.SBBD})
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -785,8 +795,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByID)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {

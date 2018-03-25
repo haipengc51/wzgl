@@ -38,6 +38,11 @@ public class LogOutActivity extends MyBaseActivity implements View.OnClickListen
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.enter:

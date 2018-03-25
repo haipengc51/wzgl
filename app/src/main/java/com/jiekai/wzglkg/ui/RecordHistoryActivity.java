@@ -18,6 +18,7 @@ import com.jiekai.wzglkg.entity.DevicestoreEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
     private RecordHistoryAdapter adapter;
     private List<DeviceUnCheckEntity> dataList = new ArrayList<>();
 
+    private DbDeal dbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_record_history);
@@ -68,6 +71,14 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
         }
         setHeaderViewVisible(View.GONE);
         getData();
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
     }
 
     @Override
@@ -116,8 +127,8 @@ public class RecordHistoryActivity extends MyBaseActivity implements View.OnClic
             adapter.notifyDataSetChanged();
             setHeaderViewVisible(View.GONE);
         }
-        DBManager.NewDbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_STORE_CHECK_LIST)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_STORE_CHECK_LIST)
                 .params(new String[]{userData.getUSERID()})
                 .clazz(DevicestoreEntity.class)
                 .execut(mContext, new DbCallBack() {

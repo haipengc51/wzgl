@@ -14,6 +14,7 @@ import com.jiekai.wzglkg.entity.PankuDataNumEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.localDbUtils.PanKuDataNumColumn;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
 
     private PankuNumAdapter adapter;
     private List<PankuDataNumEntity> dataList = new ArrayList<>();
+
+    private DbDeal dbDeal = null;
 
     @Override
     public void initView() {
@@ -63,6 +66,14 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -84,8 +95,8 @@ public class PanKuNumActivity extends MyBaseActivity implements View.OnClickList
     }
 
     private void getIntenatData() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_PANKU_GROUP_LIST)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_PANKU_GROUP_LIST)
                 .clazz(PankuDataNumEntity.class)
                 .execut(mContext, new DbCallBack() {
                     @Override

@@ -21,6 +21,7 @@ import com.jiekai.wzglkg.utils.PictureSelectUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.ftputils.FtpCallBack;
 import com.jiekai.wzglkg.utils.ftputils.FtpManager;
 import com.jiekai.wzglkg.utils.zxing.CaptureActivity;
@@ -78,6 +79,9 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
 
     private boolean isScrap = false;
 
+    private DbDeal dbDeal = null;
+    private DbDeal eventDbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_device_scrap);
@@ -102,6 +106,18 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                 .setTitle("")
                 .setMessage(getResources().getString(R.string.please_nfc))
                 .create();
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+        if (eventDbDeal != null) {
+            eventDbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
     }
 
     @Override
@@ -153,8 +169,8 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByID)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -194,8 +210,8 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceBySAOMA)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceBySAOMA)
                 .params(new String[]{id})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -230,8 +246,8 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
      * 查找该设备是否报废
      */
     private void checkDevice() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_SCRAP_DEVICE)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_SCRAP_DEVICE)
                 .params(new String[]{currentDevice.getBH()})
                 .clazz(DevicescrapEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -336,8 +352,8 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
      * 开启数据库事务
      */
     private void startEvent() {
-        DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(mContext, new DbCallBack() {
+        eventDbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+                eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -358,7 +374,12 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void insertScrap() {
-        DBManager.dbDeal(DBManager.EVENT_INSERT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.ADD_DEVICE_SCRAP)
                 .params(new Object[]{currentDevice.getBH(),
                         new Date(new java.util.Date().getTime()), userData.getUSERID(),
@@ -394,7 +415,13 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
             dismissProgressDialog();
             return;
         }
-        DBManager.dbDeal(DBManager.EVENT_INSERT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            rollback();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
                 .params(new String[]{currentDevice.getBH(), romoteImageName, fileSize, imagePath, imageType, Config.doc_sbbf})
                 .execut(mContext, new DbCallBack() {
@@ -419,7 +446,13 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void changeDeviceState() {
-        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            rollback();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.CHANGE_DEVICE_STATE)
                 .params(new String[]{"4", currentDevice.getBH()})
                 .execut(mContext, new DbCallBack() {
@@ -444,7 +477,11 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void rollback() {
-        DBManager.dbDeal(DBManager.ROLLBACK)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.ROLLBACK)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -466,7 +503,11 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     private void commit() {
-        DBManager.dbDeal(DBManager.COMMIT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.COMMIT)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {

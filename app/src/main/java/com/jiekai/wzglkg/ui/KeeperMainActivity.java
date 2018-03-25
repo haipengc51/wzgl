@@ -90,6 +90,11 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         KeeperEntity keeperEntity = (KeeperEntity) parent.getItemAtPosition(position);
         if (keeperEntity != null) {

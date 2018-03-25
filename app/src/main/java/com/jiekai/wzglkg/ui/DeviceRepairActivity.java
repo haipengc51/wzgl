@@ -22,6 +22,7 @@ import com.jiekai.wzglkg.utils.PictureSelectUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.ftputils.FtpCallBack;
 import com.jiekai.wzglkg.utils.ftputils.FtpManager;
 import com.jiekai.wzglkg.utils.zxing.CaptureActivity;
@@ -80,6 +81,9 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
     private String romoteImageName;     //图片远程服务器的名称 123.jpg
     private String localPath;   //图片本地的地址
 
+    private DbDeal dbDeal = null;
+    private DbDeal eventDbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_device_repair);
@@ -111,6 +115,18 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
         repairTypeData.add("返厂");
         repairTypePop = new DeviceCodePopup(mActivity, repairType, onRepairTypeClick);
         repairTypePop.setPopListData(repairTypeData);
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (eventDbDeal != null) {
+            eventDbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
     }
 
     @Override
@@ -172,8 +188,8 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceByID)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceByID)
                 .params(new String[]{id, id, id})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -211,8 +227,8 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetDeviceBySAOMA)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetDeviceBySAOMA)
                 .params(new String[]{id})
                 .clazz(DeviceEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -321,8 +337,8 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
      * 开启数据库事务
      */
     private void startEvent() {
-        DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(mContext, new DbCallBack() {
+        dbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+                dbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -361,7 +377,13 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
                 lb = "3";
                 break;
         }
-        DBManager.dbDeal(DBManager.EVENT_INSERT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            deletImage();
+            rollback();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.REPAIR_DEVICE)
                 .params(new Object[]{currentDevice.getBH(), new Date(new java.util.Date().getTime()),
                         userData.getUSERID(), lb, CommonUtils.getDataIfNull(beizhu.getText().toString())})
@@ -387,7 +409,13 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void getInsertId() {
-        DBManager.dbDeal(DBManager.EVENT_SELECT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            rollback();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_SELECT)
                 .sql(SqlUrl.SELECT_INSERT_ID)
                 .clazz(LastInsertIdEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -444,7 +472,12 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
                 type = Config.doc_sbwx;
                 break;
         }
-        DBManager.dbDeal(DBManager.EVENT_INSERT)
+        if (eventDbDeal == null) {
+            rollback();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_INSERT)
                 .sql(SqlUrl.INSERT_IAMGE)
                 .params(new String[]{SBBH, romoteImageName, fileSize, imagePath, imageType, type})
                 .execut(mContext, new DbCallBack() {
@@ -483,7 +516,12 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
                 lb = "2";
                 break;
         }
-        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+        if (eventDbDeal == null) {
+            rollback();
+            deletImage();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.CHANGE_DEVICE_STATE)
                 .params(new String[]{lb, currentDevice.getBH()})
                 .execut(mContext, new DbCallBack() {
@@ -507,7 +545,11 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void rollback() {
-        DBManager.dbDeal(DBManager.ROLLBACK)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.ROLLBACK)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -529,7 +571,11 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
     }
 
     private void commit() {
-        DBManager.dbDeal(DBManager.COMMIT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.COMMIT)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {

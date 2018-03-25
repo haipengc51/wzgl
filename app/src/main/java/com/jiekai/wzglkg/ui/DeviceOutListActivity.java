@@ -15,6 +15,7 @@ import com.jiekai.wzglkg.entity.DeviceapplyEntity;
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
 
     private DeviceOutListAdapter adapter;
     private List<DeviceapplyEntity> dataList = new ArrayList<>();
+    private DbDeal dbDeal = null;
 
     @Override
     public void initView() {
@@ -65,6 +67,14 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -74,8 +84,8 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
     }
 
     private void getData() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetShenHeList)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetShenHeList)
                 .clazz(DeviceapplyEntity.class)
                 .execut(mContext, new DbCallBack() {
                     @Override

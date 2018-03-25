@@ -54,6 +54,11 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_activity_nfc);

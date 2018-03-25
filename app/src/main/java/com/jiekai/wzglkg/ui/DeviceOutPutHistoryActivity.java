@@ -19,6 +19,7 @@ import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.TimePickerDialog;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     private String startTiem;
     private String endTime;
 
+    private DbDeal dbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_device_out_history);
@@ -82,6 +85,14 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
             listview.addHeaderView(headerView);
             listview.setAdapter(historyAdapter);
             listview.setOnItemClickListener(this);
+        }
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
         }
     }
 
@@ -127,8 +138,8 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
             alert(R.string.input_end_data);
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GET_OUT_HISTORY)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GET_OUT_HISTORY)
                 .params(new Object[]{ Date.valueOf(startTiem), Date.valueOf(endTime)})
                 .clazz(DevicestoreEntity.class)
                 .execut(mContext, new DbCallBack() {

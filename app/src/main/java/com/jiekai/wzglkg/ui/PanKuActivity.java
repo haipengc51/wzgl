@@ -22,6 +22,7 @@ import com.jiekai.wzglkg.test.NFCBaseActivity;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.utils.localDbUtils.PanKuDataListColumn;
 import com.jiekai.wzglkg.utils.localDbUtils.PanKuDataNumColumn;
 
@@ -65,6 +66,9 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     private AlertDialog ifContinueDialog;
 
     private List oldData = new ArrayList();
+
+    private DbDeal dbDeal = null;
+    private DbDeal eventDbDeal = null;
 
     @Override
     public void initView() {
@@ -149,6 +153,18 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+        if (eventDbDeal != null) {
+            eventDbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
     public void getNfcData(String nfcString) {
         getDeviceDataById(nfcString);
     }
@@ -183,8 +199,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void getPanKuOldData() {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.Get_Old_Panku)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.Get_Old_Panku)
                 .clazz(PankuDataEntity.class)
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -216,8 +232,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
         if (StringUtils.isEmpty(id)) {
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.GetPanKuDataByID)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.GetPanKuDataByID)
                 .params(new String[]{id, id, id})
                 .clazz(PankuDataEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -247,8 +263,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void checkIfPanku(String SBBH, final PankuDataEntity pankuDataEntity) {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.DEVICE_IS_PANKU)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.DEVICE_IS_PANKU)
                 .params(new String[]{SBBH})
                 .clazz(PankuDataEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -279,8 +295,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
      * 删除所有的没有确定的数据(删除上次盘库但是没有确定的数据，从本次开始进行盘库)
      */
     private void deletAllData() {
-        DBManager.dbDeal(DBManager.DELET)
-                .sql(SqlUrl.DELET_OLD_PANKU)
+        dbDeal = DBManager.dbDeal(DBManager.DELET);
+                dbDeal.sql(SqlUrl.DELET_OLD_PANKU)
                 .params(new String[]{"0"})
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -311,8 +327,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
             dismissProgressDialog();
             return;
         }
-        DBManager.dbDeal(DBManager.INSERT)
-                .sql(SqlUrl.INSERT_PANKU)
+        dbDeal = DBManager.dbDeal(DBManager.INSERT);
+                dbDeal.sql(SqlUrl.INSERT_PANKU)
                 .params(new Object[]{pankuDataEntity.getBH(), pankuDataEntity.getMC(),
                         pankuDataEntity.getLB(), pankuDataEntity.getXH(), pankuDataEntity.getGG(),
                         userData.getUSERID(), new Date(System.currentTimeMillis()), "0"})
@@ -347,8 +363,8 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
      * 开启事务
      */
     private void startEnv() {
-        DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(mContext, new DbCallBack() {
+        eventDbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+                eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -368,7 +384,12 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void deletDate() {
-        DBManager.dbDeal(DBManager.EVENT_DELET)
+        if (eventDbDeal == null) {
+            rollback();
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_DELET)
                 .sql(SqlUrl.DELET_OLD_PANKU)
                 .params(new String[]{"1"})
                 .execut(mContext, new DbCallBack() {
@@ -392,7 +413,12 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void uploadDate() {
-        DBManager.dbDeal(DBManager.EVENT_UPDATA)
+        if (eventDbDeal == null) {
+            rollback();
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_UPDATA)
                 .sql(SqlUrl.UPLOAD_PANKU_DATE)
                 .execut(mContext, new DbCallBack() {
                     @Override
@@ -415,7 +441,11 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void rollback() {
-        DBManager.dbDeal(DBManager.ROLLBACK)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.ROLLBACK)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -435,7 +465,11 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     private void commit() {
-        DBManager.dbDeal(DBManager.COMMIT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.COMMIT)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {

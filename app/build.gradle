@@ -34,4 +34,5 @@ dependencies {
     compile files('libs/zxing.jar')
     compile 'com.github.LuckSiege.PictureSelector:picture_library:v2.1.7'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.google.android.gms:play-services-appindexing:8.4.0'
 }

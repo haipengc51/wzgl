@@ -75,6 +75,9 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
     private String localPath;   //图片本地的地址
     private boolean isChooseImage = false;  //是否重新上传了图片
 
+    private DbDeal dbDeal = null;
+    private DbDeal eventDbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_in_history_detail);
@@ -110,6 +113,18 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
         } else {
             alert(R.string.get_bh_faild);
             finish();
+        }
+    }
+
+    @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+        if (eventDbDeal != null) {
+            eventDbDeal.cancleDbDeal();
+            dismissProgressDialog();
         }
     }
 
@@ -225,8 +240,8 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
      * 开启数据库事务
      */
     private void startEvent() {
-        DBManager.dbDeal(DBManager.START_EVENT)
-                .execut(mContext, new DbCallBack() {
+        eventDbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+                eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));
@@ -250,23 +265,29 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
      * 插入记录的数据库
      */
     private void insertRecord() {
-        DbDeal dbDeal = DBManager.dbDeal(DBManager.EVENT_UPDATA);
-        dbDeal.sql(SqlUrl.UPDATE_DEVICE_STOR);
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            deletImage();
+            rollback();
+            return;
+        }
+        eventDbDeal.reset(DBManager.EVENT_UPDATA);
+        eventDbDeal.sql(SqlUrl.UPDATE_DEVICE_STOR);
         if (Config.LB_WEIXIU.equals(currentDatas.getLB())) {
-            dbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_WEIXIU,
+            eventDbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_WEIXIU,
                     "", CommonUtils.getDataIfNull(beizhu.getText().toString()),
                     "", currentDatas.getID()});
         } else if (Config.LB_DAXIU.equals(currentDatas.getLB())) {
-            dbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_DAXIU,
+            eventDbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_DAXIU,
                     "", CommonUtils.getDataIfNull(beizhu.getText().toString()),
                     "", currentDatas.getID()});
         } else if (Config.LB_FANCHANG.equals(currentDatas.getLB())) {
-            dbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_FANCHANG,
+            eventDbDeal.params(new Object[]{new Date(new java.util.Date().getTime()), userData.getUSERID(), Config.LB_FANCHANG,
                     "", CommonUtils.getDataIfNull(beizhu.getText().toString()),
                     "", currentDatas.getID()});
         }
 
-        dbDeal.execut(mContext, new DbCallBack() {
+        eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -306,16 +327,22 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
             dismissProgressDialog();
             return;
         }
-        DbDeal dbDeal = DBManager.dbDeal(DBManager.EVENT_UPDATA);
-        dbDeal.sql(SqlUrl.UPDATE_IMAGE);
-        if (Config.LB_WEIXIU.equals(currentDatas.getLB())) {
-            dbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbwx});
-        } else if (Config.LB_DAXIU.equals(currentDatas.getLB())) {
-            dbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbdx});
-        } else if (Config.LB_FANCHANG.equals(currentDatas.getLB())) {
-            dbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbfc});
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            rollback();
+            deletImage();
+            return;
         }
-        dbDeal.execut(mContext, new DbCallBack() {
+        eventDbDeal.reset(DBManager.EVENT_UPDATA);
+        eventDbDeal.sql(SqlUrl.UPDATE_IMAGE);
+        if (Config.LB_WEIXIU.equals(currentDatas.getLB())) {
+            eventDbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbwx});
+        } else if (Config.LB_DAXIU.equals(currentDatas.getLB())) {
+            eventDbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbdx});
+        } else if (Config.LB_FANCHANG.equals(currentDatas.getLB())) {
+            eventDbDeal.params(new String[]{romoteImageName, fileSize, imagePath, imageType, SBBH, Config.doc_sbfc});
+        }
+        eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
 
@@ -337,7 +364,11 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
     }
 
     private void rollback() {
-        DBManager.dbDeal(DBManager.ROLLBACK)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.ROLLBACK)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -357,7 +388,11 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
     }
 
     private void commit() {
-        DBManager.dbDeal(DBManager.COMMIT)
+        if (eventDbDeal == null) {
+            dismissProgressDialog();
+            return;
+        }
+        eventDbDeal.reset(DBManager.COMMIT)
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
@@ -385,7 +420,7 @@ public class DeviceRepairDetailActivity extends MyBaseActivity implements View.O
             alert(R.string.get_image_fail);
             return;
         }
-        DbDeal dbDeal = DBManager.dbDeal(DBManager.SELECT);
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
         dbDeal.sql(SqlUrl.Get_Image_Path);
         if (Config.LB_WEIXIU.equals(currentDatas.getLB())) {
             dbDeal.params(new Object[]{id, Config.doc_sbwx});

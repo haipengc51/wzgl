@@ -18,6 +18,7 @@ import com.jiekai.wzglkg.utils.JSONHelper;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.dbutils.DBManager;
 import com.jiekai.wzglkg.utils.dbutils.DbCallBack;
+import com.jiekai.wzglkg.utils.dbutils.DbDeal;
 import com.jiekai.wzglkg.weight.ClickDrawableEdit;
 
 import java.util.List;
@@ -50,6 +51,8 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
     private InputPasswordUtils userInputUtils;
     private InputPasswordUtils passwordInputUtils;
 
+    private DbDeal dbDeal = null;
+
     @Override
     public void initView() {
         setContentView(R.layout.activity_login);
@@ -77,6 +80,14 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
     }
 
     @Override
+    public void progressDialogCancleLisen() {
+        if (dbDeal != null) {
+            dbDeal.cancleDbDeal();
+            dismissProgressDialog();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
@@ -99,8 +110,8 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
             alert(R.string.please_input_password);
             return;
         }
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.LoginSql)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.LoginSql)
                 .params(new String[]{username, password})
                 .clazz(UserInfoEntity.class)
                 .execut(mContext, new DbCallBack() {
@@ -134,8 +145,8 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
     }
 
     private void checkUserPermission(final UserInfoEntity userInfoEntity) {
-        DBManager.dbDeal(DBManager.SELECT)
-                .sql(SqlUrl.LoginRule)
+        dbDeal = DBManager.dbDeal(DBManager.SELECT);
+                dbDeal.sql(SqlUrl.LoginRule)
                 .params(new String[]{userInfoEntity.getUSERID()})
                 .clazz(UserRoleEntity.class)
                 .execut(mContext, new DbCallBack() {

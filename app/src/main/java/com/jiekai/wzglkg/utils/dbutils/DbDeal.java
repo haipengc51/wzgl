@@ -58,6 +58,14 @@ public class DbDeal extends AsynInterface {
         return this;
     }
 
+    public DbDeal reset(int dbType) {
+        this.dbType = dbType;
+        this.sql = null;
+        this.params = null;
+        this.mClass = null;
+        return this;
+    }
+
     public void execut(Context context, DbCallBack dbCallBack) {
         if (!NetWorkUtils.isNetworkConnected(context)) {
             Toast.makeText(context, "没有网络连接，请打开网络连接", Toast.LENGTH_SHORT).show();
@@ -267,9 +275,9 @@ public class DbDeal extends AsynInterface {
     /**
      * 取消网络请求
      */
-    private void cancleDbDeal() {
+    public void cancleDbDeal() {
         try {
-            if (!preparedStatement.isClosed()) {
+            if (preparedStatement != null && !preparedStatement.isClosed()) {
                 preparedStatement.cancel();
             }
         } catch (SQLException e) {
