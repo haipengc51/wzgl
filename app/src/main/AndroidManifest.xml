@@ -31,7 +31,8 @@
         <activity android:name="com.jiekai.wzglkg.ui.LoginActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.jiekai.wzglkg.ui.KeeperMainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
         <activity android:name="com.jiekai.wzglkg.ui.BindDeviceActivity_new"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
