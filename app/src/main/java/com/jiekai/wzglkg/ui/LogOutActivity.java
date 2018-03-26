@@ -38,7 +38,7 @@ public class LogOutActivity extends MyBaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
 
     }
 

@@ -119,7 +119,7 @@ public class DeviceOutDetailActivity extends MyBaseActivity implements View.OnCl
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

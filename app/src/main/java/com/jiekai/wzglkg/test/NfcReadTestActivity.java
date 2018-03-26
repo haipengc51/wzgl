@@ -54,7 +54,7 @@ public class NfcReadTestActivity extends NFCBaseActivity implements View.OnClick
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
 
     }
 

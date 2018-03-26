@@ -105,7 +105,7 @@ public final class CaptureActivity extends MyBaseActivity implements SurfaceHold
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
 
     }
 

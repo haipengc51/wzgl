@@ -89,7 +89,7 @@ public class DeviceOutPutHistoryActivity extends MyBaseActivity implements View.
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

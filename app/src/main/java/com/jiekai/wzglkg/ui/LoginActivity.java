@@ -80,7 +80,7 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

@@ -90,7 +90,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
 
     }
 

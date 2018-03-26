@@ -109,7 +109,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

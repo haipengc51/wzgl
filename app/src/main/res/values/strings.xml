@@ -167,4 +167,5 @@
     <string name="loading_update">正在下载更新</string>
     <string name="currentsize">已下载：%1s MB</string>
     <string name="allsize">总大小：%1s MB</string>
+    <string name="network_break">没有网络连接，请打开网络连接</string>
 </resources>

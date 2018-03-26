@@ -59,7 +59,7 @@ public class WelcomActivity extends MyBaseActivity {
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

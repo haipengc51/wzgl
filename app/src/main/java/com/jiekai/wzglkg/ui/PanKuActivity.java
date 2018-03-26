@@ -153,7 +153,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

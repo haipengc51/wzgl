@@ -166,7 +166,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

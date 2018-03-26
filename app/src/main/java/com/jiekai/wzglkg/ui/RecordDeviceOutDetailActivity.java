@@ -125,7 +125,7 @@ public class RecordDeviceOutDetailActivity extends MyBaseActivity implements Vie
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (imageDbDeal != null) {
             imageDbDeal.cancleDbDeal();
             dismissProgressDialog();

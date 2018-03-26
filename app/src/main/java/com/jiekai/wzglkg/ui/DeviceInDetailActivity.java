@@ -121,7 +121,7 @@ public class DeviceInDetailActivity extends MyBaseActivity implements View.OnCli
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (eventDbDeal != null) {
             eventDbDeal.cancleDbDeal();
             dismissProgressDialog();

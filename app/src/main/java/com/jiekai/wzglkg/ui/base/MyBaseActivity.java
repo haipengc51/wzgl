@@ -2,10 +2,13 @@ package com.jiekai.wzglkg.ui.base;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
@@ -16,6 +19,7 @@ import com.jiekai.wzglkg.config.ShareConstants;
 import com.jiekai.wzglkg.entity.UserInfoEntity;
 import com.jiekai.wzglkg.utils.AnimationUtils;
 import com.jiekai.wzglkg.utils.JSONHelper;
+import com.jiekai.wzglkg.utils.NetWorkUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 
 import butterknife.ButterKnife;
@@ -29,7 +33,7 @@ public abstract class MyBaseActivity extends Activity {
     public abstract void initView();
     public abstract void initData();
     public abstract void initOperation();
-    public abstract void progressDialogCancleLisen();
+    public abstract void cancleDbDeal();
 
     public boolean isAnimation = true;
     private SharedPreferences sharedPreferences;
@@ -39,6 +43,7 @@ public abstract class MyBaseActivity extends Activity {
     public Context mContext;
 
     private ProgressDialog progressDialog = null;
+    private MyBroadcaseReceiver myBroadcaseReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +55,10 @@ public abstract class MyBaseActivity extends Activity {
         getLoginData();
         initData();
         initOperation();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        myBroadcaseReceiver = new MyBroadcaseReceiver();
+        registerReceiver(myBroadcaseReceiver, intentFilter);
     }
 
     private void getLoginData() {
@@ -98,7 +107,7 @@ public abstract class MyBaseActivity extends Activity {
             progressDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
                 @Override
                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                    progressDialogCancleLisen();
+                    cancleDbDeal();
                     return false;
                 }
             });
@@ -121,9 +130,27 @@ public abstract class MyBaseActivity extends Activity {
         Toast.makeText(this, strId, Toast.LENGTH_SHORT).show();
     }
 
+    private class MyBroadcaseReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ConnectivityManager.CONNECTIVITY_ACTION.equals(intent.getAction())) {
+                if (!NetWorkUtils.isNetworkConnected(context)) {    //没有网络情况
+                    dismissProgressDialog();
+                    alert(R.string.network_break);
+                    cancleDbDeal();
+                }
+            }
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         dismissProgressDialog();
+        if (myBroadcaseReceiver != null) {
+            unregisterReceiver(myBroadcaseReceiver);
+            myBroadcaseReceiver = null;
+        }
     }
 }

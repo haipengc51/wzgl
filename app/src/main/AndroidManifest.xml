@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/> <!--扫描二维码是否需要动态权限-->
     <uses-permission android:name="android.permission.VIBRATE"/>    <!--zxing震动权限-->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-feature android:name="android.hardware.nfc" android:required="true"/> <!--使用者必须有nfc功能-->
 

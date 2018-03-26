@@ -118,7 +118,7 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (eventDbDeal != null) {
             eventDbDeal.cancleDbDeal();
             dismissProgressDialog();

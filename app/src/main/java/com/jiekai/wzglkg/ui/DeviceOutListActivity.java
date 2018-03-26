@@ -67,7 +67,7 @@ public class DeviceOutListActivity extends MyBaseActivity implements View.OnClic
     }
 
     @Override
-    public void progressDialogCancleLisen() {
+    public void cancleDbDeal() {
         if (dbDeal != null) {
             dbDeal.cancleDbDeal();
             dismissProgressDialog();

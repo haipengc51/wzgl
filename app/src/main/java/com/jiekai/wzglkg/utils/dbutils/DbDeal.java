@@ -4,6 +4,7 @@ package com.jiekai.wzglkg.utils.dbutils;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.jiekai.wzglkg.R;
 import com.jiekai.wzglkg.config.Config;
 import com.jiekai.wzglkg.utils.NetWorkUtils;
 
@@ -68,7 +69,7 @@ public class DbDeal extends AsynInterface {
 
     public void execut(Context context, DbCallBack dbCallBack) {
         if (!NetWorkUtils.isNetworkConnected(context)) {
-            Toast.makeText(context, "没有网络连接，请打开网络连接", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.network_break, Toast.LENGTH_SHORT).show();
             return;
         }
         DBManager.getInstance().execute(DbDeal.this, dbCallBack);
