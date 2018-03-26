@@ -228,7 +228,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
      * 通过ID卡号获取设备信息
      * @param id
      */
-    private void getDeviceDataById(String id) {
+    private void getDeviceDataById(final String id) {
         if (StringUtils.isEmpty(id)) {
             return;
         }
@@ -246,6 +246,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(id, true);
                     }
 
                     @Override

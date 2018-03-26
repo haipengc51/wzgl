@@ -160,7 +160,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
      *
      * @param id
      */
-    private void getDeviceDataById(String id) {
+    private void getDeviceDataById(final String id) {
         if (StringUtils.isEmpty(id)) {
             return;
         }
@@ -178,6 +178,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(id, true);
                     }
 
                     @Override
@@ -200,7 +201,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
      *
      * @param id
      */
-    private void getDeviceDataBySAOMA(String id) {
+    private void getDeviceDataBySAOMA(final String id) {
         if (StringUtils.isEmpty(id)) {
             return;
         }
@@ -218,6 +219,7 @@ public class DeviceInputActivity extends NFCBaseActivity implements View.OnClick
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(id, false);
                     }
 
                     @Override

@@ -14,6 +14,7 @@ import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.DeviceEntity;
 import com.jiekai.wzglkg.entity.DevicescrapEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
+import com.jiekai.wzglkg.ui.dialog.ReadCardErroDialog;
 import com.jiekai.wzglkg.utils.CommonUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
 import com.jiekai.wzglkg.utils.GlidUtils;
@@ -165,7 +166,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
      *
      * @param id
      */
-    private void getDeviceDataById(String id) {
+    private void getDeviceDataById(final String id) {
         if (StringUtils.isEmpty(id)) {
             return;
         }
@@ -183,6 +184,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(id, true);
                     }
 
                     @Override
@@ -206,7 +208,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
      *
      * @param id
      */
-    private void getDeviceDataBySAOMA(String id) {
+    private void getDeviceDataBySAOMA(final String id) {
         if (StringUtils.isEmpty(id)) {
             return;
         }
@@ -224,6 +226,7 @@ public class DeviceScrapActivity extends NFCBaseActivity implements View.OnClick
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(id, false);
                     }
 
                     @Override

@@ -3,8 +3,11 @@ package com.jiekai.wzglkg.test;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.jiekai.wzglkg.ui.base.MyBaseActivity;
+import com.jiekai.wzglkg.ui.dialog.ReadCardErroDialog;
 import com.jiekai.wzglkg.utils.nfcutils.NfcUtils;
 
 /**
@@ -17,6 +20,8 @@ public abstract class NFCBaseActivity extends MyBaseActivity {
     private NfcAdapter nfcAdapter;
     private PendingIntent pendingIntent;
 
+    protected ReadCardErroDialog readCardErroDialog;
+
     /**
      * 获取到nfc卡的信息
      * @param nfcString
@@ -24,11 +29,12 @@ public abstract class NFCBaseActivity extends MyBaseActivity {
     public abstract void getNfcData(String nfcString);
     //TODO 启动模式一应设置成singleTop，否则每次都走onCreate()
 
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        readCardErroDialog = new ReadCardErroDialog(this);
+    }
 
     @Override
     protected void onStart() {

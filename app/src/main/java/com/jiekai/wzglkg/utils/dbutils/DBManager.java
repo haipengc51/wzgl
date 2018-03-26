@@ -1,5 +1,10 @@
 package com.jiekai.wzglkg.utils.dbutils;
 
+import android.content.Context;
+
+import com.jiekai.wzglkg.R;
+import com.jiekai.wzglkg.utils.NetWorkUtils;
+
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -75,7 +80,11 @@ public class DBManager {
         return executor;
     }
 
-    public void execute(final AsynInterface asynInterface, final DbCallBack callBack) {
+    public void execute(Context context, final AsynInterface asynInterface, final DbCallBack callBack) {
+        if (!NetWorkUtils.isNetworkConnected(context)) {
+            doFailed(callBack, context.getResources().getString(R.string.network_break));
+            return;
+        }
         executor.execute(new Runnable() {
             @Override
             public void run() {

@@ -124,6 +124,8 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        //判断上次的数据进行登录
+                        useOldDataLogin();
                     }
 
                     @Override
@@ -204,5 +206,19 @@ public class LoginActivity extends MyBaseActivity implements View.OnClickListene
         String userData = JSONHelper.toJSONString(loginData);
         editor.putString(ShareConstants.USERINFO, userData);
         editor.commit();
+    }
+
+    private void useOldDataLogin() {
+        String userName = inputUsername.getText().toString();
+        String userPassword = inputPassword.getText().toString();
+        if (!StringUtils.isEmpty(userName) && !StringUtils.isEmpty(userPassword)
+                && userData != null && !StringUtils.isEmpty(userData.getUSERID())
+                && !StringUtils.isEmpty(userData.getPASSWORD())) {
+            if (userName.equals(userData.getUSERID()) && userPassword.equals(userData.getPASSWORD())) {
+                Intent intent = new Intent(LoginActivity.this, KeeperMainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
     }
 }

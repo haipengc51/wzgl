@@ -148,6 +148,7 @@ public abstract class MyBaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         dismissProgressDialog();
+        cancleDbDeal();
         if (myBroadcaseReceiver != null) {
             unregisterReceiver(myBroadcaseReceiver);
             myBroadcaseReceiver = null;

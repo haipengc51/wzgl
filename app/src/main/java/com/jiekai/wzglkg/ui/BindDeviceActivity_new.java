@@ -568,7 +568,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
      *
      * @param idCard
      */
-    private void findPartByID(String idCard) {
+    private void findPartByID(final String idCard) {
         if (StringUtils.isEmpty(idCard)) {
             return;
         }
@@ -586,6 +586,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(idCard, true);
                     }
 
                     @Override
@@ -806,6 +807,8 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
 
                     @Override
                     public void onError(String err) {
+                        alert(err);
+                        readCardErroDialog.errShowIdDialog(id, true);
                     }
 
                     @Override

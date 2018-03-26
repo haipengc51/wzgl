@@ -18,6 +18,7 @@ import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.DeviceDetailEntity;
 import com.jiekai.wzglkg.entity.DevicedocEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
+import com.jiekai.wzglkg.ui.dialog.ReadCardErroDialog;
 import com.jiekai.wzglkg.utils.PictureSelectUtils;
 import com.jiekai.wzglkg.utils.StringUtils;
 import com.jiekai.wzglkg.utils.TimeUtils;
@@ -126,7 +127,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
      *
      * @param nfcString
      */
-    private void getDeviceById(String nfcString) {
+    private void getDeviceById(final String nfcString) {
         if (StringUtils.isEmpty(nfcString)) {
             alert(getResources().getString(R.string.get_id_err));
             return;
@@ -145,6 +146,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(nfcString, true);
                     }
 
                     @Override
@@ -166,7 +168,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
      *
      * @param nfcString
      */
-    private void getDeviceBySAOMA(String nfcString) {
+    private void getDeviceBySAOMA(final String nfcString) {
         if (StringUtils.isEmpty(nfcString)) {
             alert(getResources().getString(R.string.get_id_err));
             return;
@@ -185,6 +187,7 @@ public class DeviceDetailActivity extends NFCBaseActivity implements View.OnClic
                     public void onError(String err) {
                         alert(err);
                         dismissProgressDialog();
+                        readCardErroDialog.errShowIdDialog(nfcString, false);
                     }
 
                     @Override
