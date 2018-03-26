@@ -86,7 +86,7 @@ public class KeeperMainActivity extends MyBaseActivity implements AdapterView.On
             gridView.setAdapter(adapter);
             gridView.setOnItemClickListener(this);
         }
-        AppContext.getUnCheckedData(mContext, userData.getUSERID());
+        AppContext.getUnCheckedData(this, userData.getUSERID());
     }
 
     @Override
