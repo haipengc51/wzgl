@@ -2,51 +2,66 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="match_parent"
     android:gravity="center_vertical">
+
+    <View
+        style="@style/vertile_line_d5"/>
 
     <TextView
         android:id="@+id/num"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="@dimen/title_height"
         android:layout_weight="1"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text="@string/serial_num"
         android:textSize="@dimen/content_text_size"
         android:textColor="@color/text_content_color"/>
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/part_name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="@dimen/title_height"
         android:layout_weight="2"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text="@string/part_name"
         android:textSize="@dimen/content_text_size"
         android:textColor="@color/text_content_color"/>
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/part_card_id"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="@dimen/title_height"
         android:layout_weight="2"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text="@string/part_ic_id"
         android:textSize="@dimen/content_text_size"
         android:textColor="@color/text_content_color"/>
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/part_id"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:minHeight="@dimen/title_height"
         android:layout_weight="2"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:text="@string/part_id"
         android:textSize="@dimen/content_text_size"
         android:textColor="@color/text_content_color"/>
+
+    <View
+        style="@style/vertile_line_d5"/>
 
 </LinearLayout>

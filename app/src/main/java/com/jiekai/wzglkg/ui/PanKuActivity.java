@@ -117,6 +117,7 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
 
         ifContinueDialog = new AlertDialog.Builder(mActivity)
                 .setTitle("提示").create();
+        ifContinueDialog.setCancelable(false);
         ifContinueDialog.setMessage("您上次盘库记录没有保存，是否继续上次盘库，还是清空盘库信息重新开始盘库？");
         ifContinueDialog.setButton(BUTTON_POSITIVE, "重新盘库", new DialogInterface.OnClickListener() {
             @Override
@@ -190,10 +191,19 @@ public class PanKuActivity extends NFCBaseActivity implements View.OnClickListen
                 clearLocalDB();
                 break;
             case R.id.data_upload:  //数据上传
-                startEnv();
+                //判断是否有数据，没有的话不能上传盘库信息。
+                if (pankuDataListAdapter != null && pankuDataListAdapter.getItemCount() > 0) {
+                    startEnv();
+                } else {
+                    alert(R.string.please_panku_first);
+                }
                 break;
             case R.id.data_detail:  //数据详情（统计数据个数）
-                startActivity(new Intent(mActivity, PanKuNumActivity.class));
+                if (pankuDataListAdapter != null && pankuDataListAdapter.getItemCount() > 0) {
+                    startActivity(new Intent(mActivity, PanKuNumActivity.class));
+                } else {
+                    alert(R.string.please_panku_first);
+                }
                 break;
         }
     }

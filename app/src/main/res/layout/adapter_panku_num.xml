@@ -4,10 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/device_leibie"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:minHeight="@dimen/item_height"
@@ -15,10 +18,13 @@
         android:textColor="@color/text_content_color"
         android:textSize="@dimen/content_text_size" />
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/device_xinghao"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:minHeight="@dimen/item_height"
@@ -26,25 +32,34 @@
         android:textColor="@color/text_content_color"
         android:textSize="@dimen/content_text_size" />
 
+    <View
+        style="@style/vertile_line_d5"/>
+
     <TextView
         android:id="@+id/device_guige"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:minHeight="@dimen/item_height"
         android:text="@string/shebei_guige"
         android:textColor="@color/text_content_color"
         android:textSize="@dimen/content_text_size" />
+
+    <View
+        style="@style/vertile_line_d5"/>
     <TextView
         android:id="@+id/device_num"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
         android:minHeight="@dimen/item_height"
         android:text="@string/device_num"
         android:textColor="@color/text_content_color"
         android:textSize="@dimen/content_text_size" />
+
+    <View
+        style="@style/vertile_line_d5"/>
 
 </LinearLayout>

@@ -803,11 +803,13 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                 .execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
+                        showProgressDialog(getResources().getString(R.string.get_id_data));
                     }
 
                     @Override
                     public void onError(String err) {
                         alert(err);
+                        dismissProgressDialog();
                         readCardErroDialog.errShowIdDialog(id, true);
                     }
 
@@ -826,6 +828,7 @@ public class BindDeviceActivity_new extends NFCBaseActivity implements View.OnCl
                                 deviceCardThree.setText(id);
                             }
                         }
+                        dismissProgressDialog();
                     }
                 });
     }

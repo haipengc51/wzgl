@@ -14,7 +14,6 @@ import com.jiekai.wzglkg.config.SqlUrl;
 import com.jiekai.wzglkg.entity.DeviceEntity;
 import com.jiekai.wzglkg.entity.LastInsertIdEntity;
 import com.jiekai.wzglkg.test.NFCBaseActivity;
-import com.jiekai.wzglkg.ui.dialog.ReadCardErroDialog;
 import com.jiekai.wzglkg.ui.popup.DeviceCodePopup;
 import com.jiekai.wzglkg.utils.CommonUtils;
 import com.jiekai.wzglkg.utils.FileSizeUtils;
@@ -340,8 +339,8 @@ public class DeviceRepairActivity extends NFCBaseActivity implements View.OnClic
      * 开启数据库事务
      */
     private void startEvent() {
-        dbDeal = DBManager.dbDeal(DBManager.START_EVENT);
-                dbDeal.execut(mContext, new DbCallBack() {
+        eventDbDeal = DBManager.dbDeal(DBManager.START_EVENT);
+        eventDbDeal.execut(mContext, new DbCallBack() {
                     @Override
                     public void onDbStart() {
                         showProgressDialog(getResources().getString(R.string.uploading_db));

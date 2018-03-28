@@ -323,7 +323,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/marginTop10"
                 android:layout_marginLeft="@dimen/marginTop10"
-                android:layout_marginRight="@dimen/marginTop10"/>
+                android:layout_marginRight="@dimen/marginTop10"
+                android:divider="@color/line_color"
+                android:dividerHeight="0.5dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
