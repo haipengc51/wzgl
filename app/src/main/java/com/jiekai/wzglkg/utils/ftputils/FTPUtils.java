@@ -78,12 +78,10 @@ public class FTPUtils {
             }
             return true;
         } catch (SocketException e) {
-            Log.i("liu", "失败1");
             e.printStackTrace();
             LogUtils.e(e.getMessage());
             return false;
         } catch (IOException e) {
-            Log.i("liu", "失败2");
             e.printStackTrace();
             LogUtils.e(e.getMessage());
             return false;
@@ -101,7 +99,7 @@ public class FTPUtils {
         String upFielPath = remotePath;
         if (!ftpClient.isConnected()) {
             if (!initFTPSetting(FTPUrl,  FTPPort,  UserName,  UserPassword)) {
-                return "连接服务器失败";
+                return "连接服务器失败，请检查网络";
             }
         }
         try {
@@ -144,18 +142,15 @@ public class FTPUtils {
                 return "上传的文件不存在";
             }
         } catch (IOException e) {
-            Log.i("liu", "失败3");
             e.printStackTrace();
             try {
                 ftpClient.logout();
                 ftpClient.disconnect();
             } catch (IOException e1) {
                 e1.printStackTrace();
-                Log.i("liu", "失败4");
                 try {
                     ftpClient.disconnect();
                 } catch (IOException e2) {
-                    Log.i("liu", "失败5");
                     e2.printStackTrace();
                 }
             }
@@ -174,8 +169,8 @@ public class FTPUtils {
         doStart(plantFrom, ftpCallBack);
         if (!ftpClient.isConnected()) {
             if (!initFTPSetting(FTPUrl,  FTPPort,  UserName,  UserPassword)) {
-                doFail(plantFrom, ftpCallBack, "连接服务器失败");
-                return "连接服务器失败";
+                doFail(plantFrom, ftpCallBack, "连接服务器失败，请检查网络");
+                return "连接服务器失败，请检查网络";
             }
         }
         try {
@@ -210,9 +205,6 @@ public class FTPUtils {
                     while ((onceReadSize = inputStream.read(bytes)) != -1) {
                         outputStream.write(bytes, 0, onceReadSize);
                         localSize += onceReadSize;
-                        if (localSize >= 4020000) {
-                            Log.i("liu", "dada");
-                        }
                         int process = (int) (localSize / step);
                         if (process % 3 == 0){
                             doProgress(plantFrom, ftpCallBack, allSize, localSize, process);
